@@ -9,8 +9,8 @@
   <style type="text/css">
 body {
 	overflow: hidden;	
-	background-color:#0e0e10;
-	color: white;
+    color: #ffffff;
+	background-color:#aaaaaa;
 }  
 video, input {
     display: inline;
@@ -28,7 +28,7 @@ video {
 }
 #chat {
     width: 340px;
-    border-left: 1px solid #303032;
+    border-left: 1px #303032;
     height: 100%;
     position: absolute;
     right: 0;
@@ -45,11 +45,11 @@ video {
 
 input {
     width: 200px;  
-	background-color:#666666;
+	background-color:#666666;	
 }
 
 .info {
-    background-color: #0096d6;            
+    background-color: aqua;            
 }
 
 .error {
