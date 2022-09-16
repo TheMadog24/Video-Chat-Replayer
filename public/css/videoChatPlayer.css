@@ -1,0 +1,118 @@
+body {
+	overflow: hidden;	
+	background-color:#0e0e10;
+    color: white;
+
+}  
+
+video, input {
+    display: inline;
+}
+video {
+	width:calc(100% - 340px);
+	position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#topBox {
+	height: 50px;
+	width: 340px;
+	border-left: 1px solid #303032;
+	border-bottom: 1px solid #303032;
+	position:absolute;
+	top: 0;
+	right: 0;
+	background-color: #1f1f23;
+}
+
+
+#controls {
+    display: inline-block;
+}
+
+
+#vidinput {
+	position: absolute;
+    top: 2px;
+    right: 10px;
+}
+
+#jsoninput {
+	position: absolute;
+    top: 25px;
+    right: 10px;
+}
+
+#vidText {
+	position: absolute;
+	top: 2px;
+	right: 215px;
+	height:25px;
+	margin:0;
+}
+#chatText {
+	position: absolute;
+	top: 25px;
+	right: 215px;
+	height:25px;
+	margin:0;
+}
+
+
+#chat {
+    width: 340px;
+    border-left: 1px solid #303032;
+	border-top: 1px solid #303032;
+    height: calc(100% - 50px);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+	overflow-y: auto;
+	background-color:#18181b;
+ 	font-family: "Inter";
+	color: rgb(222, 222, 227);
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 20px;
+	overflow-x: hidden;
+}
+
+input {
+    width: 200px;
+	background-color:#2b2b2f;
+}
+
+
+.info {
+    background-color: #0096d6;            
+}
+
+.error {
+    background-color: red;
+    color: white;
+}
+
+.chatline {
+    display: flex;
+    white-space: nowrap;
+}
+
+.chattime {
+    margin: 3px 10px 3px 4px;
+    font-family: monospace;
+
+    vertical-align: top;
+}
+.chatbody {
+    white-space: normal;
+}
+
+.commenter {
+    font-weight: bolder;
+}
+
+.messagePrefix {
+    margin-right: 3px;
+}
+
