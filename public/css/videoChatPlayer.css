@@ -90,6 +90,7 @@ input {
 
 .chatbody {
     white-space: normal;
+    margin-right: 6px;
 }
 
 .commenter {
