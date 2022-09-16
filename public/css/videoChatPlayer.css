@@ -16,6 +16,84 @@ video {
     left: 0;
 }
 
+#videoPlayer{
+	
+}
+
+.video-container:hover .custom-controls {
+	opacity: 100%;
+	animation: fadeInAnimationBar ease 0.3s;
+}
+.video-container .custom-controls {
+	animation: fadeOutAnimationBar ease 0.3s;
+	opacity: 0%;
+}
+
+  
+@keyframes fadeInAnimationBar {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+     }
+}
+@keyframes fadeOutAnimationBar {
+    100% {
+        opacity: 0;
+    }
+    0% {
+        opacity: 1;
+     }
+}
+
+/* Custom Video Controls bar */
+.custom-controls {
+	position: absolute;
+	width:calc(100% - 341px);
+	height: 55px;
+	background-color: green;
+	background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5));
+	bottom: 0;
+	left: 0;
+    z-index: 999;
+}
+.progress-bar {
+	margin: auto;
+	width:calc(100% - 20px);
+	height: 5px;
+	background-color: #626262;
+	opacity: 0.8;
+}
+.bar {
+	margin: auto;
+	width:80%;
+	height: 5px;
+	background-color: #ff0000;
+	opacity: 0.8;
+	left: 0;
+}
+
+
+.button {
+	position:absolute;
+	top: 14px;
+	left: 25px;	
+	border: 0;
+	background: transparent;
+	box-sizing: border-box;
+	width: 0;
+	height: 25px;
+
+	border-color: transparent transparent transparent #e5e5e5;
+	transition: 100ms all ease;
+	cursor: pointer;
+
+	border-style: solid;
+	border-width: 12px 0 12px 20px;
+}
+
+/* Custom Video Controls bar Ends */
 #topBox {
 	width: 340px;
 	border-left: 1px solid #303032;

@@ -38,7 +38,26 @@
             <div id="chat"></div>
         </div>
 
-        <video controls ></video>
+        <div class="video-container">
+			<video id="videoPlayer" ></video>
+			
+				<div class="custom-controls">
+				
+					<div class="progress-bar">
+						<div class="bar" [style.width]="barLength"></div>
+					</div>
+					
+					<button class='button'></button>
+					
+				</div>
+			
+			
+			<ngx-video-controls></ngx-video-controls>
+			
+		</div>
+
+		
+
 
     </body>
 </html>

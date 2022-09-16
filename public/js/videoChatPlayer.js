@@ -179,6 +179,25 @@ function renderChatBody( comment ) {
     return chatBody;
 }
 
+
+
+
+
+//	Custom progress bar
+
+
+
+
+
+//	Play & Pause Button
+
+
+
+
+
+
+
+
 $(document).ready(function() {
 
     localFileVideoPlayer();
