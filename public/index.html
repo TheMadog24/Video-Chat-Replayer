@@ -1,39 +1,44 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>TD player example</title>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>TD player example</title>
 
-  <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+        <link rel='stylesheet' 
+                href='https://fonts.googleapis.com/css?family=Inter'>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-  
-  <link rel="stylesheet" href="css/videoChatPlayer.css"></link>
-  <script type="text/javascript" src="js/videoChatPlayer.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+        <link rel="stylesheet" 
+                href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
+        <link rel="stylesheet" 
+                href="css/videoChatPlayer.css"></link>
+        <script type="text/javascript" src="js/videoChatPlayer.js"></script>
 
 
-</head>
-<body>
-    <div id="topBox">
-        <div class="flex header">
-            <div class="topBoxTitle" title="Select a video">Video:</div>
-            <div><input id="vidinput" type="file" accept="video/*"/></div>
+    </head>
+    <body>
+        <div id="topBox">
+            <div class="flex header">
+                <div class="topBoxTitle" title="Select a video">Video:</div>
+                <div><input id="vidinput" type="file" accept="video/*"/></div>
+            </div>
+            <div class="flex header">
+                <div class="topBoxTitle" title="Select a JSON chat file">Chat:</div>
+                <div><input id="jsoninput" type="file" accept=".json"/></div>
+            </div>
+            <div class="flex header">
+                <span id="message"></span>
+            </div>
+            <div class="flex header">
+                <div id="videoCounter"></div>
+            </div>
+            <div id="chat"></div>
         </div>
-        <div class="flex header">
-            <div class="topBoxTitle" title="Select a JSON chat file">Chat:</div>
-            <div><input id="jsoninput" type="file" accept=".json"/></div>
-        </div>
-        <div class="flex header">
-            <span id="message"></span>
-        </div>
-        <div class="flex header">
-            <div id="videoCounter"></div>
-        </div>
-        <div id="chat"></div>
-    </div>
 
-    <video controls ></video>
+        <video controls ></video>
 
-</body>
+    </body>
 </html>
-
