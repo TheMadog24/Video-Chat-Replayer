@@ -59,11 +59,13 @@ video {
 input {
     width: 275px;
 	background-color:#2b2b2f;
+	font-size: 12px;
+	font-weight: 400;
 }
 
 
 .info {
-    background-color: #0096d6;            
+	font-family: "Inter";
 }
 
 .error {

@@ -32,7 +32,7 @@ function localFileVideoPlayer() {
 		
 		var canPlay = videoNode.canPlayType(type);
 		if (canPlay === '') canPlay = 'no';
-		var message = 'Can play type "' + type + '": ' + canPlay;
+		var message = 'Successfully Loaded "' + type + '" '
 		var isError = canPlay === 'no';
 		displayMessage(message, isError);
 
