@@ -52,36 +52,33 @@ function localFileVideoPlayer() {
 
 		let currenTime = videoNode.currentTime;
 		chatNode.innerHTML = currenTime+'<br>';
-		chatJson.comments.forEach(function(obj) { 
+		chatJson.comments.forEach(function(comment) { 
 			
-			if(currenTime >= obj.content_offset_seconds) {
-                let colorHex = obj.message.user_color;
-                let styles = {"color": colorHex};
+			if(currenTime >= comment.content_offset_seconds) {
+                
+
 
                 let chatLine = $("<div>").addClass("chatline");
 
-                let time = obj.content_offset_seconds;
-                let chatTime = $("<div>").addClass("chattime").text( time );
+                let chatTime = renderChatTime( comment );
 
-                let player = $("<span>").addClass("commenter")
-                        .css( styles )
-                        .text( obj.commenter.display_name );
-                let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
-                let message = $("<span>").addClass( "chatmessage" ).text( obj.message.body );
-                let chatBody = $("<div>").addClass("chatbody");
-                chatBody.append( player );
-                chatBody.append( messagePrefix );
-                chatBody.append( message );
+                let chatBody = renderChatBody( comment );
+
+                // let player = $("<span>").addClass("commenter")
+                //         .css( styles )
+                //         .text( comment.commenter.display_name );
+                // let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+                // let message = $("<span>").addClass( "chatmessage" ).text( comment.message.body );
+                // let chatBody = $("<div>").addClass("chatbody");
+                // chatBody.append( player );
+                // chatBody.append( messagePrefix );
+                // chatBody.append( message );
 
                 chatLine.append( chatTime );
                 chatLine.append( chatBody );
 
                 chatLine.appendTo( "#chat" );
 
-                // let chatLine = document.createElement('div');
-            //     chatLine.innerHTML = '&nbsp;&nbsp;&nbsp;' + '<b style="color:' + colorHex + ';">' + 
-            //         obj.commenter.display_name +'</b>:'+ obj.message.body;
-            //     chatNode.appendChild(chatLine);
             }
 		});
 		chatNode.scrollTop = chatNode.scrollHeight;
@@ -93,6 +90,64 @@ function localFileVideoPlayer() {
   inputNodeChat.addEventListener('change', loadChat, false);
   videoNode.addEventListener('timeupdate', updateChat, false);
 
+}
+
+let TIME_MINUTE = 60;
+let TIME_HOUR = TIME_MINUTE * 60;
+
+function renderChatTime( comment ) {
+    let timeSeconds = comment.content_offset_seconds;
+
+    let timeHtml = formatElapsedTime( timeSeconds );
+
+    let chatTime = $("<div>").addClass("chattime").text( timeHtml );
+    return chatTime;
+}
+
+function formatElapsedTime( timeSeconds ) {
+
+    var seconds = timeSeconds; 
+    var hours = Math.floor( seconds / TIME_HOUR );
+    seconds -= (hours * TIME_HOUR);
+    var mins = Math.floor( seconds / TIME_MINUTE );
+    seconds -= (mins * TIME_MINUTE);
+
+    seconds = Math.floor( seconds );
+    
+    var formatted = (hours > 0 ? pad(hours, 2) + ":" : "" ) +
+        pad( mins, 2 ) + ":" +
+        pad( seconds, 2 );
+
+    return formatted;
+}
+
+function pad( num, size ) {
+    var str = "00000" + num.toString();
+    return str.substring( str.length - size );
+    // console.log( "###  pad(" + num + ", " + size + ")  " + str + "  len: " + str.length );
+    // while ( str.lenght < size ) {
+    //     str = "0" + str;
+    //     console.log( "#### pad(" + num + ", " + size + ")  " + str + "  len: " + str.length );
+    // }
+    // return str;
+}
+
+function renderChatBody( comment ) {
+
+    let colorHex = comment.message.user_color;
+    let styles = {"color": colorHex};
+
+    let player = $("<span>").addClass("commenter")
+            .css( styles )
+            .text( comment.commenter.display_name );
+    let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+    let message = $("<span>").addClass( "chatmessage" ).text( comment.message.body );
+    let chatBody = $("<div>").addClass("chatbody");
+    chatBody.append( player );
+    chatBody.append( messagePrefix );
+    chatBody.append( message );
+
+    return chatBody;
 }
 
 $(document).ready(function() {
