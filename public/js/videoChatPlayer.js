@@ -12,27 +12,27 @@ function localFileVideoPlayer() {
 	
 
 	var displayMessage = function (message, isError) {
-		var element = document.querySelector('#message')
-			element.innerHTML = message
-			element.className = isError ? 'error' : 'info'
+		var element = document.querySelector('#message');
+			element.innerHTML = message;
+			element.className = isError ? 'error' : 'info';
 	}
 
 	var playSelectedFile = function (event) {
-		var file = this.files[0]
-		var type = file.type
+		var file = this.files[0];
+		var type = file.type;
 		
-		var canPlay = videoNode.canPlayType(type)
-		if (canPlay === '') canPlay = 'no'
-		var message = 'Can play type "' + type + '": ' + canPlay
-		var isError = canPlay === 'no'
+		var canPlay = videoNode.canPlayType(type);
+		if (canPlay === '') canPlay = 'no';
+		var message = 'Can play type "' + type + '": ' + canPlay;
+		var isError = canPlay === 'no';
 		displayMessage(message, isError);
 
 		if (isError) {
 			return;
 		}
 
-		var fileURL = URL.createObjectURL(file)
-		videoNode.src = fileURL
+		var fileURL = URL.createObjectURL(file);
+		videoNode.src = fileURL;
 	}
 	
 	var loadChat = function(event) {
@@ -56,29 +56,15 @@ function localFileVideoPlayer() {
 			
 			if(currenTime >= comment.content_offset_seconds) {
                 
-
-
                 let chatLine = $("<div>").addClass("chatline");
 
                 let chatTime = renderChatTime( comment );
-
                 let chatBody = renderChatBody( comment );
-
-                // let player = $("<span>").addClass("commenter")
-                //         .css( styles )
-                //         .text( comment.commenter.display_name );
-                // let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
-                // let message = $("<span>").addClass( "chatmessage" ).text( comment.message.body );
-                // let chatBody = $("<div>").addClass("chatbody");
-                // chatBody.append( player );
-                // chatBody.append( messagePrefix );
-                // chatBody.append( message );
 
                 chatLine.append( chatTime );
                 chatLine.append( chatBody );
 
                 chatLine.appendTo( "#chat" );
-
             }
 		});
 		chatNode.scrollTop = chatNode.scrollHeight;
@@ -90,6 +76,13 @@ function localFileVideoPlayer() {
   inputNodeChat.addEventListener('change', loadChat, false);
   videoNode.addEventListener('timeupdate', updateChat, false);
 
+    $("#chat").on("click", ".chattime", function() {
+        var timeSecond = $( this ).attr("data-time");
+        if ( timeSecond ) {
+            timeSecond = Number( timeSecond );
+        }
+        videoNode.currentTime = timeSecond;
+    });
 }
 
 let TIME_MINUTE = 60;
@@ -100,7 +93,10 @@ function renderChatTime( comment ) {
 
     let timeHtml = formatElapsedTime( timeSeconds );
 
-    let chatTime = $("<div>").addClass("chattime").text( timeHtml );
+    let chatTime = $("<div>").addClass("chattime")
+            .attr("data-time", timeSeconds.toString() )
+            .attr("title", "Jump to video")
+            .text( timeHtml );
     return chatTime;
 }
 
@@ -124,12 +120,6 @@ function formatElapsedTime( timeSeconds ) {
 function pad( num, size ) {
     var str = "00000" + num.toString();
     return str.substring( str.length - size );
-    // console.log( "###  pad(" + num + ", " + size + ")  " + str + "  len: " + str.length );
-    // while ( str.lenght < size ) {
-    //     str = "0" + str;
-    //     console.log( "#### pad(" + num + ", " + size + ")  " + str + "  len: " + str.length );
-    // }
-    // return str;
 }
 
 function renderChatBody( comment ) {
