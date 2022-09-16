@@ -9,7 +9,8 @@ video, input {
     display: inline;
 }
 video {
-	width:calc(100% - 340px);
+	width:calc(100% - 341px);
+	height: 100%;
 	position: absolute;
     top: 0;
     left: 0;
@@ -18,7 +19,6 @@ video {
 #topBox {
 	width: 340px;
 	border-left: 1px solid #303032;
-	border-bottom: 1px solid #303032;
 	position:absolute;
 	top: 0;
 	right: 0;
