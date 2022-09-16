@@ -99,7 +99,7 @@ input {
 }
 
 .chattime {
-    margin: 3px 10px 3px 4px;
+    margin: 0 10px 0 4px;
     vertical-align: top;
 
     font-size: 12px;
