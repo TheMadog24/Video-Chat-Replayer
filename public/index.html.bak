@@ -12,24 +12,51 @@ body {
 	background-color:#0e0e10;
 	color: white;
 }  
+
 video, input {
     display: inline;
 }
 video {
-	width: 85%;
+	width:calc(100% - 340px);
 	position: absolute;
     top: 0;
     left: 0;
 }
 #controls {
-	position: absolute;
-    left: 0;
-    bottom: 0;
 }
+
+#vidinput {
+	position: absolute;
+    top: 0;
+    right: 10px;
+}
+
+#jsoninput {
+	position: absolute;
+    top: 25px;
+    right: 10px;
+}
+
+#vidText {
+	position: absolute;
+	top: 0;
+	right: 215px;
+	height:25px;
+	margin:0;
+}
+#chatText {
+	position: absolute;
+	top: 25px;
+	right: 215px;
+	height:25px;
+	margin:0;
+}
+
+
 #chat {
     width: 340px;
     border-left: 1px solid #303032;
-    height: 100%;
+    height: calc(100% - 50px);
     position: absolute;
     right: 0;
     bottom: 0;
@@ -59,9 +86,11 @@ input {
   </style>
 </head>
 <body>
+<p id="vidText">Select Video:</p>
+<p id="chatText">Select Chat:</p>
 <span id="controls">
-	Video:<input id="vidinput" type="file" accept="video/*"/>
-	Chat:<input id="jsoninput" type="file" accept=".json"/>
+	<input id="vidinput" type="file" accept="video/*"/>
+	<input id="jsoninput" type="file" accept=".json"/>
 	<span id="message"></span>
 </span>
 <video controls autoplay></video>
