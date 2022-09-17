@@ -74,6 +74,7 @@ video {
 }
 .bar {
 	/* margin: auto; */
+    margin-right: auto;
 	width: 0;
 	height: 5px;
 	background-color: #ff0000;
@@ -200,16 +201,22 @@ video {
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
     height: calc(100% - 55px);
-  
+    
 	overflow-y: scroll;
-    scrollbar-width: thin;
-
+    scrollbar-width: none;
+    padding-right: 8px;
+    
 	background-color:#18181b;
 	color: rgb(222, 222, 227);
 	font-size: 13px;
 	font-weight: 400;
 	line-height: 20px;
 	overflow-x: hidden;
+}
+#chat:hover {
+    /* overflow-y: scroll; */
+    scrollbar-width: thin;
+    padding-right: 0;
 }
 
 input {
