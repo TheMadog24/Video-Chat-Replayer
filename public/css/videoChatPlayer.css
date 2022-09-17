@@ -4,22 +4,28 @@ body {
     color: white;
 
     font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}  
 
-video, input {
-    display: inline;
+    height: 100vh;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
 }
+
+.video-container {
+    height: 100%;
+    width:calc(100% - 341px);
+    
+    display: flex;
+    flex-direction: column;
+}
+
 video {
-	width:calc(100% - 341px);
-	height: 100%;
-	position: absolute;
-    top: 0;
-    left: 0;
+    width: 100%;
+    
+    margin-bottom: auto;
 }
 
-/* #videoPlayer{
-	
-} */
 
 .video-container:hover .custom-controls {
 	opacity: 100%;
@@ -27,13 +33,13 @@ video {
 }
 .video-container .custom-controls {
 	animation: fadeOutAnimationBar ease 0.3s;
-	opacity: 0%;
+	opacity: 40%;
 }
 
   
 @keyframes fadeInAnimationBar {
     0% {
-        opacity: 0;
+        opacity: 0.4;
     }
     100% {
         opacity: 1;
@@ -41,7 +47,7 @@ video {
 }
 @keyframes fadeOutAnimationBar {
     100% {
-        opacity: 0;
+        opacity: 0.4;
     }
     0% {
         opacity: 1;
@@ -76,7 +82,6 @@ video {
 }
 
 .custom-controls .button {
-    /* height: 25px; */
     margin: 3px 12px;
     padding: 5px 12px;
 
@@ -156,36 +161,27 @@ video {
     background: #FF0000;
   }
 
-.buttonX {
-	/* position:absolute; */
-	/* top: 14px; */
-	/* left: 25px;	 */
-	border: 0;
-	background: transparent;
-	box-sizing: border-box;
-	width: 0;
-	height: 25px;
-
-	border-color: transparent transparent transparent #e5e5e5;
-	transition: 100ms all ease;
-	cursor: pointer;
-
-	border-style: solid;
-	border-width: 12px 0 12px 20px;
-}
 
 /* Custom Video Controls bar Ends */
 #topBox {
 	width: 340px;
+    height: 100vh;
 	border-left: 1px solid #303032;
-	position:absolute;
+	position: absolute;
 	top: 0;
 	right: 0;
     bottom: 0;
 	background-color: #1f1f23;
+    
 }
 
-#topBox > div.header {
+#topBox headers {
+    width: 100%;
+    height: auto;
+    min-height: 50px;
+}
+
+#topBox > .headers > div.header {
     height: auto;
     margin: 3px 7px;
 }
@@ -200,13 +196,14 @@ video {
 
 
 #chat {
-    width: 100%;
+    width: auto;
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
-    /* height: calc(100% - 50px); */
-    height: auto;
+    height: calc(100% - 55px);
   
-	overflow-y: auto;
+	overflow-y: scroll;
+    scrollbar-width: thin;
+
 	background-color:#18181b;
 	color: rgb(222, 222, 227);
 	font-size: 13px;
@@ -273,6 +270,6 @@ input {
 
     margin: 3px 17px;
     padding: 1px 13px;
-    height: 20px;
-    width: 326px;
+    height: 25px;
+    width: 100px;
 }

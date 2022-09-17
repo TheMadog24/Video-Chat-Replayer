@@ -9,11 +9,6 @@ function localFileVideoPlayer() {
     
     var currentChatPos = -1;
     
-    // var height = $("#topBox").height();
-    // $("#topBox > .header").each( function(index, value) {
-    //     height -= $(value).height();
-    // });
-    // $("#chat").height( height );
     
     function initChat() {
 
