@@ -59,8 +59,13 @@ function localFileVideoPlayer() {
 		if(chatJson == null) return;
 
 		let currentTime = videoNode.currentTime;
+        let duration = videoNode.duration;
+        let percent = duration == 0 ? 0 : currentTime / duration * 100;
+
         $("#videoCounter").text( formatVideoCounter( currentTime ));
-        $("#videoDuration").text( formatVideoCounter( videoNode.duration ));
+        $("#videoDuration").text( formatVideoCounter( duration ));
+
+        $(".progress-bar .bar").css({"width": (percent + "%")});
 
         var len = chatJson.comments.length;
 
