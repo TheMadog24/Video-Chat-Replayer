@@ -185,8 +185,8 @@ video {
 	background-color: #1f1f23;
 }
 
-#topBox > div.headerx {
-    height: 20px;
+#topBox > div.header {
+    height: auto;
     margin: 3px 7px;
 }
 
@@ -201,7 +201,6 @@ video {
 
 #chat {
     width: 100%;
-    margin-top: 7px;
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
     /* height: calc(100% - 50px); */

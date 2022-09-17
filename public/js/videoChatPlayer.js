@@ -132,6 +132,7 @@ function localFileVideoPlayer() {
 
         if ( isPlay ) {
             videoNode.play();
+            $("#message").text("");
         }
         else {
             videoNode.pause();
