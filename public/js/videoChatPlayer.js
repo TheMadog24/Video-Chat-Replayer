@@ -1,5 +1,37 @@
 'use strict'
 
+/*
+
+The JSON data is loaded in to the field "chatJson".
+
+There are three primary arryas that we must process:
+
+    chatJson.comments - Array of chat messages
+    chatJson.emotes.thirdParty - Array of emotes
+    chatJson.emotes.firstParty - Array of emotes
+
+Sample of one data element:
+
+
+"comments": [{
+
+}]
+
+"thirdParty": [{
+                "id": "54fa8f1401e468494b85b537",
+                "imageScale": 2,
+                "data": "iVBORw0K ... 5ErkJggg==",
+                "name": ":tf:"
+            }]
+
+"firstParty": [{
+                "id": "305941527",
+                "imageScale": 1,
+                "data": "iVBORw0K ... VORK5CYII="
+            }]
+
+
+*/
 
 function localFileVideoPlayer() {
     var URL = window.URL || window.webkitURL;
@@ -10,9 +42,7 @@ function localFileVideoPlayer() {
     var currentChatPos = -1;
     
     
-    function initChat() {
 
-    }
 
 	var displayMessage = function (message, isError) {
 		var element = document.querySelector('#message');
@@ -43,13 +73,67 @@ function localFileVideoPlayer() {
         var input = event.target;
 
         var reader = new FileReader();
+
+        var timingLoadStart = window.performance.now();
         reader.onload = function(){
 		  chatJson = JSON.parse(reader.result);
-		  initChat();
-		  
+		  initChat(timingLoadStart);
         };
+        
         reader.readAsText(input.files[0]);
     };
+    
+    function initChat( timingLoadStart ) {
+        var timingLoadMs = window.performance.now() - timingLoadStart;
+        
+        // NOTE: firefox is unable to provide nano second timings 
+        //       with the performance.now() since it's a security issue
+        //       to protect against fingerprinting and timing attacks.
+        //       Use chrome for actual nano timings if needing to 
+        //       evaluate actual performance.
+        // 
+        // chatJson.comments - Array of chat messages
+        var chatSize = chatJson.comments.length;
+        var timingReadChatStart = window.performance.now();
+        var maxTime = 0;
+        jQuery.each( chatJson.comments, function(index, msg) {
+            if ( maxTime < msg.content_offset_seconds ) {
+                maxTime = msg.content_offset_seconds;
+            }
+        });
+        var timingReadChatMs = window.performance.now() - timingReadChatStart;
+        
+        // chatJson.emotes.thirdParty - Array of emotes
+        var thirdParySize = chatJson.emotes.thirdParty.length;
+        var timingReadThirdPartyStart = window.performance.now();
+        jQuery.each( chatJson.emotes.thirdParty, function(index, emote) {
+            if ( emote.name === "testIgnore" ) {
+            }
+        });
+        var timingReadThirdPartyMs = window.performance.now() - timingReadThirdPartyStart;
+        
+        // chatJson.emotes.firstParty - Array of emotes
+        var firstParySize = chatJson.emotes.firstParty.length;
+        var timingReadFirstPartyStart = window.performance.now();
+        jQuery.each( chatJson.emotes.firstParty, function(index, emote) {
+            if ( emote.id === 99199099199 ) {
+            }
+        });
+        var timingReadFirstPartyMs = window.performance.now() - timingReadFirstPartyStart;
+
+
+        console.log("## videoChatPlayer JSON stats: \n" +
+            "##    JSON load time: " + timingLoadMs + " ms \n" +
+            "##    messages: " + chatSize + " recs  " + 
+                "readTime: " + timingReadChatMs + " ms  " +
+                "maxVideoTime: " + maxTime + " secs\n" +
+            "##    thirdParty: " + thirdParySize + " recs  " + 
+                "readTime: " + timingReadThirdPartyMs + " ms\n" +
+            "##    firstParty: " + firstParySize + " recs  " + 
+                "readTime: " + timingReadFirstPartyMs + " ms\n"
+                );
+
+    }
 
     var getChatId = function(commentIndex) {
         return "chatId" + commentIndex.toString();
