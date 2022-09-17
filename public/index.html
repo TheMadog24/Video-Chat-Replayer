@@ -41,23 +41,28 @@
         <div class="video-container">
 			<video id="videoPlayer" ></video>
 			
-				<div class="custom-controls">
-				
-					<div class="progress-bar">
-						<div class="bar" [style.width]="barLength"></div>
-					</div>
-					
-					<button class='button'></button>
-					
-				</div>
+            <div class="custom-controls">
+            
+                <div class="progress-bar">
+                    <div class="bar" [style.width]="barLength"></div>
+                </div>
+                
+                <div class="flex">
+                    <div id="playpause" class="button play">
+                        <span class="play-button play-button-before"></span>
+                        <span class="play-button play-button-after"></span>    
+                    </div>
+                    <div id="stop" class="button stop">
+                        <span class="stop-button stop-button-before"></span>
+                    </div>
+                </div>
+                
+            </div>
 			
 			
 			<ngx-video-controls></ngx-video-controls>
 			
 		</div>
-
-		
-
 
     </body>
 </html>

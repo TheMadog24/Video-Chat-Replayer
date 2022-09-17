@@ -102,6 +102,31 @@ function localFileVideoPlayer() {
         }
         videoNode.currentTime = timeSecond;
     });
+
+    $(".custom-controls #playpause").on("click", function() {
+        var isPlay = $(this).hasClass("play");
+
+        $(this).toggleClass("play pause");
+
+        if ( isPlay ) {
+            videoNode.play();
+        }
+        else {
+            videoNode.pause();
+        }
+
+    });
+
+    $(".custom-controls #stop").on("click", function() {
+
+        $("#playpause").removeClass("play pause");
+        $("#playpause").addClass("play");
+
+        videoNode.pause();
+        if ( videoNode.currentTime ) {
+            videoNode.currentTime = 0;
+        }
+    });
 }
 
 let TIME_MINUTE = 60;

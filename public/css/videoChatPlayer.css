@@ -75,11 +75,77 @@ video {
 	left: 0;
 }
 
+.custom-controls .button {
+    /* height: 25px; */
+    margin: 3px 12px;
+    padding: 5px 12px;
 
-.button {
-	position:absolute;
-	top: 14px;
-	left: 25px;	
+    background: transparent;
+    cursor: pointer;
+    
+    border: black solid 3px;
+    border-radius: 5px;
+    
+    transition: 100ms all ease;
+}
+.custom-controls .button:hover {
+    border: black solid 5px;
+    padding: 3px 10px;
+}
+.custom-controls .button:selected {
+    border: black inset 5px;
+    padding: 3px 10px;
+}
+
+
+/* Example using css transitions for button icons:
+*    https://codepen.io/zhangzhuo/pen/LNGLOz
+*/
+.custom-controls #playpause, .custom-controls #stop {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+.play-button {
+    display: inline-block;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    transition: clip-path .3s ease;
+  }
+.stop-button {
+    display: inline-block;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: #FF0000;
+    transition: clip-path .3s ease;
+  }
+  .play-button-before {
+    clip-path: polygon(0 0, 50% 25%, 50% 75%, 0% 100%);
+  }
+  .play-button-after {
+    clip-path: polygon(50% 25%, 100% 50%, 100% 50%, 50% 75%);
+  }
+  #playpause.pause .play-button-before {
+    clip-path: polygon(0 0, 30% 0, 30% 100%, 0% 100%);
+  }
+  #playpause.pause .play-button-after{
+    clip-path: polygon(70% 0, 100% 0, 100% 100%, 70% 100%)
+  }
+  .stop-button-before {
+    clip-path: polygon(20% 20%, 20% 80%, 80% 80%, 80% 20%);
+  }
+  .stop-button-before:hover {
+    clip-path: polygon(10% 10%, 10% 90%, 90% 90%, 90% 10%);
+  }
+
+.buttonX {
+	/* position:absolute; */
+	/* top: 14px; */
+	/* left: 25px;	 */
 	border: 0;
 	background: transparent;
 	box-sizing: border-box;
