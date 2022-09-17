@@ -12,18 +12,12 @@ body {
     flex-direction: row;
 }
 
-.video-container {
-    height: 100%;
-    width:calc(100% - 341px);
-    
-    display: flex;
-    flex-direction: column;
-}
-
 video {
-    width: 100%;
-    
-    margin-bottom: auto;
+	width:calc(100% - 341px);
+	height: 100%;
+	position: absolute;
+    top: 0;
+    left: 0;
 }
 
 
@@ -166,29 +160,43 @@ video {
 /* Custom Video Controls bar Ends */
 #topBox {
 	width: 340px;
-    height: 100vh;
+	height:69px;
 	border-left: 1px solid #303032;
-	position: absolute;
+	position:absolute;
 	top: 0;
 	right: 0;
     bottom: 0;
 	background-color: #1f1f23;
-    
 }
 
-#topBox headers {
-    width: 100%;
-    height: auto;
-    min-height: 50px;
-}
-
-#topBox > .headers > div.header {
-    height: auto;
-    margin: 3px 7px;
+#topBox > div {
+    height: 20px;
+	padding-top: 2px;
+	margin: auto;
 }
 
 #topBox .topBoxTitle {
     width: 55px;
+	margin: auto;
+}
+
+#message {
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: 5px;
+	font-size: 14px;
+	background-color: green;
+	animation: fadeOutInfo ease 0.3s;
+	transition-delay:5s;
+}
+
+@keyframes fadeOutInfo {
+    100% {
+        opacity: 0.4;
+    }
+    0% {
+        opacity: 1;
+     }
 }
 
 #controls {
@@ -197,21 +205,23 @@ video {
 
 
 #chat {
-    width: auto;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+    width: 340px;
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
-    height: calc(100% - 55px);
-    
-	overflow-y: scroll;
-    scrollbar-width: none;
-    padding-right: 8px;
-    
+    height: calc(100% - 70px);
+	overflow-y: auto;
 	background-color:#18181b;
+ 	font-family: "Inter";
 	color: rgb(222, 222, 227);
 	font-size: 13px;
 	font-weight: 400;
 	line-height: 20px;
 	overflow-x: hidden;
+	
+	scrollbar-width: none;
 }
 #chat:hover {
     /* overflow-y: scroll; */
