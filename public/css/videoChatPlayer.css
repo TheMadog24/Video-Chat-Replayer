@@ -17,9 +17,9 @@ video {
     left: 0;
 }
 
-#videoPlayer{
+/* #videoPlayer{
 	
-}
+} */
 
 .video-container:hover .custom-controls {
 	opacity: 100%;
@@ -185,7 +185,7 @@ video {
 	background-color: #1f1f23;
 }
 
-#topBox > div {
+#topBox > div.headerx {
     height: 20px;
     margin: 3px 7px;
 }
@@ -201,13 +201,14 @@ video {
 
 #chat {
     width: 100%;
+    margin-top: 7px;
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
-    height: calc(100% - 50px);
+    /* height: calc(100% - 50px); */
+    height: auto;
   
 	overflow-y: auto;
 	background-color:#18181b;
- 	font-family: "Inter";
 	color: rgb(222, 222, 227);
 	font-size: 13px;
 	font-weight: 400;
@@ -236,6 +237,10 @@ input {
     display: flex;
 }
 
+.center {
+    text-align: center;
+}
+
 .chatline {
     display: flex;
     white-space: nowrap;
@@ -262,3 +267,13 @@ input {
     margin-right: 3px;
 }
 
+.video-time {
+    border: #000000 2px solid;
+    border-radius: 5px;
+    background-color: #333333;
+
+    margin: 3px 17px;
+    padding: 1px 13px;
+    height: 20px;
+    width: 326px;
+}

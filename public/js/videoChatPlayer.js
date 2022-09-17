@@ -1,24 +1,23 @@
 'use strict'
 
-function initChat() {
-
-}
 
 function localFileVideoPlayer() {
-	var URL = window.URL || window.webkitURL;
+    var URL = window.URL || window.webkitURL;
 	var videoNode = document.querySelector('video');
 	var chatNode = document.querySelector('#chat');
 	var chatJson;
-
-    var currentChatPos = -1;
-	var currentChatTime = -1;
-
-    var height = $("#topBox").height();
-    $("#topBox > .header").each( function(index, value) {
-        height -= $(value).height();
-    });
-    $("#chat").height( height );
     
+    var currentChatPos = -1;
+    
+    // var height = $("#topBox").height();
+    // $("#topBox > .header").each( function(index, value) {
+    //     height -= $(value).height();
+    // });
+    // $("#chat").height( height );
+    
+    function initChat() {
+
+    }
 
 	var displayMessage = function (message, isError) {
 		var element = document.querySelector('#message');
@@ -42,6 +41,7 @@ function localFileVideoPlayer() {
 
 		var fileURL = URL.createObjectURL(file);
 		videoNode.src = fileURL;
+
 	}
 	
 	var loadChat = function(event) {
@@ -54,39 +54,61 @@ function localFileVideoPlayer() {
 		  
         };
         reader.readAsText(input.files[0]);
-   };
+    };
 
-   var updateChat = function(event) {
+    var getChatId = function(commentIndex) {
+        return "chatId" + commentIndex.toString();
+    }
+
+    var updateChat = function(event) {
 		if(chatJson == null) return;
 
 		let currentTime = videoNode.currentTime;
         $("#videoCounter").text( formatVideoCounter( currentTime ));
+        $("#videoDuration").text( formatVideoCounter( videoNode.duration ));
 
-		chatNode.innerHTML = "";
-		// chatNode.innerHTML = currenTime+'<br>';
+        var len = chatJson.comments.length;
 
-		jQuery.each( chatJson.comments, function( index, comment) { 
-		// chatJson.comments.forEach(function(comment) { 
-			
-			if(currentTime >= comment.content_offset_seconds) {
+        while ( len > 0 ) {
+            
+            var nextPos = currentChatPos + 1;
+            var nextChat = nextPos < len ? chatJson.comments[nextPos] : null;
+    
+            // Check for delete:
+            if ( currentChatPos >= 0 && 
+                    currentChatPos < len &&
+                    currentTime < chatJson.comments[currentChatPos].content_offset_seconds ) {
+
+                // Delete currentChatpos since currentTime is less than this chat's time:
+                var chatId = getChatId(currentChatPos);
+                $("#" + chatId).remove();
+                chatNode.scrollTop = chatNode.scrollHeight;
+    
+                currentChatPos--;
+            }
+            else if ( nextChat && currentTime >= nextChat.content_offset_seconds ) {
                 
+                // Add the next comment to the #chat pane:
                 let chatLine = $("<div>")
-                            .attr( "id", "comment_" + index )
+                            .attr( "id", getChatId(nextPos) )
                             .addClass("chatline flex");
-
-                let chatTime = renderChatTime( comment );
-                let chatBody = renderChatBody( comment );
-
+        
+                let chatTime = renderChatTime( nextChat );
+                let chatBody = renderChatBody( nextChat );
+        
                 chatLine.append( chatTime );
                 chatLine.append( chatBody );
-
+        
                 chatLine.appendTo( "#chat" );
+                chatNode.scrollTop = chatNode.scrollHeight;
+    
+                currentChatPos++;
             }
             else {
-                return false;
+                break;
             }
-		});
-		chatNode.scrollTop = chatNode.scrollHeight;
+        }
+
    }
   
   var inputNodeVideo = document.querySelector('#vidinput');
@@ -162,6 +184,13 @@ function formatElapsedTime( timeSeconds ) {
 }
 
 function formatVideoCounter( timeSeconds ) {
+
+    if ( typeof timeSeconds === 'undefined' ) {
+        timeSeconds = 0;
+    }
+    else if ( timeSeconds.isNaN ) {
+        return "--:--:--.000";
+    }
 
     var seconds = timeSeconds; 
     var hours = Math.floor( seconds / TIME_HOUR );
