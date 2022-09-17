@@ -32,12 +32,16 @@ Sample of one data element:
 
 
 */
+var enableStats = true;
 
 function localFileVideoPlayer() {
     var URL = window.URL || window.webkitURL;
 	var videoNode = document.querySelector('video');
 	var chatNode = document.querySelector('#chat');
 	var chatJson;
+
+    var emotesThirdParty = {};
+    var emotesFirstParty = {};
     
     var currentChatPos = -1;
     
@@ -83,30 +87,44 @@ function localFileVideoPlayer() {
         reader.readAsText(input.files[0]);
     };
     
+    /**
+     * This function will setup the chat JSON data and the emote maps.
+     * 
+     * During the processing, this function will also collect some basic 
+     * stats which can be used to evalutate the impact of size of this
+     * data to help design better performing code without going overboard.
+     * 
+     * NOTE: Firefox is unable to provide nano second timings with the 
+     *       performance.now() since it's a security issue to protect 
+     *       against fingerprinting and timing attacks. Use chrome for 
+     *       actual nano timings if needing to evaluate actual performance.
+     * 
+     * @param {*} timingLoadStart The micro milisecod timeing of when the JSON data
+     *                            was starting to load in to memory.
+     */
     function initChat( timingLoadStart ) {
         var timingLoadMs = window.performance.now() - timingLoadStart;
-        
-        // NOTE: firefox is unable to provide nano second timings 
-        //       with the performance.now() since it's a security issue
-        //       to protect against fingerprinting and timing attacks.
-        //       Use chrome for actual nano timings if needing to 
-        //       evaluate actual performance.
-        // 
+
         // chatJson.comments - Array of chat messages
         var chatSize = chatJson.comments.length;
         var timingReadChatStart = window.performance.now();
         var maxTime = 0;
-        jQuery.each( chatJson.comments, function(index, msg) {
-            if ( maxTime < msg.content_offset_seconds ) {
-                maxTime = msg.content_offset_seconds;
-            }
-        });
+        if ( enableStats ) {
+            // if enableStats is not enabled, then don't waste time getting a
+            // read count since it won't be printed to the log.
+            jQuery.each( chatJson.comments, function(index, msg) {
+                if ( maxTime < msg.content_offset_seconds ) {
+                    maxTime = msg.content_offset_seconds;
+                }
+            });
+        }
         var timingReadChatMs = window.performance.now() - timingReadChatStart;
         
         // chatJson.emotes.thirdParty - Array of emotes
         var thirdParySize = chatJson.emotes.thirdParty.length;
         var timingReadThirdPartyStart = window.performance.now();
         jQuery.each( chatJson.emotes.thirdParty, function(index, emote) {
+            emotesThirdParty[emote.name] = emote;
             if ( emote.name === "testIgnore" ) {
             }
         });
@@ -116,22 +134,26 @@ function localFileVideoPlayer() {
         var firstParySize = chatJson.emotes.firstParty.length;
         var timingReadFirstPartyStart = window.performance.now();
         jQuery.each( chatJson.emotes.firstParty, function(index, emote) {
+            emotesFirstParty[emote.id] = emote;
             if ( emote.id === 99199099199 ) {
             }
         });
         var timingReadFirstPartyMs = window.performance.now() - timingReadFirstPartyStart;
 
+        if ( enableStats ) {
+            
+            console.log("## videoChatPlayer JSON stats: \n" +
+                "##    JSON load time: " + timingLoadMs + " ms \n" +
+                "##    messages: " + chatSize + " recs  " + 
+                    "readTime: " + timingReadChatMs + " ms  " +
+                    "maxVideoTime: " + maxTime + " secs\n" +
+                "##    thirdParty: " + thirdParySize + " recs  " + 
+                    "readTime: " + timingReadThirdPartyMs + " ms\n" +
+                "##    firstParty: " + firstParySize + " recs  " + 
+                    "readTime: " + timingReadFirstPartyMs + " ms\n"
+                    );
+        }    
 
-        console.log("## videoChatPlayer JSON stats: \n" +
-            "##    JSON load time: " + timingLoadMs + " ms \n" +
-            "##    messages: " + chatSize + " recs  " + 
-                "readTime: " + timingReadChatMs + " ms  " +
-                "maxVideoTime: " + maxTime + " secs\n" +
-            "##    thirdParty: " + thirdParySize + " recs  " + 
-                "readTime: " + timingReadThirdPartyMs + " ms\n" +
-            "##    firstParty: " + firstParySize + " recs  " + 
-                "readTime: " + timingReadFirstPartyMs + " ms\n"
-                );
 
     }
 
