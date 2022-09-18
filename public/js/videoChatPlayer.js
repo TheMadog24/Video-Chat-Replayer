@@ -460,7 +460,7 @@ function makeEmoticon( emoticonId, altName ) {
 
         var imageScaleClass = "chat-image-scale-" + emote.scale;
         var img = $("<img>").attr( "title", altName )
-            .addClass( imageScaleClass );
+            .addClass( imageScaleClass )
             .attr( "src", emoteImagePrefix + emote.data );
         return img;
     }
