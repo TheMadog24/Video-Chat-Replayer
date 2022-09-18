@@ -44,6 +44,7 @@ function localFileVideoPlayer() {
     var emotesFirstParty = {};
     
     var currentChatPos = -1;
+    var maxChatMessages = 100;
     
     
 
@@ -173,51 +174,6 @@ function localFileVideoPlayer() {
 
         addNewMessages( messagePos );
 
-        console.log( messagePos );
-
-        // var len = chatJson.comments.length;
-        
-        // while ( len > 0 ) {
-            
-        //     var nextPos = currentChatPos + 1;
-        //     var nextChat = nextPos < len ? chatJson.comments[nextPos] : null;
-    
-        //     // Check for delete:
-        //     if ( currentChatPos >= 0 && 
-        //             currentChatPos < len &&
-        //             currentTime < chatJson.comments[currentChatPos].content_offset_seconds ) {
-
-        //         // Delete currentChatpos since currentTime is less than this chat's time:
-        //         var chatId = getChatId(currentChatPos);
-        //         $("#" + chatId).remove();
-        //         chatNode.scrollTop = chatNode.scrollHeight;
-    
-        //         currentChatPos--;
-        //     }
-        //     else if ( nextChat && currentTime >= nextChat.content_offset_seconds ) {
-                
-        //         // Add the next comment to the #chat pane:
-        //         let chatLine = $("<div>")
-        //                     .attr( "id", getChatId(nextPos) )
-        //                     .attr( "data-pos", nextPos )
-        //                     .addClass("chatline flex");
-        
-        //         let chatTime = renderChatTime( nextChat );
-        //         let chatBody = renderChatBody( nextChat );
-        
-        //         chatLine.append( chatTime );
-        //         chatLine.append( chatBody );
-        
-        //         chatLine.appendTo( "#chat" );
-        //         chatNode.scrollTop = chatNode.scrollHeight;
-    
-        //         currentChatPos++;
-        //     }
-        //     else {
-        //         break;
-        //     }
-        // }
-
    }
 
     /**
@@ -289,7 +245,7 @@ function localFileVideoPlayer() {
         messages.each( function(index) {
             var node = $( this );
             var position = Number.parseInt( node.attr( "data-pos" ));
-            if ( position < (messagePos - 100) || position > messagePos ) {
+            if ( position < (messagePos - maxChatMessages) || position > messagePos ) {
                 node.remove();
             }
         });
@@ -305,7 +261,7 @@ function localFileVideoPlayer() {
 
         var curPos = messagePos;
 
-        while ( curPos >= 0 && messagePos - curPos < 100 ) {
+        while ( curPos >= 0 && messagePos - curPos < maxChatMessages ) {
 
             if ( !$("#chat #" + getChatId(curPos)).length ) {
                 var msg = chatJson.comments.at( curPos );
