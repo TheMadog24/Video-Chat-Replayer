@@ -33,6 +33,11 @@ Sample of one data element:
 
 */
 var enableStats = true;
+var chatThemeMode = "dark"; // valid values: light, dark
+var twitchEmoticonsUrl = "https://static-cdn.jtvnw.net/emoticons/v{{version}}/" +
+            "{{id}}/{{format}}/{{theme_mode}}/{{scale}}.0";
+var maxChatMessages = 150;
+
 
 var emotesThirdParty = {};
 var emotesFirstParty = {};
@@ -44,7 +49,6 @@ function localFileVideoPlayer() {
 	var chatJson;
 
     var currentChatPos = -1;
-    var maxChatMessages = 150;
     
     
 
@@ -413,6 +417,7 @@ function renderChatBody( comment ) {
     let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
     let chatBody = $("<div>").addClass("chatbody");
+    // chatBody.append( makeUserBadges( comment ) );
     chatBody.append( player );
     chatBody.append( messagePrefix );
     chatBody.append( message );
@@ -468,6 +473,23 @@ function makeEmoticon( emoticonId, altName ) {
     return $('<span debug="makeEmotiocon">').text( altName );
 }
 
+function makeUserBadges( comment ) {
+    var userBadges = $("<span>").addClass("user-badges");
+    if ( comment.message.user_badges ) {
+        var url = twitchEmoticonsUrl
+                    .replace("{{format}}","static")
+                    .replace("{{theme_mode}}", chatThemeMode);
+        // .replace("{{id}}", id)
+
+        jQuery.each( comment.message.user_badges, function(index, badge) {
+            var imgSrc = url.replace("{{id}}", badge._id)
+                            .replace("{{version}}", badge.version)
+                            .replace("{{scale}}", (badge.scale ? badge.scale : "1"));
+            var badgeImg = $("<img>").attr("src", imgSrc);
+        });
+    }
+    return userBadges;
+}
 
 //	Custom progress bar
 
