@@ -109,20 +109,18 @@ function localFileVideoPlayer() {
         var chatSize = chatJson.comments.length;
         var timingReadChatStart = window.performance.now();
         var maxTime = 0;
-        if ( enableStats ) {
-            // if enableStats is not enabled, then don't waste time getting a
-            // read count since it won't be printed to the log.
-            jQuery.each( chatJson.comments, function(index, msg) {
-                if ( maxTime < msg.content_offset_seconds ) {
-                    maxTime = msg.content_offset_seconds;
-                }
-            });
-        }
+        // Timings: 32,089 recs takes about 3.2 ms
+        jQuery.each( chatJson.comments, function(index, msg) {
+            if ( maxTime < msg.content_offset_seconds ) {
+                maxTime = msg.content_offset_seconds;
+            }
+        });
         var timingReadChatMs = window.performance.now() - timingReadChatStart;
         
         // chatJson.emotes.thirdParty - Array of emotes
         var thirdParySize = chatJson.emotes.thirdParty.length;
         var timingReadThirdPartyStart = window.performance.now();
+        // Timeings: 101 recs less than 1 ms
         jQuery.each( chatJson.emotes.thirdParty, function(index, emote) {
             emotesThirdParty[emote.name] = emote;
             if ( emote.name === "testIgnore" ) {
@@ -133,6 +131,7 @@ function localFileVideoPlayer() {
         // chatJson.emotes.firstParty - Array of emotes
         var firstParySize = chatJson.emotes.firstParty.length;
         var timingReadFirstPartyStart = window.performance.now();
+        // Timeings: 622 recs less than 1 ms
         jQuery.each( chatJson.emotes.firstParty, function(index, emote) {
             emotesFirstParty[emote.id] = emote;
             if ( emote.id === 99199099199 ) {
@@ -165,57 +164,177 @@ function localFileVideoPlayer() {
 		if(chatJson == null) return;
 
 		let currentTime = videoNode.currentTime;
+ 
+        updateCountersProgressBar();
+
+        var messagePos = messageSeek( currentTime, currentChatPos );
+        
+        removeObsoleteMessages( messagePos );
+
+        addNewMessages( messagePos );
+
+        console.log( messagePos );
+
+        // var len = chatJson.comments.length;
+        
+        // while ( len > 0 ) {
+            
+        //     var nextPos = currentChatPos + 1;
+        //     var nextChat = nextPos < len ? chatJson.comments[nextPos] : null;
+    
+        //     // Check for delete:
+        //     if ( currentChatPos >= 0 && 
+        //             currentChatPos < len &&
+        //             currentTime < chatJson.comments[currentChatPos].content_offset_seconds ) {
+
+        //         // Delete currentChatpos since currentTime is less than this chat's time:
+        //         var chatId = getChatId(currentChatPos);
+        //         $("#" + chatId).remove();
+        //         chatNode.scrollTop = chatNode.scrollHeight;
+    
+        //         currentChatPos--;
+        //     }
+        //     else if ( nextChat && currentTime >= nextChat.content_offset_seconds ) {
+                
+        //         // Add the next comment to the #chat pane:
+        //         let chatLine = $("<div>")
+        //                     .attr( "id", getChatId(nextPos) )
+        //                     .attr( "data-pos", nextPos )
+        //                     .addClass("chatline flex");
+        
+        //         let chatTime = renderChatTime( nextChat );
+        //         let chatBody = renderChatBody( nextChat );
+        
+        //         chatLine.append( chatTime );
+        //         chatLine.append( chatBody );
+        
+        //         chatLine.appendTo( "#chat" );
+        //         chatNode.scrollTop = chatNode.scrollHeight;
+    
+        //         currentChatPos++;
+        //     }
+        //     else {
+        //         break;
+        //     }
+        // }
+
+   }
+
+    /**
+     * This function will update the two video counters with the
+     * current time and also the duration of the video. It will also
+     * update the progress bar too.
+     */
+    function updateCountersProgressBar() {
+
+        let currentTime = videoNode.currentTime;
         let duration = videoNode.duration;
         let percent = duration == 0 ? 0 : currentTime / duration * 100;
 
+        // Update the counters and progress bar:
         $("#videoCounter").text( formatVideoCounter( currentTime ));
         $("#videoDuration").text( formatVideoCounter( duration ));
 
         $(".progress-bar .bar").css({"width": (percent + "%")});
+    }
+
+   /**
+    * This function will take the current chatPosition within the 
+    * chatJson.comments array and will seek either forward or backwards 
+    * to find the correct location to start processing for the next
+    * chat message that needs to be displayed.
+    * 
+    * @param {*} currentTime The video's current time position
+    * @param {*} chatPos The last active position in the chatJson.comments array
+    * @returns The correct position in the chatJson.commments array to start processing from
+    */
+   function messageSeek( currentTime, chatPos ) {
 
         var len = chatJson.comments.length;
 
-        while ( len > 0 ) {
+        while ( len > 0 && chatPos < len ) {
             
-            var nextPos = currentChatPos + 1;
-            var nextChat = nextPos < len ? chatJson.comments[nextPos] : null;
-    
-            // Check for delete:
-            if ( currentChatPos >= 0 && 
-                    currentChatPos < len &&
-                    currentTime < chatJson.comments[currentChatPos].content_offset_seconds ) {
+            // If currentTime < curPos :: must step backwards
+            if ( chatPos < len && chatPos > 0 &&
+                    currentTime < chatJson.comments.at(chatPos).content_offset_seconds ) {
 
-                // Delete currentChatpos since currentTime is less than this chat's time:
-                var chatId = getChatId(currentChatPos);
-                $("#" + chatId).remove();
-                chatNode.scrollTop = chatNode.scrollHeight;
-    
-                currentChatPos--;
+                chatPos--;
             }
-            else if ( nextChat && currentTime >= nextChat.content_offset_seconds ) {
-                
-                // Add the next comment to the #chat pane:
-                let chatLine = $("<div>")
-                            .attr( "id", getChatId(nextPos) )
-                            .addClass("chatline flex");
-        
-                let chatTime = renderChatTime( nextChat );
-                let chatBody = renderChatBody( nextChat );
-        
-                chatLine.append( chatTime );
-                chatLine.append( chatBody );
-        
-                chatLine.appendTo( "#chat" );
-                chatNode.scrollTop = chatNode.scrollHeight;
-    
-                currentChatPos++;
+            
+            // if currentTime > curPos :: must step forwards
+            else if ( (chatPos + 1) < len && (chatPos + 1 ) >= 0 &&
+                   currentTime > chatJson.comments.at(chatPos + 1).content_offset_seconds ) {
+
+                chatPos++;
             }
+
+            // We got the current message record so exit:
             else {
                 break;
             }
         }
 
-   }
+        return chatPos;
+    }
+
+    /**
+    * This function will remove from #chat any message that is farther away
+    * than 100 positions from the current messagePos, or any message that 
+    * has a position greater than the current position.
+    * 
+    * @param {*} messagePos 
+    */
+    function removeObsoleteMessages( messagePos ) {
+        var messages = $("#chat > .chatline");
+        messages.each( function(index) {
+            var node = $( this );
+            var position = Number.parseInt( node.attr( "data-pos" ));
+            if ( position < (messagePos - 100) || position > messagePos ) {
+                node.remove();
+            }
+        });
+    }
+
+    /**
+     * This function will add a new message, if it already is not in the #chat
+     * display, at the bottom of the listing.
+     * 
+     * @param {*} messagePos 
+     */
+    function addNewMessages( messagePos ) {
+
+        var curPos = messagePos;
+
+        while ( curPos >= 0 && messagePos - curPos < 100 ) {
+
+            if ( !$("#chat #" + getChatId(curPos)).length ) {
+                var msg = chatJson.comments.at( curPos );
+                
+                // Add the next comment to the #chat pane:
+                let chatLine = $("<div>")
+                        .attr( "id", getChatId(curPos) )
+                        .attr( "data-pos", curPos )
+                        .addClass("chatline flex");
+    
+                let chatTime = renderChatTime( msg );
+                let chatBody = renderChatBody( msg );
+    
+                chatLine.append( chatTime );
+                chatLine.append( chatBody );
+    
+                if ( curPos == messagePos ) {
+                    chatLine.appendTo( "#chat" );
+                }
+                else {
+                    chatLine.insertBefore( "#" + getChatId(curPos+1) );
+                }
+                
+                chatNode.scrollTop = chatNode.scrollHeight;
+            }
+            curPos--;
+        }
+
+    }
   
   var inputNodeVideo = document.querySelector('#vidinput');
   var inputNodeChat = document.querySelector('#jsoninput');
