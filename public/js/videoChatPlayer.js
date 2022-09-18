@@ -34,15 +34,15 @@ Sample of one data element:
 */
 var enableStats = true;
 
+var emotesThirdParty = {};
+var emotesFirstParty = {};
+
 function localFileVideoPlayer() {
     var URL = window.URL || window.webkitURL;
 	var videoNode = document.querySelector('video');
 	var chatNode = document.querySelector('#chat');
 	var chatJson;
 
-    var emotesThirdParty = {};
-    var emotesFirstParty = {};
-    
     var currentChatPos = -1;
     var maxChatMessages = 150;
     
@@ -401,24 +401,70 @@ function pad( num, size ) {
 
 function renderChatBody( comment ) {
 
+    // comment.message.body;
+    let message = extractMessageFragments( comment );
+    
     let colorHex = comment.message.user_color;
     let styles = {"color": colorHex};
-
+    
     let player = $("<span>").addClass("commenter")
             .css( styles )
             .text( comment.commenter.display_name );
     let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
-    let message = $("<span>").addClass( "chatmessage" ).text( comment.message.body );
+  
     let chatBody = $("<div>").addClass("chatbody");
     chatBody.append( player );
     chatBody.append( messagePrefix );
     chatBody.append( message );
-
+    
     return chatBody;
 }
 
+function extractMessageFragments( comment ) {
+    
+    let message = $("<span>").addClass( "chatmessage" ); 
+            //.text( comment.message.body );
 
+    jQuery.each( comment.message.fragments, function( index, fragment ) {
+        
+        var altName = fragment.text;
+        if ( fragment.emoticon && fragment.emoticon.emoticon_id ) {
+            message.append(
+                makeEmoticon( fragment.emoticon.emoticon_id, altName ));
+        }
+        else {
+            message.append(
+                $('<span debug="extractMessageFragments">').text( altName ));
+        }
+        // else {
+        //     message.append(
+        //         $("<span> Error in extracting message fragments </span>")
+        //             .addClass("error")
+        //      );
+        // }
+    });
 
+    return message;
+}
+
+function makeEmoticon( emoticonId, altName ) {
+    var emote = emotesThirdParty[emoticonId];
+
+    if ( !emote ) {
+        emote = emotesFirstParty[emoticonId];
+    }
+
+    // Make the icon if we have an emote to work with:
+    if ( emote && emote.data ) {
+        var emoteImagePrefix = "data:image/png;base64,";
+
+        var img = $("<img>").attr( "title", altName )
+            .attr( "src", emoteImagePrefix + emote.data );
+        return img;
+    }
+
+    return $('<span debug="makeEmotiocon">').text( altName );
+}
 
 
 //	Custom progress bar
