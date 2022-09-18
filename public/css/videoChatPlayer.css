@@ -223,13 +223,23 @@ video {
 	font-weight: 400;
 	line-height: 20px;
 	overflow-x: hidden;
-	
-	scrollbar-width: none;
+	scrollbar-width: thin;
+	/* scrollbar-width: none; */
 }
-#chat:hover {
-    /* overflow-y: scroll; */
-    scrollbar-width: thin;
-    padding-right: 0;
+.cover-bar {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+    width: 8px;
+	height: calc(100% - 70px);
+	background-color:#18181b;
+	z-index: 999;
+	opacity: 100%;
+	animation: fadeInAnimationBar linear 0.1s;
+}
+.scroll-bar-wrap:hover .cover-bar {
+	opacity: 0%;
+	animation: fadeOutAnimationBar linear 0.1s;
 }
 
 input {

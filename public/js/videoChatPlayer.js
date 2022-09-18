@@ -44,7 +44,7 @@ function localFileVideoPlayer() {
     var emotesFirstParty = {};
     
     var currentChatPos = -1;
-    var maxChatMessages = 100;
+    var maxChatMessages = 150;
     
     
 
