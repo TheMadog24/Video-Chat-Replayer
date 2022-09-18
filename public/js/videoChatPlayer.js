@@ -458,7 +458,9 @@ function makeEmoticon( emoticonId, altName ) {
     if ( emote && emote.data ) {
         var emoteImagePrefix = "data:image/png;base64,";
 
+        var imageScaleClass = "chat-image-scale-" + emote.scale;
         var img = $("<img>").attr( "title", altName )
+            .addClass( imageScaleClass );
             .attr( "src", emoteImagePrefix + emote.data );
         return img;
     }
