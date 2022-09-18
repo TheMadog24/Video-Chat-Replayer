@@ -164,8 +164,8 @@ function localFileVideoPlayer() {
     var updateChat = function(event) {
 		if(chatJson == null) return;
 
-        $( "#message" ).fadeOut( "slow" );
-        
+        $( "#message" ).removeClass("animate").fadeOut( 5000, "linear" );
+
 		let currentTime = videoNode.currentTime;
  
         updateCountersProgressBar();

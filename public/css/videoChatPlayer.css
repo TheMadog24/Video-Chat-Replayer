@@ -186,10 +186,13 @@ video {
 	margin-left: 5px;
 	font-size: 14px;
 	background-color: green;
-	animation: fadeOutInfo ease 0.3s;
-	transition-delay:5s;
 }
 
+#message.animate {
+    animation: fadeOutInfo ease 0.3s;
+    transition-delay:5s;
+    
+}
 @keyframes fadeOutInfo {
     100% {
         opacity: 0.4;
