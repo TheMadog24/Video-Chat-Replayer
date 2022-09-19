@@ -304,24 +304,18 @@ function localFileVideoPlayer() {
   inputNodeChat.addEventListener('change', loadChat, false);
   videoNode.addEventListener('timeupdate', updateChat, false);
 
-//	Custom Control Bar Fade
+//	Custom Control Bar
 
-    // var eventPlayerHide = null;
-    // $("#videoPlayer").on("mousemove", function() {
-        // if ( eventPlayerHide ) {
-            // clearTimeout(eventPlayerHide);
-        // }
-        // $(".custom-controls").addClass("show-cursor").fadeIn( 300 );
-        // eventPlayerHide = setTimeout(() => {
-            // $(".custom-controls").fadeOut( 300, () => {
-              // $(this).removeClass("show-cursor");
-            // });
-        // }, 300);
-    // });
-	
+  // Draggable selector
+  $( function() {
+    $( ".barSelector" ).draggable({
+    	axis: "x",
+      containment: ".progress-bar"
+    });
+  } );
 	
 
-//	Custom Control Bar Fade
+//	Custom Control Bar
 
     $("#chat").on("click", ".chattime", function() {
         var timeSecond = $( this ).attr("data-time");

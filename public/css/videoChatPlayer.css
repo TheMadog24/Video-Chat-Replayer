@@ -51,52 +51,95 @@ video {
 .custom-controls {
 	position: absolute;
 	width:calc(100% - 341px);
-	height: 59px;
+	height: 65px;
 	background-color: green;
 	background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5));
 	bottom: 0;
 	left: 0;
     z-index: 999;
 }
-.progress-bar-container{
-	margin: 0px auto 0px auto;
-	width: 98%;
-	height: 9px;
+.progress-bar-container{	
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 20px;
 	cursor: pointer;
+	background-color: blue;
+	display: flex;
 }
 .progress-bar {
-	width: 100%;
-	height: 3px;
-	background-color: #626262;
-	border-radius: 100px;
-	opacity: 0.8;
+	margin:auto;
+	width: calc(100% - 40px);
+	height: 6px;
+	background-color: rgba(98, 98, 98, 0.8);
+	border-radius: 10px;
 }
 .progress-bar-container .progress-bar {
-	transition: height 0.3s ease;
+	transition: height 0.1s ease;
 }
 .progress-bar-container:hover .progress-bar {
 	margin: auto;
-	width: 100%;
-	height: 6px;
+	height: 8px;
 	padding: 0;
 	background-color: #626262;
-	border-radius: 2px;
-	opacity: 0.8;
-	transition: height 0.3s ease;
+	border-radius: 4px;
+	opacity: 100%;
+	transition: height 0.1s ease;
 }
-.bar {
-	/* margin: auto; */
-    margin-right: auto;
-	width: 50%;
-	height: 100%;
+
+.progress-bar-container:hover .barSelector {
+	float: right;
+	height: 18px;
+	width: 18px;
 	background-color: #ff0000;
-	opacity: 0.8;
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	border-radius: 50%;
+	margin-top: -6px;
+	margin-right: -10px;
+	-webkit-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1);
+}
+.progress-bar-container: .barSelector {
+	transition: fadeInAnimationBar 0.1s ease;
+}
+
+.progress-bar-container:hover .bar {
+	background-color: rgba(255, 0, 0, 1);
+}
+
+.barSelector {
+	height: 100%;
+	width: 2px;
+	background-color: white;
+	float: right;
+	transition:all 0.05s linear;
+}
+.progress-bar-container:hover .barSelector-Small {
+	display: none;
+}
+
+.bar {
+    margin-right: auto;
+	width: calc(0% + 1px);
+	height: 100%;
+	background-color: rgba(255, 0, 0, 0.8);
 	left: 0;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+.buttons-container{
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	height: 45px;
+	width: 100%;
+	background-color: orange;
 }
 
 .custom-controls .button {
-    margin: 3px 12px;
-    padding: 5px 12px;
+	display:inline-block;
 
     background: transparent;
     cursor: pointer;    
@@ -114,43 +157,71 @@ video {
 *    https://codepen.io/zhangzhuo/pen/LNGLOz
 */
 .custom-controls #playpause, .custom-controls #stop {
-	left: 15px;
-    width: 25px;
-    height: 25px;
+	margin: 8px 0 8px 15px;
+    width: 17px;
+    height: 17px;
     cursor: pointer;
 	padding: 6px;
-	margin: 0 15 auto 20px;
 }
 .play-button {
-    display: inline-block;
+	margin: 0px;
     position: absolute;
-    width: 25px;
-    height: 25px;
+    width: 17px;
+    height: 17px;
     background: #fff;
     transition: clip-path .3s ease;
-  }
+}
 .play-button-before {
     clip-path: polygon(0 0, 50% 25%, 50% 75%, 0% 100%);
-    background: #ffffff38;
+    background: #e5e5e5;
 }
 .play-button-after {
     clip-path: polygon(50% 25%, 100% 50%, 100% 50%, 50% 75%);
-    background: #ffffff38;
+    background: #e5e5e5;
 }
 #playpause.play:hover .play-button-before {
     background: #ffffff;
+	opacity: 100%;
 }
 #playpause.play:hover .play-button-after {
     background: #ffffff;
+	opacity: 100%;
 }
 #playpause.pause .play-button-before {
     clip-path: polygon(0 0, 30% 0, 30% 100%, 0% 100%);
     background: #ffffff;
+	opacity: 90%;
 }
 #playpause.pause .play-button-after{
     clip-path: polygon(70% 0, 100% 0, 100% 100%, 70% 100%);
     background: #ffffff;
+	opacity: 90%;
 }
+
+.time-container{
+	position: absolute;
+	left: 150px;
+	margin: 10px 0 10px 0px;
+	display: inline-block;
+	width: 100px;
+	height: 25px;
+}
+#volume{
+	position: absolute;
+	left: 55px;
+	margin: 10px 0 10px 0px;
+	display: inline-block;
+	width: 25px;
+	height: 25px;
+	color: white;
+	fill: #fff;
+	opacity: 90%;
+}
+.buttons-container svg#volume.button path{
+	margin: 20px 1px 1px 1px;
+}
+
+
 
 /* Custom Video Controls bar Ends */
 
@@ -352,6 +423,7 @@ input {
 }
 
 .video-time {
+	display: inline-block;
     margin: auto 0px;
     padding: 2px 2px;
 	text-align: center;
