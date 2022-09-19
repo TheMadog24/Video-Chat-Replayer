@@ -190,7 +190,8 @@ function localFileVideoPlayer() {
     function updateCountersProgressBar() {
 
         let currentTime = videoNode.currentTime;
-        let duration = chatJson.video.end;
+        let duration = videoNode.duration;
+        // let duration = chatJson.video.end;
         let percent = duration == 0 ? 0 : currentTime / duration * 100;
 
         // Update the counters and progress bar:
