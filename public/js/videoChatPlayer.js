@@ -304,6 +304,25 @@ function localFileVideoPlayer() {
   inputNodeChat.addEventListener('change', loadChat, false);
   videoNode.addEventListener('timeupdate', updateChat, false);
 
+//	Custom Control Bar Fade
+
+    // var eventPlayerHide = null;
+    // $("#videoPlayer").on("mousemove", function() {
+        // if ( eventPlayerHide ) {
+            // clearTimeout(eventPlayerHide);
+        // }
+        // $(".custom-controls").addClass("show-cursor").fadeIn( 300 );
+        // eventPlayerHide = setTimeout(() => {
+            // $(".custom-controls").fadeOut( 300, () => {
+              // $(this).removeClass("show-cursor");
+            // });
+        // }, 300);
+    // });
+	
+	
+
+//	Custom Control Bar Fade
+
     $("#chat").on("click", ".chattime", function() {
         var timeSecond = $( this ).attr("data-time");
         if ( timeSecond ) {
@@ -490,8 +509,6 @@ function makeUserBadges( comment ) {
     }
     return userBadges;
 }
-
-//	Custom progress bar
 
 
 

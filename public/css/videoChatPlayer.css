@@ -27,13 +27,12 @@ video {
 }
 .video-container .custom-controls {
 	animation: fadeOutAnimationBar ease 0.3s;
-	opacity: 40%;
 }
 
   
 @keyframes fadeInAnimationBar {
     0% {
-        opacity: 0.4;
+        opacity: 0;
     }
     100% {
         opacity: 1;
@@ -41,7 +40,7 @@ video {
 }
 @keyframes fadeOutAnimationBar {
     100% {
-        opacity: 0.4;
+        opacity: 0;
     }
     0% {
         opacity: 1;
@@ -52,25 +51,44 @@ video {
 .custom-controls {
 	position: absolute;
 	width:calc(100% - 341px);
-	height: 55px;
+	height: 59px;
 	background-color: green;
 	background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5));
 	bottom: 0;
 	left: 0;
     z-index: 999;
 }
+.progress-bar-container{
+	margin: 0px auto 0px auto;
+	width: 98%;
+	height: 9px;
+	cursor: pointer;
+}
 .progress-bar {
-	/* margin: auto; */
 	width: 100%;
-	height: 5px;
+	height: 3px;
 	background-color: #626262;
+	border-radius: 100px;
 	opacity: 0.8;
+}
+.progress-bar-container .progress-bar {
+	transition: height 0.3s ease;
+}
+.progress-bar-container:hover .progress-bar {
+	margin: auto;
+	width: 100%;
+	height: 6px;
+	padding: 0;
+	background-color: #626262;
+	border-radius: 2px;
+	opacity: 0.8;
+	transition: height 0.3s ease;
 }
 .bar {
 	/* margin: auto; */
     margin-right: auto;
-	width: 0;
-	height: 5px;
+	width: 50%;
+	height: 100%;
 	background-color: #ff0000;
 	opacity: 0.8;
 	left: 0;
@@ -81,20 +99,14 @@ video {
     padding: 5px 12px;
 
     background: transparent;
-    cursor: pointer;
-    
-    border: black solid 3px;
-    border-radius: 5px;
-    
+    cursor: pointer;    
     transition: 100ms all ease;
 }
 .custom-controls .button:hover {
-    border: black solid 5px;
-    padding: 3px 10px;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: 5px;
 }
 .custom-controls .button:selected {
-    border: black inset 5px;
-    padding: 3px 10px;
 }
 
 
@@ -102,27 +114,21 @@ video {
 *    https://codepen.io/zhangzhuo/pen/LNGLOz
 */
 .custom-controls #playpause, .custom-controls #stop {
-    display: inline-block;
+	left: 15px;
     width: 25px;
     height: 25px;
     cursor: pointer;
+	padding: 6px;
+	margin: 0 15 auto 20px;
 }
 .play-button {
     display: inline-block;
     position: absolute;
     width: 25px;
     height: 25px;
-    background: #ffffff;
+    background: #fff;
     transition: clip-path .3s ease;
-}
-.stop-button {
-    display: inline-block;
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    /* background: #FF0000; */
-    transition: clip-path .3s ease;
-}
+  }
 .play-button-before {
     clip-path: polygon(0 0, 50% 25%, 50% 75%, 0% 100%);
     background: #ffffff38;
@@ -132,11 +138,9 @@ video {
     background: #ffffff38;
 }
 #playpause.play:hover .play-button-before {
-    clip-path: polygon(0 0, 50% 25%, 50% 75%, 0% 100%) !important;
     background: #ffffff;
 }
 #playpause.play:hover .play-button-after {
-    clip-path: polygon(50% 25%, 100% 50%, 100% 50%, 50% 75%) !important;
     background: #ffffff;
 }
 #playpause.pause .play-button-before {
@@ -147,17 +151,10 @@ video {
     clip-path: polygon(70% 0, 100% 0, 100% 100%, 70% 100%);
     background: #ffffff;
 }
-.stop-button-before {
-    clip-path: polygon(20% 20%, 20% 80%, 80% 80%, 80% 20%);
-    background: #ff000038;
-}
-.stop-button-before:hover {
-    clip-path: polygon(10% 10%, 10% 90%, 90% 90%, 90% 10%);
-    background: #FF0000;
-  }
-
 
 /* Custom Video Controls bar Ends */
+
+
 #topBox {
 	width: 340px;
 	height:69px;
@@ -226,6 +223,29 @@ video {
 	scrollbar-width: thin;
 	/* scrollbar-width: none; */
 }
+
+
+/* width */
+#chat::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+#chat::-webkit-scrollbar-track {
+  background: #18181b; 
+}
+ 
+/* Handle */
+#chat::-webkit-scrollbar-thumb {
+  background: #727274;
+}
+
+/* Handle on hover */
+#chat::-webkit-scrollbar-thumb:hover {
+  background: #5f5f61; 
+}
+
+
 .cover-bar {
 	position: absolute;
 	bottom: 0;
@@ -235,12 +255,38 @@ video {
 	background-color:#18181b;
 	z-index: 999;
 	opacity: 100%;
-	animation: fadeInAnimationBar linear 0.1s;
+	visibility: visible;
+	animation-fill-mode: forwards;
+	animation: CoverFadeIn linear 0.1s;
 }
-.scroll-bar-wrap:hover .cover-bar {
-	opacity: 0%;
-	animation: fadeOutAnimationBar linear 0.1s;
+.scroll-bar-wrap:hover .cover-bar {	
+	animation-fill-mode: forwards;
+	animation: CoverFadeOut linear 0.1s;
+	visibility: hidden;
+	
 }
+
+@keyframes CoverFadeIn {
+    0% {
+        opacity: 0.4;
+    }
+    100% {
+        opacity: 1;
+     }
+}
+@keyframes CoverFadeOut { 
+    0% { 
+        opacity: 100%;
+		visibility: visible;
+    }
+    99% {
+        opacity: 1%;
+     }
+	100% {
+		visibility: hidden;
+	 }
+}
+
 
 input {
     width: 275px;
@@ -282,7 +328,7 @@ input {
 
 .chatbody {
     white-space: normal;
-    margin-right: 6px;
+	word-break: break-word;
 }
 
 .commenter {
@@ -306,12 +352,37 @@ input {
 }
 
 .video-time {
-    border: #000000 2px solid;
-    border-radius: 5px;
-    background-color: #333333;
+    margin: auto 0px;
+    padding: 2px 2px;
+	text-align: center;
+}
+#timeSeperator {
+}
 
-    margin: 3px 17px;
-    padding: 1px 13px;
-    height: 25px;
-    width: 100px;
+
+/* Play Button */
+
+.video-controls-container .controls button {
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0;
+  height: 30px;
+  width: 30px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: .85;
+  transition: opacity 150ms ease-in-out;
+}
+
+.video-controls-container .controls button:hover {
+  opacity: 1;
+}
+
+.video-container.paused .pause-icon {
+  display: none;
+}
+
+.video-container:not(.paused) .play-icon {
+  display: none;
 }
