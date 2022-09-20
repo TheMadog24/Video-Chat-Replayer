@@ -319,27 +319,8 @@ function localFileVideoPlayer() {
             var pOffset = $(".bar").offset().left;
             var uiOffset = ui.offset.left;
 
-            // To properly calculate adjFactor, uiOffset 
-            // has to be at it's max value, trim to about
-            // 5 decimal positions and add 0.00001:
-            // var adjFactor = width / (uiOffset - pOffset) + 0.00001;
-            var adjFactor = 1.01193;
-
-            if ( uiOffset < pOffset ) {
-                uiOffset = pOffset;
-            }
-
-            var offset = (uiOffset - pOffset);
-            var percent = offset / width * adjFactor;
+            setVideotime( width, pOffset, uiOffset );
             
-            let duration = videoNode.duration;
-            let currentTime = parseInt(Math.floor(duration * percent), 10);
-            if ( currentTime > duration ) {
-                currenttime = duration;
-            }
-            videoNode.currentTime = currentTime;
-            
-            updateCountersProgressBar();
         },
         start: function( event, ui ) {
             $(".bar .barSelector").hide();
@@ -348,8 +329,50 @@ function localFileVideoPlayer() {
             $(".bar .barSelector").show();
         }
     });
-  } );
+
+    $(".progress-bar").on("click", function( event ) {
+        var node = $(this);
+        var pagePostionLeft = event.pageX;
+        var nodePositionLeft = node.position().left;
+        var nodeOffsetLeft = node.offset().left;
+        
+        var width = $(".progress-bar").innerWidth();
+        var pOffset = $(".bar").offset().left;
+
+        var uiOffset = pagePostionLeft - nodePositionLeft - 
+                    nodeOffsetLeft + pOffset;
+
+        setVideotime( width, pOffset, uiOffset );
+
+    });
+
+  });
 	
+
+    function setVideotime( width, pOffset, uiOffset ) {
+                    
+        // To properly calculate adjFactor, uiOffset 
+        // has to be at it's max value, trim to about
+        // 5 decimal positions and add 0.00001:
+        // var adjFactor = width / (uiOffset - pOffset) + 0.00001;
+        var adjFactor = 1.01193;
+
+        if ( uiOffset < pOffset ) {
+            uiOffset = pOffset;
+        }
+
+        var offset = (uiOffset - pOffset);
+        var percent = offset / width * adjFactor;
+        
+        let duration = videoNode.duration;
+        let currentTime = parseInt(Math.floor(duration * percent), 10);
+        if ( currentTime > duration ) {
+            currenttime = duration;
+        }
+        videoNode.currentTime = currentTime;
+        
+        updateCountersProgressBar();
+    }
 
 //	Custom Control Bar
 
