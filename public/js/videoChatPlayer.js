@@ -45,7 +45,7 @@ var emotesFirstParty = {};
 function localFileVideoPlayer() {
     var URL = window.URL || window.webkitURL;
 	var videoNode = document.querySelector('video');
-	var chatNode = document.querySelector('#chat');
+	//var chatNode = document.querySelector('#chat');
 	var chatJson;
 
     var currentChatPos = -1;
@@ -292,11 +292,14 @@ function localFileVideoPlayer() {
                     chatLine.insertBefore( "#" + getChatId(curPos+1) );
                 }
                 
-                chatNode.scrollTop = chatNode.scrollHeight;
+                $("#chat").scrollTop( 10000 );
             }
             curPos--; 
         }
-
+        
+        setTimeout( () => {
+            $("#chat").scrollTop( 10000 );
+        }, 20);
     }
   
   var inputNodeVideo = document.querySelector('#vidinput');
