@@ -413,11 +413,21 @@ input {
 }
 
 .commenter {
+    vertical-align: top;
     font-weight: bolder;
 }
 
 .messagePrefix {
+    vertical-align: top;
     margin-right: 3px;
+}
+
+.chatmessage {
+    vertical-align: top;
+}
+.chatmessage span {
+    display: inline-block;
+    vertical-align: top;
 }
 
 .chat-image-scale-1 {
