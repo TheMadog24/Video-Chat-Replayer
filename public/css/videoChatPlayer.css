@@ -205,6 +205,8 @@ video {
 	display: inline-block;
 	width: 100px;
 	height: 25px;
+	top: 0;
+	width: 200px;
 }
 #volume{
 	position: absolute;
