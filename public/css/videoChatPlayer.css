@@ -212,17 +212,17 @@ video {
 #volume{
 	position: absolute;
 	left: 55px;
-	margin: 10px 0 10px 0px;
+	margin: 8px 0 8px 0px;
 	display: inline-block;
-	width: 25px;
-	height: 25px;
+	width: 29px;
+	height: 29px;
 	color: white;
 	fill: #fff;
 	opacity: 90%;
 }
 #volume svg {
-    margin-top: -6px;
-    margin-left: -5px;
+    margin-top: -4px;
+    margin-left: -3px;
 }
 
 .buttons-container svg#volume.button path{
