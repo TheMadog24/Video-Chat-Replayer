@@ -319,17 +319,26 @@ function localFileVideoPlayer() {
             var pOffset = $(".bar").offset().left;
             var uiOffset = ui.offset.left;
 
+            // To properly calculate adjFactor, uiOffset 
+            // has to be at it's max value, trim to about
+            // 5 decimal positions and add 0.00001:
+            // var adjFactor = width / (uiOffset - pOffset) + 0.00001;
+            var adjFactor = 1.01193;
+
             if ( uiOffset < pOffset ) {
                 uiOffset = pOffset;
             }
 
             var offset = (uiOffset - pOffset);
-            var percent = offset / width;
-
+            var percent = offset / width * adjFactor;
+            
             let duration = videoNode.duration;
             let currentTime = parseInt(Math.floor(duration * percent), 10);
+            if ( currentTime > duration ) {
+                currenttime = duration;
+            }
             videoNode.currentTime = currentTime;
-
+            
             updateCountersProgressBar();
         },
         start: function( event, ui ) {
