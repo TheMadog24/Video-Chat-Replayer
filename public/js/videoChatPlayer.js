@@ -294,7 +294,7 @@ function localFileVideoPlayer() {
                 
                 chatNode.scrollTop = chatNode.scrollHeight;
             }
-            curPos--;
+            curPos--; 
         }
 
     }
@@ -311,7 +311,33 @@ function localFileVideoPlayer() {
   $( function() {
     $( ".barSelector" ).draggable({
     	axis: "x",
-      containment: ".progress-bar"
+        containment: ".progress-bar",
+        helper: "clone",
+        appendTo: ".progress-bar",
+        drag: function( event, ui ) {
+            var width = $(".progress-bar").innerWidth();
+            var pOffset = $(".bar").offset().left;
+            var uiOffset = ui.offset.left;
+
+            if ( uiOffset < pOffset ) {
+                uiOffset = pOffset;
+            }
+
+            var offset = (uiOffset - pOffset);
+            var percent = offset / width;
+
+            let duration = videoNode.duration;
+            let currentTime = parseInt(Math.floor(duration * percent), 10);
+            videoNode.currentTime = currentTime;
+
+            updateCountersProgressBar();
+        },
+        start: function( event, ui ) {
+            $(".bar .barSelector").hide();
+        },
+        stop: function( event, ui ) {
+            $(".bar .barSelector").show();
+        }
     });
   } );
 	
