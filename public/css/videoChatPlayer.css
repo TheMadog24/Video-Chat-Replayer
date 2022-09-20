@@ -208,6 +208,7 @@ video {
 	top: 0;
 	width: 200px;
 }
+
 #volume{
 	position: absolute;
 	left: 55px;
@@ -219,6 +220,11 @@ video {
 	fill: #fff;
 	opacity: 90%;
 }
+#volume svg {
+    margin-top: -6px;
+    margin-left: -5px;
+}
+
 .buttons-container svg#volume.button path{
 	margin: 20px 1px 1px 1px;
 }
