@@ -115,6 +115,17 @@ video {
 	float: right;
 	transition:all 0.05s linear;
 }
+
+.progress-bar-container:hover .timeSeekerBar {
+	height: 100%;
+	width: 2px;
+	background-color: #9b9b9b;
+	float: right;
+	right: 250px;
+}
+.timeSeekerBar {
+}
+
 .progress-bar-container:hover .barSelector-Small {
 	display: none;
 }
@@ -200,7 +211,7 @@ video {
 
 .time-container{
 	position: absolute;
-	left: 150px;
+	left: 225px;
 	margin: 10px 0 10px 0px;
 	display: inline-block;
 	width: 100px;
@@ -209,6 +220,8 @@ video {
 	width: 200px;
 }
 
+
+/* Volume Button */
 #volume{
 	position: absolute;
 	left: 55px;
@@ -227,9 +240,67 @@ video {
     margin-left: -3px;
 }
 
+.Volume-speaker-muted{
+	display: none;
+}
+.Volume-animated-speaker-half{
+	display: none;
+}
+
 .buttons-container svg#volume.button path{
 	margin: 20px 1px 1px 1px;
 }
+
+
+/* Volume Slider */
+
+.slider-container {
+	position: absolute;
+	left: 80px;
+	display: inline-block;
+	cursor: pointer;
+	height: 45px;
+	width: 150px;
+	margin-left: 10px
+}
+
+
+#slider {
+	position: relative;
+	display: block;
+	margin: 20px 0 20px 0;
+	width: 100px;
+	height: 5px;
+	background: #EEEEEE;
+	clear: both;
+}
+#fill {
+	pointer-events: none;
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	background: #CCCCCC;
+	width: 100%;
+	height: 100%;
+}
+#bar {
+	pointer-events: none;
+	z-index: 2;
+	position: absolute;
+	right: 0;
+	top: -8px;
+	display: block;
+	width: 5px;
+	height: 20px;
+	border: 1px solid #BBBBBB;
+	background: #FFFFFF;
+}
+
+
+
+
 
 
 

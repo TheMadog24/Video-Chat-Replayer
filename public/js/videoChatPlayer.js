@@ -310,6 +310,99 @@ function localFileVideoPlayer() {
 
 //	Custom Control Bar
 
+//Mute Button Function
+
+$('#volume').click(function(){
+    if( $("#videoPlayer").prop('muted') ) {
+          $("#videoPlayer").prop('muted', false); //unmuted
+          $(".Volume-animated-speaker").show();
+		  $(".Volume-animated-speaker-half").hide();
+          $(".Volume-speaker-muted").hide();
+		  videoNode.volume = (1);
+		  newPercent = 100; 
+		  moveSliderBar($bar, $fill, newPercent, barWidth);
+			videoNode.volume = (newPercent / 100);
+          //Set Volume Button icon
+      // or toggle class, style it with a volume icon sprite, change background-position
+    } else {
+      $("#videoPlayer").prop('muted', true); //muted
+          $(".Volume-animated-speaker").hide();
+		  $(".Volume-animated-speaker-half").hide();
+          $(".Volume-speaker-muted").show();
+		  videoNode.volume = (0);
+		  newPercent = 0;
+		  moveSliderBar($bar, $fill, newPercent, barWidth);
+			videoNode.volume = (newPercent / 100);
+    }
+});
+
+
+//Volume Slider
+$('#slider').on('mousedown', function(e) {
+	if(e.which == 1) {
+		var $bar = $('#bar');
+		var $fill = $('#fill');
+		var barWidth = $bar.outerWidth();
+		var sliderWidth = $(this).outerWidth();
+		var sliderX = $(this).offset().left;
+		var downX = e.clientX - sliderX; 
+		var multiplier = 100 / sliderWidth;
+		var curPercent = downX * multiplier;
+		moveSliderBar($bar, $fill, curPercent, barWidth);
+		$(window).on('mousemove.slider', function(e) {
+			var diffX = (e.clientX - sliderX) - downX;
+			var newPercent = curPercent + (diffX * multiplier);
+			if(newPercent <= 0) {
+				newPercent = 0;
+			}
+			if (newPercent <= 50){
+				$(".Volume-animated-speaker-half").show();
+				$(".Volume-animated-speaker").hide();
+				$(".Volume-speaker-muted").hide();				
+			}
+			if (newPercent > 50){
+				$(".Volume-animated-speaker-half").hide();
+				$(".Volume-animated-speaker").show();
+				$(".Volume-speaker-muted").hide();				
+			}
+			if (newPercent <= 0){
+				$(".Volume-animated-speaker-half").hide();
+				$(".Volume-animated-speaker").hide();
+				$(".Volume-speaker-muted").show();
+				$("#videoPlayer").prop('muted', true)
+			}
+			if (newPercent > 0 && newPercent < 50){
+				$(".Volume-animated-speaker-half").show();
+				$(".Volume-animated-speaker").hide();
+				$(".Volume-speaker-muted").hide();
+				$("#videoPlayer").prop('muted', false)
+			}
+			if(newPercent >= 100) {
+				newPercent = 100;
+			}
+			moveSliderBar($bar, $fill, newPercent, barWidth);
+			videoNode.volume = (newPercent / 100); 
+		})
+		.on('mouseup.slider', function(e) {
+			$(window).off('mousemove.slider mouseup.slider');
+		});
+	}
+});
+
+//Moves slider bar.
+function moveSliderBar($bar, $fill, percent, barWidth) {
+	$bar.css('left', 'calc('+percent+'% - '+(barWidth / 2)+'px)');
+	$fill.css('width', 'calc('+percent+'% - '+(barWidth / 2)+'px)');
+}
+
+
+
+
+//	Custom Control Bar End
+
+
+
+
   // Draggable selector
   $( function() {
     $( ".barSelector" ).draggable({
