@@ -310,6 +310,15 @@ function localFileVideoPlayer() {
 
 //	Custom Control Bar
 
+
+
+// Preview Start
+
+
+
+// Preview End
+
+
 //Mute Button Function
 
 $('#volume').click(function(){
@@ -395,11 +404,57 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
 	$fill.css('width', 'calc('+percent+'% - '+(barWidth / 2)+'px)');
 }
 
+// Custom Player Overlay Start
+	//Click video to Pause/Play
+	$("#videoPlayer").on("click", function() {
+		var isPlay = $(".custom-controls #playpause").hasClass("play");
 
+        $(".custom-controls #playpause").toggleClass("play pause");
+
+        if ( isPlay ) {
+            videoNode.play();
+            $("#message").text("");
+        }
+        else {
+            videoNode.pause();
+        }
+	});
+
+
+	//Shows Overlay on Pause
+	videoNode.onpause = function() {
+		$("#video-PausePlay-container").fadeIn(100);
+	}; 
+	//Hides Overlay on Play
+	videoNode.onplay = function() {
+		$("#video-PausePlay-container").fadeOut(100);
+		$(".custom-controls").fadeOut(500)
+	}; 
+	//Clicking on the overlay Plays the video and Hides the Overlay
+	$("#video-PausePlay-container").on("click", function() {
+		$("#video-PausePlay-container").fadeIn(100);
+		var isPlay = $(".custom-controls #playpause").hasClass("play");
+		$(".custom-controls #playpause").toggleClass("play pause");
+		videoNode.play();
+	});
+// Custom Player Overlay Ends
+
+    var eventPlayerHide = null;
+    $("#videoPlayer").on("mousemove", function() {
+        if ( eventPlayerHide ) {
+            clearTimeout(eventPlayerHide);
+			$(".custom-controls").fadeIn(100);
+        }
+        $("#videoPlayer").addClass("show-cursor").fadeIn( 100 );
+        eventPlayerHide = setTimeout(() => {
+            $(".custom-controls").fadeOut( 500, () => {
+              $("#videoPlayer").removeClass("show-cursor");
+            });
+        }, 5000);
+    });
 
 
 //	Custom Control Bar End
-
 
 
 
@@ -470,7 +525,10 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
         updateCountersProgressBar();
     }
 
-//	Custom Control Bar
+
+
+
+
 
     $("#chat").on("click", ".chattime", function() {
         var timeSecond = $( this ).attr("data-time");

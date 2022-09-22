@@ -18,6 +18,7 @@ video {
 	position: absolute;
     top: 0;
     left: 0;
+	cursor: none;
 }
 
 
@@ -26,6 +27,8 @@ video {
 	animation: fadeInAnimationBar ease 0.3s;
 }
 .video-container .custom-controls {
+	animation-delay: 3s;
+	opacity: 0%;
 	animation: fadeOutAnimationBar ease 0.3s;
 }
 
@@ -48,6 +51,9 @@ video {
 }
 
 /* Custom Video Controls bar */
+
+
+
 .custom-controls {
 	position: absolute;
 	width:calc(100% - 341px);
@@ -58,6 +64,11 @@ video {
 	left: 0;
     z-index: 999;
 }
+
+#videoPlayer.show-cursor {
+    cursor: auto;
+}
+
 .progress-bar-container{	
 	top: 0;
 	left: 0;
@@ -167,6 +178,39 @@ video {
 /* Example using css transitions for button icons:
 *    https://codepen.io/zhangzhuo/pen/LNGLOz
 */
+
+#video-PausePlay-container{
+	width:calc(100% - 341px);
+	height: calc(100% - 65px);
+	position: absolute;
+    top: 0;
+    left: 0;
+	z-index: 98;
+	display: flex;
+	align-items: center;
+}
+
+.video-PausePlay-circle{
+	margin: auto;
+	width: 100px;
+	height: 100px;
+	padding: 50px;
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 1);
+	border-radius: 100%;
+	z-index: 96;
+	cursor: pointer;
+}
+.video-PausePlay{
+	margin-left: 10px;
+	width: 100px;
+	height: 100px;	
+	clip-path: polygon(0px 0px, 100% 50%, 0% 100%);
+    background: #e5e5e5;
+	z-index: 97;
+}
+
+
 .custom-controls #playpause, .custom-controls #stop {
 	margin: 8px 0 8px 15px;
     width: 17px;
@@ -221,7 +265,38 @@ video {
 }
 
 
+/* Preview Start */
+
+#previewBox{
+	width: 180px;
+	height: 100px;
+	position: absolute;
+	background-color: teal;
+	border: 1px solid #000000;
+	margin-top: -105px;
+}
+
+#imagePreview{
+	width: 180px;
+	height: 80px;
+	background-color:#a970ff;
+}
+
+#timePreview{
+	height: 16px;
+	width: 100%;
+	font-size: 14px;
+	display: inline-block;
+    margin: auto;
+    padding: 2px 0;
+	text-align: center;
+}
+
+/* Preview Ends */
+
 /* Volume Button */
+
+
 #volume{
 	position: absolute;
 	left: 55px;
