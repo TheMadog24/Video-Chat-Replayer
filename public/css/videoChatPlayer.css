@@ -292,7 +292,7 @@ video {
     width: 340px;
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
-    height: calc(100% - 70px);
+    height: calc(100% - 75px);
 	overflow-y: auto;
 	background-color:#18181b;
  	font-family: "Inter";
@@ -303,6 +303,7 @@ video {
 	overflow-x: hidden;
 	scrollbar-width: thin;
 	/* scrollbar-width: none; */
+	padding-bottom: 5px;
 }
 
 
@@ -400,11 +401,18 @@ input {
 }
 
 .chattime {
-    margin: 0 10px 0 7px;
+    margin: 0 10px 0 10px;
     vertical-align: top;
 
     font-size: 12px;
     font-weight: 400;
+}
+
+.chattime:hover {
+    margin: 0 7px 0 7px;
+    background-color: #464649;
+	padding: 0 3px 0 3px;
+	cursor: pointer;
 }
 
 .chatbody {
