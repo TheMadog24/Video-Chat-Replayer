@@ -454,6 +454,68 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
     });
 
 
+
+
+//PreviewBox Follows Mouse Xaxis
+var innerDiv = $('#previewBox');
+var outerDiv = $('#videoPlayer');
+var outDim = outerDiv.offset();
+outDim.right = (outDim.left + outerDiv.width());
+$(document).on('mousemove', function(e) {
+  var x = (e.clientX) - 90;
+  var x_allowed = x >= outDim.left && x <= (outDim.right - innerDiv.width());
+  if (x_allowed) {
+    innerDiv.css({
+      left: x + 'px'
+    });
+  } else {
+    //fine tune tweaks
+    if (x >= outDim.left) {
+      innerDiv.css({
+        left: outDim.right - innerDiv.width() + 'px',
+      });
+    }
+    if (x <= (outDim.right - innerDiv.width())) {
+      innerDiv.css({
+        left: outDim.left + 'px',
+      });
+    }
+  }
+});
+
+//barSelector Follows Mouse Xaxis (BROKEN)
+var innerDivbar = $('.timeSeekerBar');
+var outerDivbar = $('.progress-bar');
+var outDimbar = outerDiv.offset();
+outDim.right = (outDim.left + outerDiv.width());
+$(document).on('mousemove', function(e) {
+  var xbar = (e.clientX);
+  var xbar_allowed = x >= outDimbar.left && x <= (outDimbar.right - innerDivbar.width());
+  if (x_allowed) {
+    innerDivbar.css({
+      left: x + 'px'
+    });
+  } else {
+    //fine tune tweaks
+    if (x >= outDimbar.left) {
+      innerDivbar.css({
+        left: outDimbar.right - innerDivbar.width() + 'px',
+      });
+    }
+    if (x <= (outDimbar.right - innerDivbar.width())) {
+      innerDivbar.css({
+        left: outDimbar.left + 'px',
+      });
+    }
+  }
+});
+
+
+
+
+
+
+
 //	Custom Control Bar End
 
 

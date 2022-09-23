@@ -78,16 +78,7 @@ video {
 	/* background-color: blue; */
 	display: flex;
 }
-.progress-bar-container:hover ~ #previewBox{
-	opacity: 100%;
-	z-index: 999;
-	animation: fadeInAnimationBar ease 0.2s;
-}
-.progress-bar-container ~ #previewBox{
-	opacity: 0%;
-	z-index: 999;
-	animation: fadeOutAnimationBar ease 0.1s;
-}
+
 .progress-bar {
 	margin:auto;
 	width: calc(100% - 40px);
@@ -140,11 +131,11 @@ video {
 .progress-bar-container:hover .timeSeekerBar {
 	height: 100%;
 	width: 2px;
-	background-color: #9b9b9b;
+	background-color: green;
 	float: right;
-	right: 250px;
 }
 .timeSeekerBar {
+	z-index: 999;
 }
 
 .progress-bar-container:hover .barSelector-Small {
@@ -285,6 +276,16 @@ video {
 	border: 1px solid #000000;
 	margin-top: -125px;
 	opacity: 0%;
+}
+.progress-bar-container:hover ~ #previewBox{
+	opacity: 100%;
+	z-index: 999;
+	animation: fadeInAnimationBar ease 0.2s;
+}
+.progress-bar-container ~ #previewBox{
+	opacity: 0%;
+	z-index: 999;
+	animation: fadeOutAnimationBar ease 0.1s;
 }
 
 #imagePreview{
