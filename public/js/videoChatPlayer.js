@@ -321,33 +321,34 @@ function localFileVideoPlayer() {
 
 //Mute Button Function
 
+var savedVol = 100
+
 $('#volume').click(function(){
     if( $("#videoPlayer").prop('muted') ) {
-          $("#videoPlayer").prop('muted', false); //unmuted
+          $("#videoPlayer").prop('muted', false); //unmute
           $(".Volume-animated-speaker").show();
 		  $(".Volume-animated-speaker-half").hide();
           $(".Volume-speaker-muted").hide();
-		  videoNode.volume = (1);
-		  newPercent = 100; 
-		  moveSliderBar($bar, $fill, newPercent, barWidth);
-			videoNode.volume = (newPercent / 100);
+		  console.log(savedVol)
+		  videoNode.volume = (savedVol / 100);
+		  $('#bar').css('left', 'calc('+savedVol+'% - 9.5px)');
+		  $('#fill').css('width', 'calc('+savedVol+'% - 9.5px)');
           //Set Volume Button icon
       // or toggle class, style it with a volume icon sprite, change background-position
     } else {
-      $("#videoPlayer").prop('muted', true); //muted
+      $("#videoPlayer").prop('muted', true); //mute
           $(".Volume-animated-speaker").hide();
 		  $(".Volume-animated-speaker-half").hide();
           $(".Volume-speaker-muted").show();
-		  videoNode.volume = (0);
-		  newPercent = 0;
-		  moveSliderBar($bar, $fill, newPercent, barWidth);
-			videoNode.volume = (newPercent / 100);
+		  videoNode.volume = 0;
+		  $('#bar').css('left', 'calc(0% - 9.5px)');
+		  $('#fill').css('width', 'calc(0% - 9.5px)');
     }
 });
 
 
 //Volume Slider
-$('#slider').on('mousedown', function(e) {
+$('.slider-container').on('mousedown', function(e) {
 	if(e.which == 1) {
 		var $bar = $('#bar');
 		var $fill = $('#fill');
@@ -358,7 +359,7 @@ $('#slider').on('mousedown', function(e) {
 		var multiplier = 100 / sliderWidth;
 		var curPercent = downX * multiplier;
 		moveSliderBar($bar, $fill, curPercent, barWidth);
-		$(window).on('mousemove.slider', function(e) {
+		$(window).on('mousemove.slider-container', function(e) {
 			var diffX = (e.clientX - sliderX) - downX;
 			var newPercent = curPercent + (diffX * multiplier);
 			if(newPercent <= 0) {
@@ -391,9 +392,10 @@ $('#slider').on('mousedown', function(e) {
 			}
 			moveSliderBar($bar, $fill, newPercent, barWidth);
 			videoNode.volume = (newPercent / 100); 
+			savedVol = newPercent;
 		})
-		.on('mouseup.slider', function(e) {
-			$(window).off('mousemove.slider mouseup.slider');
+		.on('mouseup.slider-container', function(e) {
+			$(window).off('mousemove.slider-container mouseup.slider-container');
 		});
 	}
 });
@@ -403,6 +405,9 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
 	$bar.css('left', 'calc('+percent+'% - '+(barWidth / 2)+'px)');
 	$fill.css('width', 'calc('+percent+'% - '+(barWidth / 2)+'px)');
 }
+
+
+
 
 // Custom Player Overlay Start
 	//Click video to Pause/Play
@@ -455,6 +460,36 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
 
 
 
+//Re-grab Paramiters on Window Resize
+$(window).on('resize', function(){
+	//PreviewBox Follows Mouse Xaxis
+	var innerDiv = $('#previewBox');
+	var outerDiv = $('#videoPlayer');
+	var outDim = outerDiv.offset();
+	outDim.right = (outDim.left + outerDiv.width());
+	$(document).on('mousemove', function(e) {
+		var x = (e.clientX) - 90;
+		var x_allowed = x >= outDim.left && x <= (outDim.right - innerDiv.width());
+		if (x_allowed) {
+		innerDiv.css({
+		left: x + 'px'
+	});
+		} else {
+		//fine tune tweaks
+		if (x >= outDim.left) {
+		innerDiv.css({
+        left: outDim.right - innerDiv.width() + 'px',
+		});
+		}
+		if (x <= (outDim.right - innerDiv.width())) {
+		innerDiv.css({
+		left: outDim.left + 'px',
+		});
+		}
+		}
+	});
+});
+
 
 //PreviewBox Follows Mouse Xaxis
 var innerDiv = $('#previewBox');
@@ -486,29 +521,39 @@ $(document).on('mousemove', function(e) {
 //barSelector Follows Mouse Xaxis (BROKEN)
 var innerDivbar = $('.timeSeekerBar');
 var outerDivbar = $('.progress-bar');
-var outDimbar = outerDiv.offset();
-outDim.right = (outDim.left + outerDiv.width());
+var outDimbar = outerDivbar.offset();
+outDimbar.right = (outDimbar.left + outerDivbar.width());
 $(document).on('mousemove', function(e) {
   var xbar = (e.clientX);
-  var xbar_allowed = x >= outDimbar.left && x <= (outDimbar.right - innerDivbar.width());
-  if (x_allowed) {
+  var xbar_allowed = xbar >= outDimbar.left && xbar <= (outDimbar.right - innerDivbar.width());
+  if (xbar_allowed) {
     innerDivbar.css({
-      left: x + 'px'
+      left: xbar + 'px'
     });
   } else {
     //fine tune tweaks
-    if (x >= outDimbar.left) {
+    if (xbar >= outDimbar.left) {
       innerDivbar.css({
         left: outDimbar.right - innerDivbar.width() + 'px',
       });
     }
-    if (x <= (outDimbar.right - innerDivbar.width())) {
+    if (xbar <= (outDimbar.right - innerDivbar.width())) {
       innerDivbar.css({
         left: outDimbar.left + 'px',
       });
     }
   }
 });
+
+
+
+// Show current Video Time On Bar Hover
+
+
+
+
+
+
 
 
 

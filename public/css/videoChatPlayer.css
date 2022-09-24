@@ -158,7 +158,7 @@ video {
 	position: absolute;
 	height: 45px;
 	width: 100%;
-	/* background-color: orange; */
+	/* background-color: orange;  */
 }
 
 .custom-controls .button {
@@ -323,9 +323,10 @@ video {
 #volume svg {	
 	width: 29px;
 	height: 29px;
-    margin-top: -4px;
+    margin-top: -3.5px;
     margin-left: -3px;
 }
+
 
 .Volume-speaker-muted{
 	display: none;
@@ -334,9 +335,7 @@ video {
 	display: none;
 }
 
-.buttons-container svg#volume.button path{
-	margin: 20px 1px 1px 1px;
-}
+
 
 
 /* Volume Slider */
@@ -346,19 +345,19 @@ video {
 	left: 80px;
 	display: inline-block;
 	cursor: pointer;
-	height: 45px;
-	width: 150px;
-	margin-left: 10px
+	height: 20px;
+	width: 100px;
+	margin: 12.5px 10px 12.5px 20px;
 }
 
 
 #slider {
 	position: relative;
 	display: block;
-	margin: 20px 0 20px 0;
+	margin: 7.5px 0 7.5px 0;
 	width: 100px;
 	height: 5px;
-	background: #EEEEEE;
+	background: rgb(255, 255, 255, 0.25);
 	clear: both;
 }
 #fill {
@@ -368,7 +367,7 @@ video {
 	top: 0;
 	left: 0;
 	display: block;
-	background: #CCCCCC;
+	background: #ffffff;
 	width: 100%;
 	height: 100%;
 }
@@ -376,13 +375,13 @@ video {
 	pointer-events: none;
 	z-index: 2;
 	position: absolute;
-	right: 0;
-	top: -8px;
+	right: -10px;
+	top: -7px;
 	display: block;
-	width: 5px;
-	height: 20px;
-	border: 1px solid #BBBBBB;
-	background: #FFFFFF;
+	width: 19px;
+	height: 19px;
+	background: #ffffff;
+	border-radius: 100%;
 }
 
 
