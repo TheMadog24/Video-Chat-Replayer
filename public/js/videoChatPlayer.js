@@ -346,8 +346,7 @@ $('#volume').click(function(){
 });
 
 
-//Volume Slider
-var newPercent = 100
+//Volume Slider Starts
 $('.slider-container').on('mousedown', function(e) {
 	if(e.which == 1) {
 		var $bar = $('#bar');
@@ -362,50 +361,57 @@ $('.slider-container').on('mousedown', function(e) {
 		$(window).on('mousemove.slider-container', function(e) {
 			var diffX = (e.clientX - sliderX) - downX;
 			var newPercent = curPercent + (diffX * multiplier);
-			if(newPercent <= 0) {
-				newPercent = 0;
-			}
-			if (newPercent <= 50){
-				$(".Volume-animated-speaker-half").show();
-				$(".Volume-animated-speaker").hide();
-				$(".Volume-speaker-muted").hide();				
-			}
-			if (newPercent > 50){
-				$(".Volume-animated-speaker-half").hide();
-				$(".Volume-animated-speaker").show();
-				$(".Volume-speaker-muted").hide();				
-			}
-			if (newPercent <= 0){
-				$(".Volume-animated-speaker-half").hide();
-				$(".Volume-animated-speaker").hide();
-				$(".Volume-speaker-muted").show();
-				$("#videoPlayer").prop('muted', true)
-			}
-			if (newPercent > 0 && newPercent < 50){
-				$(".Volume-animated-speaker-half").show();
-				$(".Volume-animated-speaker").hide();
-				$(".Volume-speaker-muted").hide();
-				$("#videoPlayer").prop('muted', false)
-			}
-			if(newPercent >= 100) {
-				newPercent = 100;
-			}
+
 			moveSliderBar($bar, $fill, newPercent, barWidth);
-			videoNode.volume = (newPercent / 100); 
-			savedVol = newPercent;
+/* 			videoNode.volume = (newPercent / 100); 
+			savedVol = newPercent; */
 		})
 		.on('mouseup.slider-container', function(e) {
 			$(window).off('mousemove.slider-container mouseup.slider-container');
+      
 		});
 	}
 });
 
+
+
 //Moves slider bar.
 function moveSliderBar($bar, $fill, percent, barWidth) {
+
+  if(percent <= 0) {
+    percent = 0;
+    $(".Volume-animated-speaker-half").hide();
+    $(".Volume-animated-speaker").hide();
+    $(".Volume-speaker-muted").show();
+    $("#videoPlayer").prop('muted', true)
+  }
+  else if (percent <= 50){
+    $(".Volume-animated-speaker-half").show();
+    $(".Volume-animated-speaker").hide();
+    $(".Volume-speaker-muted").hide();
+    $("#videoPlayer").prop('muted', false)
+  }
+  else if (percent > 0 && percent < 50){
+    $(".Volume-animated-speaker-half").show();
+    $(".Volume-animated-speaker").hide();
+    $(".Volume-speaker-muted").hide();
+    $("#videoPlayer").prop('muted', false)
+  }
+  else {
+    $(".Volume-animated-speaker-half").hide();
+    $(".Volume-animated-speaker").show();
+    $(".Volume-speaker-muted").hide();
+    if(percent > 100) {
+      percent = 100;
+    }
+  }
+
 	$bar.css('left', 'calc('+percent+'% - '+(barWidth / 2)+'px)');
 	$fill.css('width', 'calc('+percent+'% - '+(barWidth / 2)+'px)');
+  videoNode.volume = (percent / 100); 
+	savedVol = percent;
 }
-
+//Volume Slider Ends
 
 
 
