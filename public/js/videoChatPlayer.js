@@ -640,7 +640,57 @@ function vidCtrl(e) {
 
 
 
+// Attmepting to make the progressbar smooth
+// $(".progress-bar").on('mousedown', function(e) {
+		// function setup( event, ui ) {
+		// var width = $(".progress-bar").innerWidth();
+            // var pOffset = $(".bar").offset().left;
+            // var uiOffset = ui.offset.left;
 
+            // setVideotime( width, pOffset, uiOffset );
+        // };
+		
+		// var node = $(this);
+        // var pagePostionLeft = event.pageX;
+        // var nodePositionLeft = node.position().left;
+        // var nodeOffsetLeft = node.offset().left;
+        
+        // var width = $(".progress-bar").innerWidth();
+        // var pOffset = $(".bar").offset().left;
+
+        // var uiOffset = pagePostionLeft - nodePositionLeft - 
+                    // nodeOffsetLeft + pOffset;
+
+        // setVideotime( width, pOffset, uiOffset );
+	// if(e.which == 1) {
+		// var $bar = $('.barSelector');
+		// var $fill = $('.bar');
+		// var barWidth = $bar.outerWidth();
+		// var sliderWidth = $(this).outerWidth();
+		// var sliderX = $(this).offset().left;
+		// var downX = e.clientX - sliderX; 
+		// var multiplier = 100 / sliderWidth;
+		// var curVidPercent = downX * multiplier;
+		// moveVidBar($bar, $fill, curVidPercent, barWidth);
+		// setVideotime()
+		// $(window).on('mousemove.progress-bar-container', function(e) {
+			// var diffX = (e.clientX - sliderX) - downX;
+			// var newVidPercent = curVidPercent + (diffX * multiplier);
+
+			// moveVidBar($bar, $fill, newVidPercent, barWidth);
+		// })
+		// .on('mouseup.progress-bar-container', function(e) {
+			// $(window).off('mousemove.progress-bar-container mouseup.progress-bar-container');
+      
+		// })
+	// }
+// });
+
+
+// function moveVidBar($bar, $fill, percent, barWidth) {
+	// $bar.css('left', 'calc('+percent+'% - '+((barWidth / 2)-9)+'px)');
+	// $fill.css('width', 'calc('+percent+'% - '+((barWidth / 2)-9)+'px)');
+// }
 
 
 
