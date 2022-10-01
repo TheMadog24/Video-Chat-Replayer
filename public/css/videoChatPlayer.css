@@ -128,15 +128,25 @@ video {
 	transition:all 0.05s linear;
 }
 
-.progress-bar-container:hover .timeSeekerBar {
-	height: 100%;
-	width: 2px;
-	background-color: green;
-	float: right;
-}
+
 .timeSeekerBar {
-	z-index: 999;
+	width: 2px;
+	height: 8px;
+	position: absolute;
+	background-color: purple;
+	opacity: 0%;
 }
+.progress-bar-container:hover .timeSeekerBar {
+	opacity: 100%;
+	z-index: 999;
+	animation: fadeInAnimationBar ease 0.2s;
+}
+.progress-bar-container .timeSeekerBar {
+	opacity: 0%;
+	z-index: 999;
+	animation: fadeOutAnimationBar ease 0.1s;
+}
+
 
 .progress-bar-container:hover .barSelector-Small {
 	display: none;

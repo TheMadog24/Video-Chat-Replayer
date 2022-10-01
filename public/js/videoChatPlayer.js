@@ -519,27 +519,27 @@ $(document).on('mousemove', function(e) {
 });
 
 //barSelector Follows Mouse Xaxis (BROKEN)
-var innerDivbar = $('.timeSeekerBar');
-var outerDivbar = $('.progress-bar');
-var outDimbar = outerDivbar.offset();
-outDimbar.right = (outDimbar.left + outerDivbar.width());
+var innerClass = $('.timeSeekerBar');
+var outerClass = $('.progress-bar');
+var outClass = outerClass.offset();
+outClass.right = (outClass.left + outerClass.width());
 $(document).on('mousemove', function(e) {
-  var xbar = (e.clientX);
-  var xbar_allowed = xbar >= outDimbar.left && xbar <= (outDimbar.right - innerDivbar.width());
-  if (xbar_allowed) {
-    innerDivbar.css({
-      left: xbar + 'px'
+  var xc = (e.clientX) - 0;
+  var xc_allowed = xc >= outClass.left && xc <= (outClass.right - innerClass.width());
+  if (xc_allowed) {
+    innerClass.css({
+      left: xc + 'px'
     });
   } else {
     //fine tune tweaks
-    if (xbar >= outDimbar.left) {
-      innerDivbar.css({
-        left: outDimbar.right - innerDivbar.width() + 'px',
+    if (xc >= outClass.left) {
+      innerClass.css({
+        left: outClass.right - innerClass.width() + 'px',
       });
     }
-    if (xbar <= (outDimbar.right - innerDivbar.width())) {
-      innerDivbar.css({
-        left: outDimbar.left + 'px',
+    if (xc <= (outClass.right - innerClass.width())) {
+      innerClass.css({
+        left: outClass.left + 'px',
       });
     }
   }
