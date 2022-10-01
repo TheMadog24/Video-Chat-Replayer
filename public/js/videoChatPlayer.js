@@ -329,7 +329,6 @@ $('#volume').click(function(){
           $(".Volume-animated-speaker").show();
 		  $(".Volume-animated-speaker-half").hide();
           $(".Volume-speaker-muted").hide();
-		  console.log(savedVol)
 		  videoNode.volume = (savedVol / 100);
 		  $('#bar').css('left', 'calc('+savedVol+'% - 9.5px)');
 		  $('#fill').css('width', 'calc('+savedVol+'% - 9.5px)');
@@ -348,6 +347,7 @@ $('#volume').click(function(){
 
 
 //Volume Slider
+var newPercent = 100
 $('.slider-container').on('mousedown', function(e) {
 	if(e.which == 1) {
 		var $bar = $('#bar');
@@ -576,6 +576,54 @@ $(document).on('mousemove', function(e) {
 
 
 
+// Video Shortcut Keys
+
+window.onkeydown = vidCtrl;
+
+function vidCtrl(e) {
+  const vid = document.querySelector('#videoPlayer');
+  const key = e.code;
+
+  if (key === 'ArrowLeft') {
+    vid.currentTime -= 5;
+    if (vid.currentTime < 0) {
+      vid.pause();
+      vid.currentTime = 0;
+    }
+  } else if (key === 'ArrowRight') {
+    vid.currentTime += 5;
+    if (vid.currentTime > vid.duration) {
+      vid.pause();
+      vid.currentTime = 0;
+    }
+  } else if (key === 'Space') {
+    if (vid.paused || vid.ended) {
+      vid.play();
+    } else {
+      vid.pause();
+    }
+  } else if (key === 'KeyM') {
+    if( $("#videoPlayer").prop('muted') ) {
+          $("#videoPlayer").prop('muted', false); //unmute
+          $(".Volume-animated-speaker").show();
+		  $(".Volume-animated-speaker-half").hide();
+          $(".Volume-speaker-muted").hide();
+		  videoNode.volume = (savedVol / 100);
+		  $('#bar').css('left', 'calc('+savedVol+'% - 9.5px)');
+		  $('#fill').css('width', 'calc('+savedVol+'% - 9.5px)');
+          //Set Volume Button icon
+      // or toggle class, style it with a volume icon sprite, change background-position
+    } else {
+      $("#videoPlayer").prop('muted', true); //mute
+          $(".Volume-animated-speaker").hide();
+		  $(".Volume-animated-speaker-half").hide();
+          $(".Volume-speaker-muted").show();
+		  videoNode.volume = 0;
+		  $('#bar').css('left', 'calc(0% - 9.5px)');
+		  $('#fill').css('width', 'calc(0% - 9.5px)');
+    } 
+  }
+}
 
 // Show current Video Time On Bar Hover
 
