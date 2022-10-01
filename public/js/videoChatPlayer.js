@@ -460,7 +460,7 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
 
 
 
-//Re-grab Paramiters on Window Resize
+//Re-grab Paramiters on Window Resize Stars
 $(window).on('resize', function(){
 	//PreviewBox Follows Mouse Xaxis
 	var innerDiv = $('#previewBox');
@@ -489,6 +489,35 @@ $(window).on('resize', function(){
 		}
 	});
 });
+$(window).on('resize', function(){
+	//barSelector Follows Mouse Xaxis
+	var innerClass = $('.timeSeekerBar');
+	var outerClass = $('.progress-bar');
+	var outClass = outerClass.offset();
+	outClass.right = (outClass.left + outerClass.width());
+	$(document).on('mousemove', function(e) {
+	var xc = (e.clientX) - 0;
+	var xc_allowed = xc >= outClass.left && xc <= (outClass.right - innerClass.width());
+	if (xc_allowed) {
+		innerClass.css({
+		left: xc + 'px'
+		});
+	} else {
+		//fine tune tweaks
+		if (xc >= outClass.left) {
+		innerClass.css({
+			left: outClass.right - innerClass.width() + 'px',
+		});
+		}
+		if (xc <= (outClass.right - innerClass.width())) {
+		innerClass.css({
+        left: outClass.left + 'px',
+	});
+		}
+	}
+	});
+});
+//Re-grab Paramiters on Window Resize Ends
 
 
 //PreviewBox Follows Mouse Xaxis
@@ -518,7 +547,7 @@ $(document).on('mousemove', function(e) {
   }
 });
 
-//barSelector Follows Mouse Xaxis (BROKEN)
+//barSelector Follows Mouse Xaxis
 var innerClass = $('.timeSeekerBar');
 var outerClass = $('.progress-bar');
 var outClass = outerClass.offset();
@@ -544,6 +573,7 @@ $(document).on('mousemove', function(e) {
     }
   }
 });
+
 
 
 
