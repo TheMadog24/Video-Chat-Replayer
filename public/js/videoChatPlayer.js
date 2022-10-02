@@ -408,7 +408,7 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
 
 	$bar.css('left', 'calc('+percent+'% - '+(barWidth / 2)+'px)');
 	$fill.css('width', 'calc('+percent+'% - '+(barWidth / 2)+'px)');
-  videoNode.volume = (percent / 100); 
+	videoNode.volume = (percent / 100); 
 	savedVol = percent;
 }
 //Volume Slider Ends
@@ -635,10 +635,66 @@ function vidCtrl(e) {
 
 
 
+// Attmepting 2 at making the progressbar smooth
 
 
+  // VIDEO PROGRESS BAR
+  //when video timebar clicked
+  var pauseRemember = true;
+  var timeDrag = false; /* check for drag event */
+  
+  $(".progress-bar-container").on("mousedown", function(e) {
+	var vid = $("#videoPlayer");
+    
+	// console.log(vid.prop('paused'));
+	if (vid.prop('paused') === true) {
+		console.log("was paused");
+		pauseRemember = true;
+	}
+	if (vid.prop('paused') === false) {
+		console.log("was not paused");
+		pauseRemember = false;
+	}	
+	console.log(pauseRemember);
+	timeDrag = true;
+    updatebar(e.pageX);
+	videoNode.pause();
+	
+  });
+  $(".progress-bar-container").on("mouseup", function(e) {
+	var vid = $("#videoPlayer");
+    if (timeDrag) {
+      timeDrag = false;
+      updatebar(e.pageX);
+	  console.log(pauseRemember);
+	  if ( pauseRemember == true ) {
+		  console.log("detected pause");
+	  }
+	  if ( pauseRemember == false ) {
+		  console.log("DID NOT detect pause");
+		  videoNode.play();
+	  } 
+    }
+  });
+  $(".progress-bar-container").on("mousemove", function(e) {
+    if (timeDrag) {
+      updatebar(e.pageX);
+    }
+  });
 
-
+function updatebar(x) {
+	var $bar = $(".bar");
+    var position = x - $(".bar").offset().left;
+    var percentage = 100 * position / $(".progress-bar").width();
+    if (percentage > 100) {
+      percentage = 100;
+    }
+    if (percentage < 0) {
+      percentage = 0;
+    }
+    $bar.css("width", percentage + "%");
+    $("#videoPlayer")[0].currentTime = $("#videoPlayer")[0].duration * percentage / 100;
+  }
 
 // Attmepting to make the progressbar smooth
 // $(".progress-bar").on('mousedown', function(e) {
@@ -700,71 +756,71 @@ function vidCtrl(e) {
 
 
   // Draggable selector
-  $( function() {
-    $( ".barSelector" ).draggable({
-    	axis: "x",
-        containment: ".progress-bar",
-        helper: "clone",
-        appendTo: ".progress-bar",
-        drag: function( event, ui ) {
-            var width = $(".progress-bar").innerWidth();
-            var pOffset = $(".bar").offset().left;
-            var uiOffset = ui.offset.left;
+  // $( function() {
+    // $( ".barSelector" ).draggable({
+    	// axis: "x",
+        // containment: ".progress-bar",
+        // helper: "clone",
+        // appendTo: ".progress-bar",
+        // drag: function( event, ui ) {
+            // var width = $(".progress-bar").innerWidth();
+            // var pOffset = $(".bar").offset().left;
+            // var uiOffset = ui.offset.left;
 
-            setVideotime( width, pOffset, uiOffset );
+            // setVideotime( width, pOffset, uiOffset );
             
-        },
-        start: function( event, ui ) {
-            $(".bar .barSelector").hide();
-        },
-        stop: function( event, ui ) {
-            $(".bar .barSelector").show();
-        }
-    });
+        // },
+        // start: function( event, ui ) {
+            // $(".bar .barSelector").hide();
+        // },
+        // stop: function( event, ui ) {
+            // $(".bar .barSelector").show();
+        // }
+    // });
 
-    $(".progress-bar").on("click", function( event ) {
-        var node = $(this);
-        var pagePostionLeft = event.pageX;
-        var nodePositionLeft = node.position().left;
-        var nodeOffsetLeft = node.offset().left;
+    // $(".progress-bar").on("click", function( event ) {
+        // var node = $(this);
+        // var pagePostionLeft = event.pageX;
+        // var nodePositionLeft = node.position().left;
+        // var nodeOffsetLeft = node.offset().left;
         
-        var width = $(".progress-bar").innerWidth();
-        var pOffset = $(".bar").offset().left;
+        // var width = $(".progress-bar").innerWidth();
+        // var pOffset = $(".bar").offset().left;
 
-        var uiOffset = pagePostionLeft - nodePositionLeft - 
-                    nodeOffsetLeft + pOffset;
+        // var uiOffset = pagePostionLeft - nodePositionLeft - 
+                    // nodeOffsetLeft + pOffset;
 
-        setVideotime( width, pOffset, uiOffset );
+        // setVideotime( width, pOffset, uiOffset );
 
-    });
+    // });
 
-  });
+  // });
 	
 
-    function setVideotime( width, pOffset, uiOffset ) {
+    // function setVideotime( width, pOffset, uiOffset ) {
                     
-        // To properly calculate adjFactor, uiOffset 
-        // has to be at it's max value, trim to about
-        // 5 decimal positions and add 0.00001:
-        // var adjFactor = width / (uiOffset - pOffset) + 0.00001;
-        var adjFactor = 1.01193;
+        // // To properly calculate adjFactor, uiOffset 
+        // // has to be at it's max value, trim to about
+        // // 5 decimal positions and add 0.00001:
+        // // var adjFactor = width / (uiOffset - pOffset) + 0.00001;
+        // var adjFactor = 1.01193;
 
-        if ( uiOffset < pOffset ) {
-            uiOffset = pOffset;
-        }
+        // if ( uiOffset < pOffset ) {
+            // uiOffset = pOffset;
+        // }
 
-        var offset = (uiOffset - pOffset);
-        var percent = offset / width * adjFactor;
+        // var offset = (uiOffset - pOffset);
+        // var percent = offset / width * adjFactor;
         
-        let duration = videoNode.duration;
-        let currentTime = parseInt(Math.floor(duration * percent), 10);
-        if ( currentTime > duration ) {
-            currenttime = duration;
-        }
-        videoNode.currentTime = currentTime;
+        // let duration = videoNode.duration;
+        // let currentTime = parseInt(Math.floor(duration * percent), 10);
+        // if ( currentTime > duration ) {
+            // currenttime = duration;
+        // }
+        // videoNode.currentTime = currentTime;
         
-        updateCountersProgressBar();
-    }
+        // updateCountersProgressBar();
+    // }
 
 
 
