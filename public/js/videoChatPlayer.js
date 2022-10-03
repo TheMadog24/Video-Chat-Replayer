@@ -308,7 +308,7 @@ function localFileVideoPlayer() {
   inputNodeChat.addEventListener('change', loadChat, false);
   videoNode.addEventListener('timeupdate', updateChat, false);
 
-//	Custom Control Bar
+//	Custom Control Bar Starts
 
 
 
@@ -319,10 +319,9 @@ function localFileVideoPlayer() {
 // Preview End
 
 
+
 //Mute Button Function
-
 var savedVol = 100
-
 $('#volume').click(function(){
     if( $("#videoPlayer").prop('muted') ) {
           $("#videoPlayer").prop('muted', false); //unmute
@@ -374,33 +373,36 @@ $('.slider-container').on('mousedown', function(e) {
 });
 
 
-
 //Moves slider bar.
 function moveSliderBar($bar, $fill, percent, barWidth) {
+	var VolumeFull = $(".Volume-animated-speaker");
+	var VolumeHalf = $(".Volume-animated-speaker-half");
+	var VolumeMuted = $(".Volume-speaker-muted");
+	var Vid = $("#videoPlayer");
 
   if(percent <= 0) {
     percent = 0;
-    $(".Volume-animated-speaker-half").hide();
-    $(".Volume-animated-speaker").hide();
-    $(".Volume-speaker-muted").show();
-    $("#videoPlayer").prop('muted', true)
+    VolumeHalf.hide();
+    VolumeFull.hide();
+    VolumeMuted.show();
+    Vid.prop('muted', true)
   }
   else if (percent <= 50){
-    $(".Volume-animated-speaker-half").show();
-    $(".Volume-animated-speaker").hide();
-    $(".Volume-speaker-muted").hide();
-    $("#videoPlayer").prop('muted', false)
+    VolumeHalf.show();
+    VolumeFull.hide();
+    VolumeMuted.hide();
+    Vid.prop('muted', false)
   }
   else if (percent > 0 && percent < 50){
-    $(".Volume-animated-speaker-half").show();
-    $(".Volume-animated-speaker").hide();
-    $(".Volume-speaker-muted").hide();
-    $("#videoPlayer").prop('muted', false)
+    VolumeHalf.show();
+    VolumeFull.hide();
+    VolumeMuted.hide();
+    Vid.prop('muted', false)
   }
   else {
-    $(".Volume-animated-speaker-half").hide();
-    $(".Volume-animated-speaker").show();
-    $(".Volume-speaker-muted").hide();
+    VolumeHalf.hide();
+    VolumeFull.show();
+    VolumeMuted.hide();
     if(percent > 100) {
       percent = 100;
     }
@@ -501,33 +503,6 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
 		},5000)
 	});
 	
-	
-
-
-
-
-
-
-
-
-
-    // var eventPlayerHide = null;
-    // $("#videoPlayer").on("mousemove", function() {
-        // if ( eventPlayerHide ) {
-            // clearTimeout(eventPlayerHide);
-			// $(".custom-controls").fadeIn(100);
-        // }
-		// if (isMouseOverControlls === false){
-			// $("#videoPlayer").addClass("show-cursor").fadeIn( 100 );
-        // eventPlayerHide = setTimeout(() => {
-            // $(".custom-controls").fadeOut( 500, () => {
-              // $("#videoPlayer").removeClass("show-cursor");
-            // });
-        // }, 5000);
-		// }
-        
-    // });
-
 
 
 //Re-grab Paramiters on Window Resize Stars
@@ -673,21 +648,25 @@ function vidCtrl(e) {
       vid.pause();
     }
   } else if (key === 'KeyM') {
-    if( $("#videoPlayer").prop('muted') ) {
-          $("#videoPlayer").prop('muted', false); //unmute
-          $(".Volume-animated-speaker").show();
-		  $(".Volume-animated-speaker-half").hide();
-          $(".Volume-speaker-muted").hide();
+	var VolumeFull = $(".Volume-animated-speaker");
+	var VolumeHalf = $(".Volume-animated-speaker-half");
+	var VolumeMuted = $(".Volume-speaker-muted");
+	var Vid = $("#videoPlayer");
+    if( Vid.prop('muted') ) {
+          Vid.prop('muted', false); //unmute
+          VolumeFull.show();
+		  VolumeHalf.hide();
+          VolumeMuted.hide();
 		  videoNode.volume = (savedVol / 100);
 		  $('#bar').css('left', 'calc('+savedVol+'% - 9.5px)');
 		  $('#fill').css('width', 'calc('+savedVol+'% - 9.5px)');
           //Set Volume Button icon
       // or toggle class, style it with a volume icon sprite, change background-position
     } else {
-      $("#videoPlayer").prop('muted', true); //mute
-          $(".Volume-animated-speaker").hide();
-		  $(".Volume-animated-speaker-half").hide();
-          $(".Volume-speaker-muted").show();
+      Vid.prop('muted', true); //mute
+          VolumeFull.hide();
+		  VolumeHalf.hide();
+          VolumeMuted.show();
 		  videoNode.volume = 0;
 		  $('#bar').css('left', 'calc(0% - 9.5px)');
 		  $('#fill').css('width', 'calc(0% - 9.5px)');
@@ -787,133 +766,8 @@ function updatebar(x) {
     $("#videoPlayer")[0].currentTime = $("#videoPlayer")[0].duration * percentage / 100;
   }
 
-// Attmepting to make the progressbar smooth
-// $(".progress-bar").on('mousedown', function(e) {
-		// function setup( event, ui ) {
-		// var width = $(".progress-bar").innerWidth();
-            // var pOffset = $(".bar").offset().left;
-            // var uiOffset = ui.offset.left;
-
-            // setVideotime( width, pOffset, uiOffset );
-        // };
-		
-		// var node = $(this);
-        // var pagePostionLeft = event.pageX;
-        // var nodePositionLeft = node.position().left;
-        // var nodeOffsetLeft = node.offset().left;
-        
-        // var width = $(".progress-bar").innerWidth();
-        // var pOffset = $(".bar").offset().left;
-
-        // var uiOffset = pagePostionLeft - nodePositionLeft - 
-                    // nodeOffsetLeft + pOffset;
-
-        // setVideotime( width, pOffset, uiOffset );
-	// if(e.which == 1) {
-		// var $bar = $('.barSelector');
-		// var $fill = $('.bar');
-		// var barWidth = $bar.outerWidth();
-		// var sliderWidth = $(this).outerWidth();
-		// var sliderX = $(this).offset().left;
-		// var downX = e.clientX - sliderX; 
-		// var multiplier = 100 / sliderWidth;
-		// var curVidPercent = downX * multiplier;
-		// moveVidBar($bar, $fill, curVidPercent, barWidth);
-		// setVideotime()
-		// $(window).on('mousemove.progress-bar-container', function(e) {
-			// var diffX = (e.clientX - sliderX) - downX;
-			// var newVidPercent = curVidPercent + (diffX * multiplier);
-
-			// moveVidBar($bar, $fill, newVidPercent, barWidth);
-		// })
-		// .on('mouseup.progress-bar-container', function(e) {
-			// $(window).off('mousemove.progress-bar-container mouseup.progress-bar-container');
-      
-		// })
-	// }
-// });
-
-
-// function moveVidBar($bar, $fill, percent, barWidth) {
-	// $bar.css('left', 'calc('+percent+'% - '+((barWidth / 2)-9)+'px)');
-	// $fill.css('width', 'calc('+percent+'% - '+((barWidth / 2)-9)+'px)');
-// }
-
-
-
 
 //	Custom Control Bar End
-
-
-
-  // Draggable selector
-  // $( function() {
-    // $( ".barSelector" ).draggable({
-    	// axis: "x",
-        // containment: ".progress-bar",
-        // helper: "clone",
-        // appendTo: ".progress-bar",
-        // drag: function( event, ui ) {
-            // var width = $(".progress-bar").innerWidth();
-            // var pOffset = $(".bar").offset().left;
-            // var uiOffset = ui.offset.left;
-
-            // setVideotime( width, pOffset, uiOffset );
-            
-        // },
-        // start: function( event, ui ) {
-            // $(".bar .barSelector").hide();
-        // },
-        // stop: function( event, ui ) {
-            // $(".bar .barSelector").show();
-        // }
-    // });
-
-    // $(".progress-bar").on("click", function( event ) {
-        // var node = $(this);
-        // var pagePostionLeft = event.pageX;
-        // var nodePositionLeft = node.position().left;
-        // var nodeOffsetLeft = node.offset().left;
-        
-        // var width = $(".progress-bar").innerWidth();
-        // var pOffset = $(".bar").offset().left;
-
-        // var uiOffset = pagePostionLeft - nodePositionLeft - 
-                    // nodeOffsetLeft + pOffset;
-
-        // setVideotime( width, pOffset, uiOffset );
-
-    // });
-
-  // });
-	
-
-    // function setVideotime( width, pOffset, uiOffset ) {
-                    
-        // // To properly calculate adjFactor, uiOffset 
-        // // has to be at it's max value, trim to about
-        // // 5 decimal positions and add 0.00001:
-        // // var adjFactor = width / (uiOffset - pOffset) + 0.00001;
-        // var adjFactor = 1.01193;
-
-        // if ( uiOffset < pOffset ) {
-            // uiOffset = pOffset;
-        // }
-
-        // var offset = (uiOffset - pOffset);
-        // var percent = offset / width * adjFactor;
-        
-        // let duration = videoNode.duration;
-        // let currentTime = parseInt(Math.floor(duration * percent), 10);
-        // if ( currentTime > duration ) {
-            // currenttime = duration;
-        // }
-        // videoNode.currentTime = currentTime;
-        
-        // updateCountersProgressBar();
-    // }
-
-
 
 
 
