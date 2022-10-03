@@ -53,7 +53,7 @@ video {
 	position: absolute;
 	width:calc(100% - 341px);
 	height: 65px;
-	background-color: green;
+	/* background-color: green; */
 	background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5));
 	bottom: 0;
 	left: 0;

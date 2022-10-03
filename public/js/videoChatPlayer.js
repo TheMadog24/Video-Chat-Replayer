@@ -674,7 +674,65 @@ function vidCtrl(e) {
   }
 }
 
+
+
 // Show current Video Time On Bar Hover
+
+
+	$(".progress-bar-container").on('mousemove', function(e) {
+		//gets progressbar offset from left, where cursor is
+		var progress = $(".progress-bar");
+		var progressOffset = progress.offset();    
+		var relX = e.pageX - progressOffset.left;
+		//get width of progressbar
+		var progressWidth = progress[0].offsetWidth;
+		//Error Correction
+		if (relX > progressWidth) {
+			relX = progressWidth;
+		}
+		if (relX < 0) {
+			relX = 0;
+		}
+		//calculate percentage
+		var percentage = (100 * (relX / progressWidth));
+		GetHoverTime(percentage);
+		
+
+		// console.log("totalwidth:" + progressWidth + " relative:" + relX + " Percentage " + percentage);
+	});
+	//Gets video time based on mouse position
+	function GetHoverTime(percentage) {
+		// console.log(percentage);
+		var calculatedTime = new Date(null);
+		var video = $("#videoPlayer");
+		video[0].HoverTime = video[0].duration * percentage / 100;
+		var TimeInSeconds = video[0].HoverTime;
+		// console.log(video[0].HoverTime);
+		calculatedTime.setSeconds(video[0].HoverTime);
+		var newTime = calculatedTime.toISOString().substr(11, 8);
+		// console.log(newTime);
+		$("#timePreview").text(formatHoverTime(TimeInSeconds));
+	}
+
+function formatHoverTime(TimeInSeconds) {
+
+    var seconds = TimeInSeconds; 
+    var hours = Math.floor( seconds / TIME_HOUR );
+    seconds -= (hours * TIME_HOUR);
+    var mins = Math.floor( seconds / TIME_MINUTE );
+    seconds -= (mins * TIME_MINUTE);
+
+    seconds = Math.floor( seconds );
+    
+    var formatted = (hours > 0 ? pad(hours, 2) + ":" : "" ) +
+        pad( mins, 2 ) + ":" +
+        pad( seconds, 2 );
+
+    return formatted;
+}
+
+
+
 
 
 
@@ -768,6 +826,13 @@ function updatebar(x) {
 
 
 //	Custom Control Bar End
+
+
+//Reading video Metadata
+
+
+
+
 
 
 
