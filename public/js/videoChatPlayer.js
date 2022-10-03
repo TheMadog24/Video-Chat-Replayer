@@ -740,7 +740,23 @@ function formatHoverTime(TimeInSeconds) {
 		$("#previewBox").fadeOut(100);
 	});
 
+//Disable on Page load
+$( document ).ready(function() {
+	$("#videoPlayer").hide();
+	$("#video-PausePlay-container").fadeOut(1);
+	$(".custom-controls").fadeOut(1);
+});
 
+
+//Video player not loaded until video is loaded
+	$("#videoPlayer")[0].addEventListener('loadeddata', (e) => {
+		if ( $("#videoPlayer")[0].readyState === 4 ) {
+			$("#videoPlayer").fadeIn(0);
+			$(".custom-controls").fadeIn(200);
+			$("#video-PausePlay-container").fadeIn(200);
+			console.log("Video Loaded");
+		}
+	});
 
 
 // Attmepting 2 at making the progressbar smooth
