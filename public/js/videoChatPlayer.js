@@ -731,7 +731,14 @@ function formatHoverTime(TimeInSeconds) {
     return formatted;
 }
 
-
+//PreviewBox Appears on Hover Only
+	
+	$(".progress-bar-container").on("mouseover", function(e) {
+		$("#previewBox").fadeIn(200);
+	});
+	$(".progress-bar-container").on("mouseleave", function(e) {
+		$("#previewBox").fadeOut(100);
+	});
 
 
 

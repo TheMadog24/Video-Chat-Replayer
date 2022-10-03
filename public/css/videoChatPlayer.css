@@ -285,23 +285,21 @@ video {
 	background-color: teal;
 	border: 1px solid #000000;
 	margin-top: -125px;
-	opacity: 0%;
+	display: none;
 }
-.progress-bar-container:hover ~ #previewBox{
-	opacity: 100%;
-	z-index: 999;
-	animation: fadeInAnimationBar ease 0.2s;
-}
-.progress-bar-container ~ #previewBox{
-	opacity: 0%;
-	z-index: 999;
-	animation: fadeOutAnimationBar ease 0.1s;
-}
+
 
 #imagePreview{
 	width: 180px;
 	height: 80px;
 	background-color:#a970ff;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 #timePreview{
@@ -312,6 +310,13 @@ video {
     margin: auto;
     padding: 2px 0;
 	text-align: center;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 /* Preview Ends */
