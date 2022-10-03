@@ -23,13 +23,8 @@ video {
 
 
 .video-container:hover .custom-controls {
-	opacity: 100%;
-	animation: fadeInAnimationBar ease 0.3s;
 }
 .video-container .custom-controls {
-	animation-delay: 3s;
-	opacity: 0%;
-	animation: fadeOutAnimationBar ease 0.3s;
 }
 
   
@@ -58,7 +53,7 @@ video {
 	position: absolute;
 	width:calc(100% - 341px);
 	height: 65px;
-	/* background-color: green; */
+	background-color: green;
 	background-image: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5));
 	bottom: 0;
 	left: 0;

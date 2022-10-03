@@ -435,11 +435,18 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
 	//Shows Overlay on Pause
 	videoNode.onpause = function() {
 		$("#video-PausePlay-container").fadeIn(100);
+		$(".custom-controls").fadeIn(100);
+		
 	}; 
 	//Hides Overlay on Play
 	videoNode.onplay = function() {
 		$("#video-PausePlay-container").fadeOut(100);
-		$(".custom-controls").fadeOut(500)
+		$(".custom-controls").fadeOut(200);
+		$("#videoPlayer").removeClass("show-cursor");
+		// $("#videoPlayer").delay(2000).queue(function(next){
+			// $(this).removeClass("show-cursor");
+			// next();
+		// });
 	}; 
 	//Clicking on the overlay Plays the video and Hides the Overlay
 	$("#video-PausePlay-container").on("click", function() {
@@ -450,19 +457,76 @@ function moveSliderBar($bar, $fill, percent, barWidth) {
 	});
 // Custom Player Overlay Ends
 
-    var eventPlayerHide = null;
-    $("#videoPlayer").on("mousemove", function() {
-        if ( eventPlayerHide ) {
-            clearTimeout(eventPlayerHide);
-			$(".custom-controls").fadeIn(100);
-        }
-        $("#videoPlayer").addClass("show-cursor").fadeIn( 100 );
-        eventPlayerHide = setTimeout(() => {
-            $(".custom-controls").fadeOut( 500, () => {
-              $("#videoPlayer").removeClass("show-cursor");
-            });
-        }, 5000);
-    });
+
+	//Checks if Mouse is over Controls
+	var isMouseOverControlls = false;
+	$(".custom-controls").on("mouseover", function (event) {
+		if ($('.progress-bar-container').is(":hover") || $('.buttons-container').is(":hover")){
+			isMouseOverControlls = true;
+		}
+	});
+	$(".custom-controls").on("mouseleave", function (event) {
+		isMouseOverControlls = false;
+	});
+
+
+	//Shows controls when mouse enters video-container, and shows cursor
+	$(".video-container").on("mousemove", function (event) {
+		var CustomControls = $(".custom-controls");
+		CustomControls.clearQueue();
+		CustomControls.stop();
+		CustomControls.fadeIn(50);
+		$("#videoPlayer").addClass("show-cursor").fadeIn(100);
+	});
+	//Hides controls after 1 second, when mouse leaves video-container
+	$(".video-container").on("mouseleave", function (event) {
+		if ($("#videoPlayer").prop('paused') === false) {
+			$(".custom-controls").delay(1000).fadeOut(500);
+		}		
+	});
+
+	var moveTimer;
+	$(".video-container").on("mousemove",function(){
+		clearTimeout(moveTimer);
+		
+		moveTimer = setTimeout(function(){
+			var vid = $("#videoPlayer");
+			if (vid.prop('paused') === false) {
+				vid.removeClass("show-cursor");
+				$(".custom-controls").fadeOut(500);
+			}
+			else {
+			}
+			
+		},5000)
+	});
+	
+	
+
+
+
+
+
+
+
+
+
+    // var eventPlayerHide = null;
+    // $("#videoPlayer").on("mousemove", function() {
+        // if ( eventPlayerHide ) {
+            // clearTimeout(eventPlayerHide);
+			// $(".custom-controls").fadeIn(100);
+        // }
+		// if (isMouseOverControlls === false){
+			// $("#videoPlayer").addClass("show-cursor").fadeIn( 100 );
+        // eventPlayerHide = setTimeout(() => {
+            // $(".custom-controls").fadeOut( 500, () => {
+              // $("#videoPlayer").removeClass("show-cursor");
+            // });
+        // }, 5000);
+		// }
+        
+    // });
 
 
 
@@ -640,39 +704,66 @@ function vidCtrl(e) {
 
   // VIDEO PROGRESS BAR
   //when video timebar clicked
-  var pauseRemember = true;
+  var Rememberpause = true;
   var timeDrag = false; /* check for drag event */
   
   $(".progress-bar-container").on("mousedown", function(e) {
 	var vid = $("#videoPlayer");
-    
-	// console.log(vid.prop('paused'));
+	var vidPause = $("#video-PausePlay-container");
 	if (vid.prop('paused') === true) {
 		console.log("was paused");
-		pauseRemember = true;
+		Rememberpause = true;
 	}
 	if (vid.prop('paused') === false) {
 		console.log("was not paused");
-		pauseRemember = false;
+		Rememberpause = false;
 	}	
-	console.log(pauseRemember);
+	// $("#video-PausePlay-container").show();
+	// console.log("shown");
+	console.log($("#video-PausePlay-container").is(":visible"));
+	videoNode.pause();
+	vidPause.stop;
+	vidPause.clearQueue();
 	timeDrag = true;
     updatebar(e.pageX);
-	videoNode.pause();
+	HideOverlay();
+	function HideOverlay() {
+		var vidPause = $("#video-PausePlay-container");
+		if (vidPause.is(":visible") === true){
+			console.log($("#video-PausePlay-container").is(":visible") + "Before");
+			vidPause.hide();
+			console.log("hidden")
+			console.log($("#video-PausePlay-container").is(":visible") + "After");
+		}
+		if (vidPause.is(":visible") === false){
+			vidPause.stop;
+			vidPause.clearQueue();
+			console.log($("#video-PausePlay-container").is(":visible") + "Before NO");
+			vidPause.hide();
+			console.log("hidden")
+			console.log($("#video-PausePlay-container").is(":visible") + "After NO");
+		}
+	}
 	
   });
+  
   $(".progress-bar-container").on("mouseup", function(e) {
 	var vid = $("#videoPlayer");
     if (timeDrag) {
       timeDrag = false;
       updatebar(e.pageX);
-	  console.log(pauseRemember);
-	  if ( pauseRemember == true ) {
+	  console.log(Rememberpause);
+	  if ( Rememberpause == true ) {
 		  console.log("detected pause");
+		  $("#video-PausePlay-container").show();
 	  }
-	  if ( pauseRemember == false ) {
+	  if ( Rememberpause == false ) {
+		  var controls = $(".custom-controls");
 		  console.log("DID NOT detect pause");
 		  videoNode.play();
+		  controls.stop;
+		  controls.clearQueue();
+		  controls.show();
 	  } 
     }
   });
