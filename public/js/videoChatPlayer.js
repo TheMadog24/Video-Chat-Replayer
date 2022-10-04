@@ -800,24 +800,22 @@ $( document ).ready(function() {
 	// console.log("shown");
 	console.log($("#video-PausePlay-container").is(":visible"));
 	videoNode.pause();
-	vidPause.clearQueue();
 	timeDrag = true;
     updatebar(e.pageX);
-	HideOverlay();
-	function HideOverlay() {
+	hideOverlay();
+	function hideOverlay() {
 		var vidPause = $("#video-PausePlay-container");
-		if (vidPause.is(":visible") === true){
-			console.log($("#video-PausePlay-container").is(":visible") + "Before");
+		if ( vidPause.is(":visible") ){
+			console.log(( vidPause.is(":hidden") ) + "Before");
 			vidPause.hide();
 			console.log("hidden")
-			console.log($("#video-PausePlay-container").is(":visible") + "After");
+			console.log(( vidPause.is(":hidden") ) + "After");
 		}
-		if (vidPause.is(":visible") === false){
-			vidPause.clearQueue();
-			console.log($("#video-PausePlay-container").is(":visible") + "Before NO");
+		if ( vidPause.is(":hidden") ){
+			console.log(( vidPause.is(":hidden") ) + "Before NO");
 			vidPause.hide();
 			console.log("hidden")
-			console.log($("#video-PausePlay-container").is(":visible") + "After NO");
+			console.log(( vidPause.is(":hidden") ) + "After NO");
 		}
 	}
 	
@@ -863,6 +861,9 @@ function updatebar(x) {
     $("#videoPlayer")[0].currentTime = $("#videoPlayer")[0].duration * percentage / 100;
   }
 
+// $(".progress-bar-container").on("mouseout", function(e) {
+	// $(this).trigger("mouseup");
+// });
 
 //	Custom Control Bar End
 

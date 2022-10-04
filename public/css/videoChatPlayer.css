@@ -107,9 +107,7 @@ video {
 	-ms-transform: scale(1);
 	transform: scale(1);
 }
-.progress-bar-container: .barSelector {
-	transition: fadeInAnimationBar 0.1s ease;
-}
+
 
 .progress-bar-container:hover .bar {
 	background-color: rgba(255, 0, 0, 1);
