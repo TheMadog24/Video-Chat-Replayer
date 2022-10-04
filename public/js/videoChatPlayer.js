@@ -787,37 +787,41 @@ $( document ).ready(function() {
   
   $(".progress-bar-container").on("mousedown", function(e) {
 	var vid = $("#videoPlayer");
-	var vidPause = $("#video-PausePlay-container");
+	var isVisible = $("#video-PausePlay-container").is(":visible");
 	if (vid.prop('paused') === true) {
-		console.log("was paused");
+		// console.log("was paused");
 		Rememberpause = true;
 	}
 	if (vid.prop('paused') === false) {
-		console.log("was not paused");
+		// console.log("was not paused");
 		Rememberpause = false;
 	}	
 	// $("#video-PausePlay-container").show();
 	// console.log("shown");
-	console.log($("#video-PausePlay-container").is(":visible"));
+	// console.log($("#video-PausePlay-container").is(":visible"));
 	videoNode.pause();
 	timeDrag = true;
     updatebar(e.pageX);
-	hideOverlay();
-	function hideOverlay() {
-		var vidPause = $("#video-PausePlay-container");
-		if ( vidPause.is(":visible") ){
-			console.log(( vidPause.is(":hidden") ) + "Before");
-			vidPause.hide();
-			console.log("hidden")
-			console.log(( vidPause.is(":hidden") ) + "After");
-		}
-		if ( vidPause.is(":hidden") ){
-			console.log(( vidPause.is(":hidden") ) + "Before NO");
-			vidPause.hide();
-			console.log("hidden")
-			console.log(( vidPause.is(":hidden") ) + "After NO");
-		}
-	}
+	
+	setTimeout( function() {
+		$("#video-PausePlay-container").hide();
+	}, 1);
+	// hideOverlay();
+	// function hideOverlay() {
+		// var vidPause = $("#video-PausePlay-container");
+		// if ( isVisible ) {
+			// console.log(( vidPause.is(":hidden") ) + "Before");
+			// $("#video-PausePlay-container").hide();
+			// console.log("hidden")
+			// console.log(( vidPause.is(":hidden") ) + "After");
+		// }
+		// else {
+			// console.log(( vidPause.is(":hidden") ) + "Before NO");
+			// vidPause.hide();
+			// console.log("hidden")
+			// console.log(( vidPause.is(":hidden") ) + "After NO");
+		// }
+	// }
 	
   });
   
@@ -826,14 +830,14 @@ $( document ).ready(function() {
     if (timeDrag) {
       timeDrag = false;
       updatebar(e.pageX);
-	  console.log(Rememberpause);
+	  // console.log(Rememberpause);
 	  if ( Rememberpause == true ) {
-		  console.log("detected pause");
+		  // console.log("detected pause");
 		  $("#video-PausePlay-container").show();
 	  }
 	  if ( Rememberpause == false ) {
 		  var controls = $(".custom-controls");
-		  console.log("DID NOT detect pause");
+		  // console.log("DID NOT detect pause");
 		  videoNode.play();
 		  controls.stop;
 		  controls.clearQueue();
