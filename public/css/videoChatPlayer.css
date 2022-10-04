@@ -292,7 +292,7 @@ video {
 #imagePreview{
 	width: 180px;
 	height: 100px;
-	background-color:#a970ff;
+	/* background-color:#a970ff; */
 	-webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -320,7 +320,11 @@ video {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
-
+#previewVid{
+	height: 100px;
+	width: 180px;
+	
+}
 
 
 

@@ -76,7 +76,7 @@ function localFileVideoPlayer() {
 
 		var fileURL = URL.createObjectURL(file);
 		videoNode.src = fileURL;
-		// PreviewVid.src = fileURL;
+		PreviewVid.src = fileURL;
 
 	}
 	
@@ -702,6 +702,7 @@ function vidCtrl(e) {
 		var newTime = calculatedTime.toISOString().substr(11, 8);
 		//console.log(TimeInSeconds);
 		$("#timePreview").text(formatHoverTime(TimeInSeconds));
+		showPreview(TimeInSeconds);
 	}
 
 function formatHoverTime(TimeInSeconds) {
@@ -723,19 +724,24 @@ function formatHoverTime(TimeInSeconds) {
 
 // Preview Start
 
+	function showPreview(TimeInSeconds){
+		$("#previewVid")[0].currentTime = TimeInSeconds;
+	}
 
-const canvas = document.createElement('canvas');
+// function showPreview(TimeInSeconds) {
+    // const canvas = document.createElement('canvas');
 
-const context = canvas.getContext('2d');
-if ( context ) {
-	videoNode.currentTime = TimeInSeconds;
-	setTimeout( function() {
-		context.drawImage(videoNode, 0, 0, 180, 100);
-		const url = canvas.toDataURL('image/jpeg');
-		var img = $('<url>').attr('src', url);
-		$('#thumb').html( img );
-	}, 200)
-}
+    // const context = canvas.getContext('2d');
+    // if ( context ) {
+    // videoNode.currentTime = TimeInSeconds;
+    // setTimeout( function() {
+        // context.drawImage(videoNode, 0, 0, 180, 100);
+        // const url = canvas.toDataURL('image/jpeg');
+        // var img = $('<url>').attr('src', url);
+        // $('#thumb').html( img );
+    // }, 200);
+    // } 
+// }
 
 
 	
@@ -753,22 +759,22 @@ if ( context ) {
 	});
 
 //Disable on Page load
-// $( document ).ready(function() {
-	// $("#videoPlayer").hide();
-	// $("#video-PausePlay-container").fadeOut(1);
-	// $(".custom-controls").fadeOut(1);
-// });
+$( document ).ready(function() {
+	$("#videoPlayer").hide();
+	$("#video-PausePlay-container").fadeOut(1);
+	$(".custom-controls").fadeOut(1);
+});
 
 
 //Video player not loaded until video is loaded
-	// $("#videoPlayer")[0].addEventListener('loadeddata', (e) => {
-		// if ( $("#videoPlayer")[0].readyState === 4 ) {
-			// $("#videoPlayer").fadeIn(0);
-			// $(".custom-controls").fadeIn(200);
-			// $("#video-PausePlay-container").fadeIn(200);
-			// console.log("Video Loaded");
-		// }
-	// });
+	$("#videoPlayer")[0].addEventListener('loadeddata', (e) => {
+		if ( $("#videoPlayer")[0].readyState === 4 ) {
+			$("#videoPlayer").fadeIn(0);
+			$(".custom-controls").fadeIn(200);
+			$("#video-PausePlay-container").fadeIn(200);
+			console.log("Video Loaded");
+		}
+	});
 
 
 // Attmepting 2 at making the progressbar smooth
