@@ -45,6 +45,7 @@ var emotesFirstParty = {};
 function localFileVideoPlayer() {
     var URL = window.URL || window.webkitURL;
 	var videoNode = document.querySelector('video');
+	var PreviewVid = document.querySelector('#previewVid');
 	//var chatNode = document.querySelector('#chat');
 	var chatJson;
 
@@ -75,6 +76,7 @@ function localFileVideoPlayer() {
 
 		var fileURL = URL.createObjectURL(file);
 		videoNode.src = fileURL;
+		// PreviewVid.src = fileURL;
 
 	}
 	
@@ -309,15 +311,6 @@ function localFileVideoPlayer() {
   videoNode.addEventListener('timeupdate', updateChat, false);
 
 //	Custom Control Bar Starts
-
-
-
-// Preview Start
-
-
-
-// Preview End
-
 
 
 //Mute Button Function
@@ -678,7 +671,7 @@ function vidCtrl(e) {
 
 // Show current Video Time On Bar Hover
 
-
+	var TimeInSeconds = null;
 	$(".progress-bar-container").on('mousemove', function(e) {
 		//gets progressbar offset from left, where cursor is
 		var progress = $(".progress-bar");
@@ -696,9 +689,6 @@ function vidCtrl(e) {
 		//calculate percentage
 		var percentage = (100 * (relX / progressWidth));
 		GetHoverTime(percentage);
-		
-
-		// console.log("totalwidth:" + progressWidth + " relative:" + relX + " Percentage " + percentage);
 	});
 	//Gets video time based on mouse position
 	function GetHoverTime(percentage) {
@@ -710,7 +700,7 @@ function vidCtrl(e) {
 		// console.log(video[0].HoverTime);
 		calculatedTime.setSeconds(video[0].HoverTime);
 		var newTime = calculatedTime.toISOString().substr(11, 8);
-		// console.log(newTime);
+		//console.log(TimeInSeconds);
 		$("#timePreview").text(formatHoverTime(TimeInSeconds));
 	}
 
@@ -731,32 +721,54 @@ function formatHoverTime(TimeInSeconds) {
     return formatted;
 }
 
+// Preview Start
+
+
+const canvas = document.createElement('canvas');
+
+const context = canvas.getContext('2d');
+if ( context ) {
+	videoNode.currentTime = TimeInSeconds;
+	setTimeout( function() {
+		context.drawImage(videoNode, 0, 0, 180, 100);
+		const url = canvas.toDataURL('image/jpeg');
+		var img = $('<url>').attr('src', url);
+		$('#thumb').html( img );
+	}, 200)
+}
+
+
+	
+// Preview End
+
 //PreviewBox Appears on Hover Only
 	
 	$(".progress-bar-container").on("mouseover", function(e) {
-		$("#previewBox").fadeIn(200);
+		$("#previewBox").fadeIn(100);
 	});
 	$(".progress-bar-container").on("mouseleave", function(e) {
-		$("#previewBox").fadeOut(100);
+		var PBox = $("#previewBox");
+		PBox.clearQueue();
+		PBox.fadeOut(10);
 	});
 
 //Disable on Page load
-$( document ).ready(function() {
-	$("#videoPlayer").hide();
-	$("#video-PausePlay-container").fadeOut(1);
-	$(".custom-controls").fadeOut(1);
-});
+// $( document ).ready(function() {
+	// $("#videoPlayer").hide();
+	// $("#video-PausePlay-container").fadeOut(1);
+	// $(".custom-controls").fadeOut(1);
+// });
 
 
 //Video player not loaded until video is loaded
-	$("#videoPlayer")[0].addEventListener('loadeddata', (e) => {
-		if ( $("#videoPlayer")[0].readyState === 4 ) {
-			$("#videoPlayer").fadeIn(0);
-			$(".custom-controls").fadeIn(200);
-			$("#video-PausePlay-container").fadeIn(200);
-			console.log("Video Loaded");
-		}
-	});
+	// $("#videoPlayer")[0].addEventListener('loadeddata', (e) => {
+		// if ( $("#videoPlayer")[0].readyState === 4 ) {
+			// $("#videoPlayer").fadeIn(0);
+			// $(".custom-controls").fadeIn(200);
+			// $("#video-PausePlay-container").fadeIn(200);
+			// console.log("Video Loaded");
+		// }
+	// });
 
 
 // Attmepting 2 at making the progressbar smooth
@@ -782,7 +794,6 @@ $( document ).ready(function() {
 	// console.log("shown");
 	console.log($("#video-PausePlay-container").is(":visible"));
 	videoNode.pause();
-	vidPause.stop;
 	vidPause.clearQueue();
 	timeDrag = true;
     updatebar(e.pageX);
@@ -796,7 +807,6 @@ $( document ).ready(function() {
 			console.log($("#video-PausePlay-container").is(":visible") + "After");
 		}
 		if (vidPause.is(":visible") === false){
-			vidPause.stop;
 			vidPause.clearQueue();
 			console.log($("#video-PausePlay-container").is(":visible") + "Before NO");
 			vidPause.hide();

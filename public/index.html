@@ -67,7 +67,11 @@
 				
 				<div id="previewBox">
 				
-					<div id="imagePreview"></div>
+					<div id="imagePreview">
+						<img *ngIf="thumb && thumb.url; else loading" [src]="thumb.url">
+						<!-- <video id="previewVid" > -->
+						<!-- </video> -->
+					</div>
 					<div id="timePreview" class="video-time">0:00</div>
 					
 				</div>
@@ -101,10 +105,10 @@
                         <div id="videoDuration" class="video-time">0:00</div>
                     </div>
 				</div>
-            <!-- </div>
+            </div>
             
             
-            <!-- <ngx-video-controls></ngx-video-controls>
+        
             
         </div>
 
