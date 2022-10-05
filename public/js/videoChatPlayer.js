@@ -39,6 +39,9 @@ var twitchEmoticonsUrl = "https://static-cdn.jtvnw.net/emoticons/v{{version}}/" 
 var maxChatMessages = 150;
 
 
+
+
+
 var emotesThirdParty = {};
 var emotesFirstParty = {};
 
@@ -77,6 +80,8 @@ function localFileVideoPlayer() {
 		var fileURL = URL.createObjectURL(file);
 		videoNode.src = fileURL;
 		PreviewVid.src = fileURL;
+		
+
 
 	}
 	
@@ -168,13 +173,13 @@ function localFileVideoPlayer() {
     }
 
     var updateChat = function(event) {
+		updateCountersProgressBar();
+		
 		if(chatJson == null) return;
 
         $( "#message" ).removeClass("animate").fadeOut( 5000, "linear" );
 
 		let currentTime = videoNode.currentTime;
- 
-        updateCountersProgressBar();
 
         var messagePos = messageSeek( currentTime, currentChatPos );
         
@@ -271,6 +276,7 @@ function localFileVideoPlayer() {
         var curPos = messagePos;
 
         while ( curPos >= 0 && messagePos - curPos < maxChatMessages ) {
+			
 
             if ( !$("#chat #" + getChatId(curPos)).length ) {
                 var msg = chatJson.comments.at( curPos );
@@ -773,8 +779,13 @@ $( document ).ready(function() {
 			$(".custom-controls").fadeIn(200);
 			$("#video-PausePlay-container").fadeIn(200);
 			console.log("Video Loaded");
+			updateCountersProgressBar();
 		}
 	});
+
+
+
+
 
 
 // Attmepting 2 at making the progressbar smooth
@@ -1084,4 +1095,10 @@ function makeUserBadges( comment ) {
 $(document).ready(function() {
 
     localFileVideoPlayer();
+		$('.selector').change(function(){
+		var optionSelected = $("option:selected", this);
+		var valueSelected = this.value;
+		maxChatMessages = valueSelected;
+		});
+
 });

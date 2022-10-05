@@ -415,6 +415,51 @@ video {
 /* Custom Video Controls bar Ends */
 
 
+#BottomBox {
+	width: 340px;
+	height:30px;
+	border-left: 1px solid #303032;
+	position:absolute;
+	right: 0;
+    bottom: 0;
+	background-color: #1f1f23;
+}
+
+.bottomBoxCenter {
+	display: flex;
+	height: 100%;
+	text-align:center;
+}
+
+#BottomBoxTitleN {
+	margin: auto 0px auto auto;
+	float: left;
+	font-size: 14px;
+	width: 210px;
+	display: inline;
+	padding-right: 5px;
+}
+
+#messageNumber {
+	margin: auto auto auto 0px;
+	float: right;
+	font-size: 12px;
+	display: inline;
+}
+
+.selector{
+	color: white;
+	background-color: #1f1f23;
+	border: 2px solid #535353;
+	border-radius: 3px;
+}
+
+#CenterBox {
+	width: 100%;
+	height: 100%;
+	background-color: green;
+}
+
 #topBox {
 	width: 340px;
 	height:69px;
@@ -437,6 +482,8 @@ video {
 	margin: auto;
 }
 
+
+
 #message {
 	margin-top: auto;
 	margin-bottom: auto;
@@ -444,6 +491,7 @@ video {
 	font-size: 14px;
 	background-color: green;
 }
+
 
 #message.animate {
     animation: fadeOutInfo ease 0.3s;
@@ -466,12 +514,13 @@ video {
 
 #chat {
 	position: absolute;
-	bottom: 0;
+	bottom: 30px;
 	right: 0;
     width: 340px;
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
-    height: calc(100% - 75px);
+	border-bottom: 1px solid #303032;
+    height: calc(100% - 106px);
 	overflow-y: auto;
 	background-color:#18181b;
  	font-family: "Inter";
@@ -511,10 +560,10 @@ video {
 }
 .cover-bar {
 	position: absolute;
-	bottom: 0;
+	bottom: 30px;
 	right: 0;
     width: 8px;
-	height: calc(100% - 70px);
+	height: calc(100% - 106px);
 	background-color:#18181b;
 	z-index: 999;
 	opacity: 100%;
