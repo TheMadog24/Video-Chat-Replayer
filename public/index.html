@@ -20,6 +20,38 @@
     </head>
     <body>	
 	
+	<div id="optionsOverlay">
+		<div id="optionsBox">
+			<ul id="optionsMenu">
+				<li id="optionsMessages">
+					<ul>
+						<li>Number of Messages to show:</li>
+						<li>
+							<select type="number" class="selector">
+					
+							<option value="500">500</option>
+							<option value="450">450</option>
+							<option value="400">400</option>
+							<option value="350">350</option>
+							<option value="300">300</option>
+							<option value="250">250</option>
+							<option value="200">200</option>
+							<option value="150" selected>150</option>
+							<option value="100">100</option>
+							
+							</select>
+						</li>
+					</ul>
+				</li>
+				<li id="optionsClose">
+					Close
+				</li>
+			</ul>
+		</div>
+		<div id="OptionsCover"></div>
+    </div>
+	
+	
 	<div class="scroll-bar-wrap">
 		<div id="chat"></div>
 		<div class="cover-bar"></div>
@@ -36,33 +68,12 @@
             <div class="flex header">
                 <span id="message" class="animate"></span>
             </div>
-            <div class="flex header center">
+            <div class="flex header">
+			<div id="clickOptions" class="topBoxTitle">Options</div>
             </div>
         </div>
 		
-		<div id="BottomBox">
-			<div class="bottomBoxCenter">
-				<div id="BottomBoxTitleN">
-					Number of Messages to show:
-				</div>
-					<div id="messageNumber">
-						<select type="number" class="selector">
-					
-							<option value="500">500</option>
-							<option value="450">450</option>
-							<option value="400">400</option>
-							<option value="350">350</option>
-							<option value="300">300</option>
-							<option value="250">250</option>
-							<option value="200">200</option>
-							<option value="150" selected>150</option>
-							<option value="100">100</option>
-							
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
+		
 	
         <div class="video-container">
             <video id="videoPlayer" ></video>

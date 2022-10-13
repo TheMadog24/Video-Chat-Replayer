@@ -300,13 +300,13 @@ function localFileVideoPlayer() {
                     chatLine.insertBefore( "#" + getChatId(curPos+1) );
                 }
                 
-                $("#chat").scrollTop( 10000 );
+                $("#chat").scrollTop($("#chat")[0].scrollHeight);
             }
             curPos--; 
         }
         
         setTimeout( () => {
-            $("#chat").scrollTop( 10000 );
+            $("#chat").scrollTop($("#chat")[0].scrollHeight);
         }, 20);
     }
   
@@ -769,6 +769,7 @@ $( document ).ready(function() {
 	$("#videoPlayer").hide();
 	$("#video-PausePlay-container").fadeOut(1);
 	$(".custom-controls").fadeOut(1);
+	$("#optionsOverlay").hide();
 });
 
 
@@ -783,7 +784,17 @@ $( document ).ready(function() {
 		}
 	});
 
+	//Options menu Open/Close
+	$("#clickOptions").click( function(e) {
+		$("#optionsOverlay").show();
+	});
 
+	$("#optionsClose").click( function(e) {
+		$("#optionsOverlay").hide();
+	});
+	$("#OptionsCover").click( function(e) {
+		$("#optionsOverlay").hide();
+	});
 
 
 
@@ -1096,9 +1107,10 @@ $(document).ready(function() {
 
     localFileVideoPlayer();
 		$('.selector').change(function(){
-		var optionSelected = $("option:selected", this);
-		var valueSelected = this.value;
-		maxChatMessages = valueSelected;
+			var optionSelected = $("option:selected", this);
+			var valueSelected = this.value;
+			maxChatMessages = valueSelected;
+			
 		});
 
 });
