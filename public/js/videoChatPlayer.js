@@ -38,6 +38,8 @@ var twitchEmoticonsUrl = "https://static-cdn.jtvnw.net/emoticons/v{{version}}/" 
             "{{id}}/{{format}}/{{theme_mode}}/{{scale}}.0";
 var maxChatMessages = 150;
 
+var chatOffsetAdjustment = 0;
+var chatOffsetPlusMinus = "+";
 
 
 
@@ -316,6 +318,13 @@ function localFileVideoPlayer() {
   inputNodeChat.addEventListener('change', loadChat, false);
   videoNode.addEventListener('timeupdate', updateChat, false);
 
+
+$('.selector').change(function(){
+			var optionSelected = $("option:selected", this);
+			var valueSelected = this.value;
+			maxChatMessages = valueSelected;
+			updateChat();
+		});
 //	Custom Control Bar Starts
 
 
@@ -766,10 +775,8 @@ function formatHoverTime(TimeInSeconds) {
 
 //Disable on Page load
 $( document ).ready(function() {
-	$("#videoPlayer").hide();
 	$("#video-PausePlay-container").fadeOut(1);
 	$(".custom-controls").fadeOut(1);
-	$("#optionsOverlay").hide();
 });
 
 
@@ -1097,20 +1104,49 @@ function makeUserBadges( comment ) {
 //	Play & Pause Button
 
 
+// Restricts input for each element in the set of matched elements to the given inputFilter.
+(function($) {
+  $.fn.inputFilter = function(callback, errMsg) {
+    return this.on("input keydown keyup mousedown mouseup select contextmenu drop focusout", function(e) {
+      if (callback(this.value)) {
+        // Accepted value
+        if (["keydown","mousedown","focusout"].indexOf(e.type) >= 0){
+          $(this).removeClass("input-error");
+          this.setCustomValidity("");
+        }
+        this.oldValue = this.value;
+        this.oldSelectionStart = this.selectionStart;
+        this.oldSelectionEnd = this.selectionEnd;
+      } else if (this.hasOwnProperty("oldValue")) {
+        // Rejected value - restore the previous one
+        $(this).addClass("input-error");
+        this.setCustomValidity(errMsg);
+        this.reportValidity();
+        this.value = this.oldValue;
+        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+      } else {
+        // Rejected value - nothing to restore
+        this.value = "";
+      }
+    });
+  };
+}(jQuery));
 
 
 
 
 
-
+   
+   
 $(document).ready(function() {
 
+	
+		$("#floatTextBox").inputFilter(function(value) {
+		return /^-?\d*[.,]?\d*$/.test(value); }, "Numbers Only (decimal allowed)");
+
     localFileVideoPlayer();
-		$('.selector').change(function(){
-			var optionSelected = $("option:selected", this);
-			var valueSelected = this.value;
-			maxChatMessages = valueSelected;
-			
-		});
+		
+
+	
 
 });

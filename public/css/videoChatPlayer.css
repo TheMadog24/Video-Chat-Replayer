@@ -64,6 +64,10 @@ video {
     cursor: auto;
 }
 
+#videoPlayer {
+	display: none;
+}
+
 .progress-bar-container{	
 	top: 0;
 	left: 0;
@@ -126,7 +130,7 @@ video {
 	width: 2px;
 	height: 8px;
 	position: absolute;
-	background-color: purple;
+	background-color: rgb(255,255,255,0.6);
 	opacity: 0%;
 }
 .progress-bar-container:hover .timeSeekerBar {
@@ -417,6 +421,7 @@ video {
 /* Custom Video Controls bar Ends */
 
 #optionsOverlay {
+	display: none;
 	position: absolute;
 	height: 100%;
 	width: 100%;
@@ -434,7 +439,7 @@ video {
 #optionsBox {
 	position: absolute;
 	width: 340px;
-	height:100px;
+	height:150px;
 	border: 1px solid #303032;
 	margin: auto;
 	background-color: #1f1f23;
@@ -452,8 +457,8 @@ video {
 	list-style-type: none;
 	padding: 0;
 	width: 100%;
-	height: 80px;
-	margin: auto;
+	height: 130px;
+	margin: 10px auto;
     position: relative;
 }
 
@@ -466,8 +471,20 @@ video {
 	display: inline;
 }
 #optionsMessages ul{
-	display: inline;
 	padding: 0;
+}
+
+#optionsOffset {
+	list-style-type: none;
+	display: inline;
+	margin: auto;
+}
+#optionsOffset li{
+	display: inline;
+}
+#optionsOffset ul{
+	padding: 0;
+	margin: 10px auto auto auto;
 }
 
 #optionsClose {
@@ -519,6 +536,97 @@ video {
 	border: 2px solid #535353;
 	border-radius: 3px;
 	margin-left: 10px;
+}
+
+.OffsetTime{
+	color: white;
+	background-color: #1f1f23;
+	border: 2px solid #535353;
+	border-radius: 3px;
+	margin-left: 5px;
+	width: 40px;
+	margin-right: 2px;
+}
+.Offsetselector{
+	color: white;
+	background-color: #1f1f23;
+	border: 2px solid #535353;
+	border-radius: 3px;
+}
+.CurrentChatOffset{
+	margin-left: 5px;
+}
+.offsetInfo {
+	vertical-align: super;
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}
+
+.offsetInfo .offsetInfoToolTip {
+	visibility: hidden;
+	width: 360px;
+	background-color: #555;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 1;
+	bottom: 125%;
+	left: -618%;
+	margin-left: -60px;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.offsetInfo .offsetInfoToolTip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.offsetInfo:hover .offsetInfoToolTip {
+  visibility: visible;
+  opacity: 1;
+}
+
+#Offsetmessage {
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: 5px;
+	font-size: 14px;
+	background-color: green;
+}
+
+
+#Offsetmessage.animate {
+    animation: fadeOutInfo ease 0.3s;
+    transition-delay:5s;
+    
+}
+.input-error{
+    outline: 1px solid red;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+#timeoffsetTitle {
+	padding-right: 5px;
 }
 
 #optionsmessageNumbers {}
