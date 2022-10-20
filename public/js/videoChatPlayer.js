@@ -228,14 +228,16 @@ function localFileVideoPlayer() {
             
             // If currentTime < curPos :: must step backwards
             if ( chatPos < len && chatPos > 0 &&
-                    currentTime < chatJson.comments.at(chatPos).content_offset_seconds ) {
+                    currentTime < 
+                      (chatJson.comments.at(chatPos).content_offset_seconds + chatOffsetAdjustment) ) {
 
                 chatPos--;
             }
             
             // if currentTime > curPos :: must step forwards
             else if ( (chatPos + 1) < len && (chatPos + 1 ) >= 0 &&
-                   currentTime > chatJson.comments.at(chatPos + 1).content_offset_seconds ) {
+                   currentTime > 
+                    (chatJson.comments.at(chatPos + 1).content_offset_seconds + chatOffsetAdjustment) ) {
 
                 chatPos++;
             }
@@ -949,7 +951,7 @@ let TIME_MINUTE = 60;
 let TIME_HOUR = TIME_MINUTE * 60;
 
 function renderChatTime( comment ) {
-    let timeSeconds = comment.content_offset_seconds;
+    let timeSeconds = comment.content_offset_seconds + chatOffsetAdjustment;
 
     let timeHtml = formatElapsedTime( timeSeconds );
 
