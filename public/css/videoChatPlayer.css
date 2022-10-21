@@ -757,10 +757,10 @@ input[type=number] {
 }
 .cover-bar {
 	position: absolute;
-	bottom: 30px;
+	bottom: 0;
 	right: 0;
     width: 8px;
-	height: calc(100% - 106px);
+	height: calc(100% - 96px);
 	background-color:#18181b;
 	z-index: 999;
 	opacity: 100%;

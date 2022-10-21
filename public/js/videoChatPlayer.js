@@ -39,7 +39,6 @@ var twitchEmoticonsUrl = "https://static-cdn.jtvnw.net/emoticons/v{{version}}/" 
 var maxChatMessages = 150;
 
 var chatOffsetAdjustment = 0;
-var chatOffsetPlusMinus = "+";
 
 
 
@@ -327,6 +326,13 @@ $('.selector').change(function(){
 			maxChatMessages = valueSelected;
 			updateChat();
 		});
+
+// Time offset
+$(".CurrentChatOffset").click(function() {
+	var timeOffset = $(".OffsetTime").val();
+	chatOffsetAdjustment = timeOffset;
+	console.log(timeOffset);
+});
 //	Custom Control Bar Starts
 
 
@@ -1103,7 +1109,8 @@ function makeUserBadges( comment ) {
 
 
 
-//	Play & Pause Button
+
+
 
 
 // Restricts input for each element in the set of matched elements to the given inputFilter.
@@ -1143,8 +1150,8 @@ function makeUserBadges( comment ) {
 $(document).ready(function() {
 
 	
-		$("#floatTextBox").inputFilter(function(value) {
-		return /^-?\d*[.,]?\d*$/.test(value); }, "Numbers Only (decimal allowed)");
+		$("#intTextBox").inputFilter(function(value) {
+		return /^-?\d*$/.test(value); }, "Must be an Number");
 
     localFileVideoPlayer();
 		
