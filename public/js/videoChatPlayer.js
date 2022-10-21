@@ -234,8 +234,7 @@ function localFileVideoPlayer() {
         chatPos < len &&
         chatPos > 0 &&
         currentTime <
-          chatJson.comments.at(chatPos).content_offset_seconds +
-            chatOffsetAdjustment
+          chatJson.comments.at(chatPos).content_offset_seconds
       ) {
         chatPos--;
       }
@@ -245,8 +244,7 @@ function localFileVideoPlayer() {
         chatPos + 1 < len &&
         chatPos + 1 >= 0 &&
         currentTime >
-          chatJson.comments.at(chatPos + 1).content_offset_seconds +
-            chatOffsetAdjustment
+          chatJson.comments.at(chatPos + 1).content_offset_seconds
       ) {
         chatPos++;
       }
@@ -296,20 +294,40 @@ function localFileVideoPlayer() {
           .attr("id", getChatId(curPos))
           .attr("data-pos", curPos)
           .addClass("chatline flex");
+		let chatTime = renderChatTime(msg);
+		let chatBody = renderChatBody(msg);
+		let chatSub = renderChatSub(msg);
+			
+		if (msg.message.user_notice_params["msg-id"] == "resub") {
+			let chatLine = $("<div>")
+			.attr("id", getChatId(curPos))
+			.attr("data-pos", curPos)
+			.addClass("chatline flex")
+			.addClass("sub");
+			
+			chatLine.append(chatSub);
+			
+			if (curPos == messagePos) {
+			chatLine.appendTo("#chat");
+			} else {
+			chatLine.insertBefore("#" + getChatId(curPos + 1));
+			}
 
-        let chatTime = renderChatTime(msg);
-        let chatBody = renderChatBody(msg);
+			$("#chat").scrollTop($("#chat")[0].scrollHeight);
+		}
+		else {
+			chatLine.append(chatTime);
+			chatLine.append(chatBody);
 
-        chatLine.append(chatTime);
-        chatLine.append(chatBody);
+			if (curPos == messagePos) {
+			chatLine.appendTo("#chat");
+			} else {
+			chatLine.insertBefore("#" + getChatId(curPos + 1));
+			}
 
-        if (curPos == messagePos) {
-          chatLine.appendTo("#chat");
-        } else {
-          chatLine.insertBefore("#" + getChatId(curPos + 1));
-        }
-
-        $("#chat").scrollTop($("#chat")[0].scrollHeight);
+			$("#chat").scrollTop($("#chat")[0].scrollHeight);
+		}
+        
       }
       curPos--;
     }
@@ -928,7 +946,7 @@ let TIME_MINUTE = 60;
 let TIME_HOUR = TIME_MINUTE * 60;
 
 function renderChatTime(comment) {
-  let timeSeconds = comment.content_offset_seconds + chatOffsetAdjustment;
+  let timeSeconds = comment.content_offset_seconds;
 
   let timeHtml = formatElapsedTime(timeSeconds);
 
@@ -1012,6 +1030,42 @@ function renderChatBody(comment) {
   chatBody.append(message);
 
   return chatBody;
+}
+function renderChatSub(comment) {
+  // comment.message.body;
+  let message = extractMessageFragments(comment);
+
+  let colorHex = comment.message.user_color;
+  let styles = { color: colorHex };
+
+  let player = $("<span>")
+    .addClass("commenter")
+    .css(styles)
+    .text(comment.commenter.display_name);
+  let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+  let primeSubsvg = $("<svg>").addClass("subsvg");
+  let primeSub = $("<path>").attr("d", "M18 5v8a2 2 0 0 1-2 2H4a2.002 2.002 0 0 1-2-2V5l4 3 4-4 4 4 4-3z").addClass("primeSub");
+  let tier1Subsvg = $("<svg>")
+  let tier1Sub = $("<path>").attr("d", "M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77zz").addClass("primeSub");
+
+  let chatBody = $("<div>").addClass("chatbody").attr('id', 'sub');
+  // chatBody.append( makeUserBadges( comment ) );
+    if (message.is(':contains("subscribed with Prime")')){
+	  chatBody.append(primeSubsvg);
+	  primeSubsvg.append(primeSub);
+  }if (message.is(':contains("subscribed at Tier 1")')){
+	  chatBody.append(tier1Subsvg);
+	  primeSubsvg.append(tier1Sub);
+  } else {
+	    chatBody.append(player);
+  chatBody.append(player);
+  // chatBody.append(messagePrefix);
+  chatBody.append(message);
+
+
+  return chatBody;
+  }
+
 }
 
 function extractMessageFragments(comment) {

@@ -716,7 +716,6 @@ input[type=number] {
     width: 340px;
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
-	border-bottom: 1px solid #303032;
     height: calc(100% - 96px);
 	overflow-y: auto;
 	background-color:#18181b;
@@ -730,6 +729,41 @@ input[type=number] {
 	/* scrollbar-width: none; */
 	padding-bottom: 5px;
 }
+
+/* Test Message formatting */
+
+#sub {
+	border-left: 5px solid #a970ff;
+	background-color: #1f1f23;
+}
+#sub .commenter{
+	position: relative;
+	top: 8px;
+	left: 45px;
+	margin: 0;
+	display: block;
+	font-weight: 700;
+}
+#sub .chatmessage{
+	position: relative;
+	/* top: 10px; */
+	/* left: 45px; */
+	margin: 10px auto auto 45px;
+	display: block;
+}
+.subsvg{
+	margin: 9px auto auto 18px;
+	width: 25px;
+	height: 25px;
+}
+.primeSub {
+	position: relative;
+	fill: #a970ff;
+	width: 25px;
+	height: 25px;
+}
+
+
 
 
 /* width */
