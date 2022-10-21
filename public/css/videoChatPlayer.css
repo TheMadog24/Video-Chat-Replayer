@@ -739,28 +739,36 @@ input[type=number] {
 #sub .commenter{
 	position: relative;
 	top: 8px;
-	left: 45px;
+	left: 10px;
 	margin: 0;
 	display: block;
 	font-weight: 700;
+	display: inline-block;
 }
 #sub .chatmessage{
 	position: relative;
-	/* top: 10px; */
-	/* left: 45px; */
-	margin: 10px auto auto 45px;
+	margin: 0 auto 10px 45px;
 	display: block;
 }
-.subsvg{
-	margin: 9px auto auto 18px;
-	width: 25px;
-	height: 25px;
+#sub svg{
+	margin: 9px auto auto 15px;
+	width: 20px;
+	height: 20px;
+	display: inline-block;
 }
 .primeSub {
 	position: relative;
+	margin: 0;
 	fill: #a970ff;
-	width: 25px;
-	height: 25px;
+	width: 16px;
+	height: 11px;
+}
+.tierOneSub {
+	position: relative;
+	margin: 0;
+	fill: #adadb8;
+	width: 16px;
+	height: 11px;
 }
 
 
@@ -859,6 +867,7 @@ input {
 .chatline {
     display: flex;
     white-space: nowrap;
+	margin-top: 5px;
 }
 
 .chattime {
