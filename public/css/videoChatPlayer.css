@@ -770,6 +770,34 @@ input[type=number] {
 	width: 16px;
 	height: 11px;
 }
+.subgift {
+	fill: #efeff1;
+}
+#biggiftsub {
+	border-left: 5px solid #a970ff;
+	background-color: #1f1f23;
+}
+#biggiftsub .commenter{
+	position: relative;
+	top: 12px;
+	left: 9px;
+	margin: 0;
+	display: block;
+	font-size: 16px;
+	font-weight: 900;
+	display: inline-block;
+}
+#biggiftsub .chatmessage{
+	position: relative;
+	margin: -16px auto 14px 65px;
+	display: block;
+}
+#bigSub {
+	position: relative;
+	margin: 9px auto auto 15px;
+	width: 40px;
+	height: 40px;
+}
 
 
 
@@ -887,6 +915,7 @@ input {
 }
 
 .chatbody {
+	width: 100%;
     white-space: normal;
 	word-break: break-word;
 }
