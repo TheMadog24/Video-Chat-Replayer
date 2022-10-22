@@ -439,7 +439,7 @@ video {
 #optionsBox {
 	position: absolute;
 	width: 340px;
-	height:150px;
+	height:170px;
 	border: 1px solid #303032;
 	margin: auto;
 	background-color: #1f1f23;
@@ -457,7 +457,7 @@ video {
 	list-style-type: none;
 	padding: 0;
 	width: 100%;
-	height: 130px;
+	height: 150px;
 	margin: 10px auto;
     position: relative;
 }
@@ -485,6 +485,19 @@ video {
 #optionsOffset ul{
 	padding: 0;
 	margin: 10px auto auto auto;
+}
+#accentColorOption {
+	list-style-type: none;
+	display: inline;
+	margin: auto;
+}
+#accentColorOption li{
+	display: inline;
+}
+#accentColorOption ul{
+	padding: 0;
+	margin: 10px auto auto auto;
+	text-align: center;
 }
 
 #optionsClose {
@@ -562,7 +575,6 @@ video {
 	display: inline-block;
 	border-bottom: 1px dotted black;
 }
-
 .offsetInfo .offsetInfoToolTip {
 	visibility: hidden;
 	width: 360px;
@@ -596,6 +608,45 @@ video {
   opacity: 1;
 }
 
+.accentInfo {
+	vertical-align: super;
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+}
+.accentInfo .accentInfoToolTip {
+	visibility: hidden;
+	width: 220px;
+	background-color: #555;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 1;
+	bottom: 125%;
+	left: -232%;
+	margin-left: -60px;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.accentInfo .accentInfoToolTip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.accentInfo:hover .accentInfoToolTip {
+  visibility: visible;
+  opacity: 1;
+}
+
 #Offsetmessage {
 	margin-top: auto;
 	margin-bottom: auto;
@@ -625,7 +676,22 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.colorpicker {
+	position: relative;
+    border: solid thin black;
+    width: 50px;
+    height: 18px;
+	display: inline-block;
+	background-color: #a970ff;
+	border-radius: 5px;
+	margin: auto;
+	top: 4px;
+}
+
 #timeoffsetTitle {
+	padding-right: 5px;
+}
+#accentColorTitle {
 	padding-right: 5px;
 }
 
@@ -732,11 +798,13 @@ input[type=number] {
 
 /* Test Message formatting */
 
-#sub {
-	border-left: 5px solid #a970ff;
+.issubmessage {
+	border-left-color: #a970ff;
+	border-left-style: solid;
+	border-left-width: 5px;
 	background-color: #1f1f23;
 }
-#sub .commenter{
+.issubmessage .commenter{
 	position: relative;
 	top: 8px;
 	left: 10px;
@@ -745,12 +813,12 @@ input[type=number] {
 	font-weight: 700;
 	display: inline-block;
 }
-#sub .chatmessage{
+.issubmessage .chatmessage{
 	position: relative;
 	margin: 0 auto 10px 45px;
 	display: block;
 }
-#sub svg{
+.issubmessage svg{
 	margin: 9px auto auto 15px;
 	width: 20px;
 	height: 20px;
@@ -773,11 +841,14 @@ input[type=number] {
 .subgift {
 	fill: #efeff1;
 }
-#biggiftsub {
-	border-left: 5px solid #a970ff;
+.isbiggiftsubmessage {
+	border-left-color: #a970ff;
+	border-left-style: solid;
+	border-left-width: 5px;
 	background-color: #1f1f23;
+	margin: 0;
 }
-#biggiftsub .commenter{
+.isbiggiftsubmessage .commenter{
 	position: relative;
 	top: 12px;
 	left: 9px;
@@ -787,12 +858,12 @@ input[type=number] {
 	font-weight: 900;
 	display: inline-block;
 }
-#biggiftsub .chatmessage{
+.isbiggiftsubmessage .chatmessage{
 	position: relative;
 	margin: -16px auto 14px 65px;
 	display: block;
 }
-#bigSub {
+.isbiggiftsubmessageimg {
 	position: relative;
 	margin: 9px auto auto 15px;
 	width: 40px;

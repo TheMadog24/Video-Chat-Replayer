@@ -16,6 +16,8 @@
         <link rel="stylesheet" 
                 href="css/videoChatPlayer.css"></link>
         <script type="text/javascript" src="js/videoChatPlayer.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css"></link>
+		<script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
 
     </head>
     <body>	
@@ -62,8 +64,14 @@
 						</li>
 						<li><button class="CurrentChatOffset">Set</button></li>
 					</ul>
+				</li>
+				<li id="accentColorOption">
 					<ul>
-						<span id="Offsetmessage" class="animate"></span>
+						<li class="accentInfo">&#9432; 
+							<span class="accentInfoToolTip">Sets the accent color.<br>Used for sub messages.</span>
+						</li>
+						<li id="accentColorTitle">Accent Color:</li>
+						<div class="colorpicker"></div>
 					</ul>
 				</li>
 				<li id="optionsClose">

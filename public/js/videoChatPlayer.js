@@ -303,7 +303,7 @@ function localFileVideoPlayer() {
 			.attr("id", getChatId(curPos))
 			.attr("data-pos", curPos)
 			.addClass("chatline flex")
-			.addClass("sub");
+			.addClass("issub");
 			
 			let chatSub = renderChatSub(msg);
 			
@@ -341,7 +341,7 @@ function localFileVideoPlayer() {
 			.attr("id", getChatId(curPos))
 			.attr("data-pos", curPos)
 			.addClass("chatline flex")
-			.addClass("subgift");
+			.addClass("issubgift");
 			
 			let subgift = rendersubgift(msg);
 			
@@ -389,6 +389,29 @@ function localFileVideoPlayer() {
     maxChatMessages = valueSelected;
     updateChat();
   });
+
+//Color Picker
+
+$('.colorpicker').spectrum({
+	color: "#a970ff",
+	type: "color",
+	showPalette: false,
+	showInput: true,
+	showInitial: true,
+	showAlpha: false,
+	showButtons: false,
+	allowEmpty: false,
+	move: function(color) {
+		$(".colorpicker").css('background-color', color.toHexString());
+		$(".issubmessage").css('border-left-color', color.toHexString());
+		$(".isbiggiftsubmessage").css('border-left-color', color.toHexString());
+		accentColor = color.toHexString();
+	},
+});
+
+
+
+
 
   // Time offset
   $(".CurrentChatOffset").click(function () {
@@ -1050,6 +1073,8 @@ function pad(num, size) {
   return str.substring(str.length - size);
 }
 
+var accentColor = "#a970ff";
+
 function renderChatBody(comment) {
   // comment.message.body;
   let message = extractMessageFragments(comment);
@@ -1087,7 +1112,7 @@ function renderChatSub(comment) {
   
   
 
-  let chatBody = $("<div>").addClass("chatbody").attr('id', 'sub');
+  let chatBody = $("<div>").addClass("chatbody").addClass('issubmessage').css('border-left-color', accentColor);
   // chatBody.append( makeUserBadges( comment ) );
     if (message.is(':contains("subscribed with Prime")')){
 		let primeSub = $('<svg><path class="primeSub" d="M18 5v8a2 2 0 0 1-2 2H4a2.002 2.002 0 0 1-2-2V5l4 3 4-4 4 4 4-3z"/></svg>');
@@ -1099,7 +1124,6 @@ function renderChatSub(comment) {
 	}
 	chatBody.append(player);
 	chatBody.append(message);
-	console.log(message.is(':contains("subscribed with Prime")'));
 	return chatBody;
 
 }
@@ -1116,15 +1140,14 @@ function renderChatsubmysterygift(comment) {
     .text(comment.commenter.display_name);
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
-  let chatBody = $("<div>").addClass("chatbody").attr('id', 'biggiftsub');
+  let chatBody = $("<div>").addClass("chatbody").addClass('isbiggiftsubmessage').css('border-left-color', accentColor);
   // chatBody.append( makeUserBadges( comment ) );
     if (message.is(':contains("is gifting")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
-		let giftedsub = $('<img id="bigSub" src="img/subs/gift.png"/>');
+		let giftedsub = $('<img class="isbiggiftsubmessageimg" src="img/subs/gift.png"/>');
 		chatBody.append(giftedsub);
 	}
 	chatBody.append(player);
 	chatBody.append(message);
-	console.log(message.is(':contains("subscribed with Prime")'));
 	return chatBody;
 
 }
@@ -1144,16 +1167,14 @@ function rendersubgift(comment) {
   
   
 
-  let chatBody = $("<div>").addClass("chatbody").attr('id', 'sub');
+  let chatBody = $("<div>").addClass("chatbody").addClass('issubmessage').css('border-left-color', accentColor);
   // chatBody.append( makeUserBadges( comment ) );
     if (message.is(':contains("gifted a Tier")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
 		let subgift = $('<svg><path class="subgift" fill-rule="evenodd" d="M16 6h2v6h-1v6H3v-6H2V6h2V4.793c0-2.507 3.03-3.762 4.803-1.99.131.131.249.275.352.429L10 4.5l.845-1.268a2.81 2.81 0 01.352-.429C12.969 1.031 16 2.286 16 4.793V6zM6 4.793V6h2.596L7.49 4.341A.814.814 0 006 4.793zm8 0V6h-2.596l1.106-1.659a.814.814 0 011.49.451zM16 8v2h-5V8h5zm-1 8v-4h-4v4h4zM9 8v2H4V8h5zm0 4H5v4h4v-4z" fill-rule="evenodd"/></svg>');
 		chatBody.append(subgift);
-		console.log("Added Tier1");
 	}
 	chatBody.append(player);
 	chatBody.append(message);
-	console.log(message.is(':contains("subscribed with Prime")'));
 	return chatBody;
 
 }
@@ -1164,7 +1185,11 @@ function extractMessageFragments(comment) {
 
   jQuery.each(comment.message.fragments, function (index, fragment) {
     var altName = fragment.text;
-    if (fragment.emoticon && fragment.emoticon.emoticon_id) {
+    // if (comment.message["bits_spent"]) {
+      // console.log("bits sent");
+	  // message.append(makeCheer(comment, altName));
+    // }
+	if (fragment.emoticon && fragment.emoticon.emoticon_id) {
       message.append(makeEmoticon(fragment.emoticon.emoticon_id, altName));
     } else {
       message.append($('<span debug="extractMessageFragments">').text(altName));
@@ -1201,6 +1226,13 @@ function makeEmoticon(emoticonId, altName) {
 
   return $('<span debug="makeEmotiocon">').text(altName);
 }
+//makes Cheer Images
+// function makeCheer(comment, altName) {
+  // if (altName.is(':contains("Cheer1")')) {
+    // console.log("Conatins bits!");
+  // }
+  
+// }
 
 function makeUserBadges(comment) {
   var userBadges = $("<span>").addClass("user-badges");
