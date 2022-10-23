@@ -317,7 +317,7 @@ function localFileVideoPlayer() {
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
 		}
-		if (msg.message.user_notice_params["msg-id"] == "submysterygift") {
+		else if (msg.message.user_notice_params["msg-id"] == "submysterygift") {
 			let chatLine = $("<div>")
 			.attr("id", getChatId(curPos))
 			.attr("data-pos", curPos)
@@ -336,7 +336,7 @@ function localFileVideoPlayer() {
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
 		}
-		if (msg.message.user_notice_params["msg-id"] == "subgift") {
+		else if (msg.message.user_notice_params["msg-id"] == "subgift") {
 			let chatLine = $("<div>")
 			.attr("id", getChatId(curPos))
 			.attr("data-pos", curPos)
@@ -355,7 +355,7 @@ function localFileVideoPlayer() {
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
 		}
-		else if (!(msg.message.user_notice_params["msg-id"] == "subgift") && !(msg.message.user_notice_params["msg-id"] == "submysterygift") && !(msg.message.user_notice_params["msg-id"] == "resub")){
+		else if (msg.message.user_notice_params["msg-id"] !== "subgift" && msg.message.user_notice_params["msg-id"] !== "submysterygift" && msg.message.user_notice_params["msg-id"] !== "resub"){
 			chatLine.append(chatTime);
 			chatLine.append(chatBody);
 
@@ -1179,12 +1179,16 @@ function rendersubgift(comment) {
 
 }
 
+
+
+
 function extractMessageFragments(comment) {
   let message = $("<span>").addClass("chatmessage");
   //.text( comment.message.body );
 
   jQuery.each(comment.message.fragments, function (index, fragment) {
     var altName = fragment.text;
+	//if the message has "bits_spent", it gets sent for processing
     // if (comment.message["bits_spent"]) {
       // console.log("bits sent");
 	  // message.append(makeCheer(comment, altName));
@@ -1204,7 +1208,7 @@ function extractMessageFragments(comment) {
 
   return message;
 }
-
+//makes Emotes ----------------------------------------
 function makeEmoticon(emoticonId, altName) {
   var emote = emotesThirdParty[emoticonId];
 
@@ -1226,14 +1230,28 @@ function makeEmoticon(emoticonId, altName) {
 
   return $('<span debug="makeEmotiocon">').text(altName);
 }
-//makes Cheer Images
-// function makeCheer(comment, altName) {
-  // if (altName.is(':contains("Cheer1")')) {
-    // console.log("Conatins bits!");
-  // }
-  
-// }
+//makes Cheer Images (failed)----------------------------------------
 
+// function makeCheer(comment, altName) {
+	// console.log("Began Proccessing Bits");
+	// console.log(altName);
+  // if (altName.includes("Cheer1000")) {
+	  
+	  // var img = $("<img>")
+      // .attr("title", "Cheer1000")
+      // .addClass("cheer")
+      // .attr("src", "img/bits/1000.gif");
+	  
+    // console.log("Conatins 1000 bits!");
+	
+	// // let newCheer = altName.replace("Cheer1000", (img + "1000"));
+	// let newCheer = altName.replace("Cheer1000", "1000");
+	// console.log("Replaced!");
+	
+	// return img;
+  // }
+  // return "";
+// }
 function makeUserBadges(comment) {
   var userBadges = $("<span>").addClass("user-badges");
   if (comment.message.user_badges) {
@@ -1252,7 +1270,6 @@ function makeUserBadges(comment) {
   }
   return userBadges;
 }
-
 // Restricts input for each element in the set of matched elements to the given inputFilter.
 (function ($) {
   $.fn.inputFilter = function (callback, errMsg) {
