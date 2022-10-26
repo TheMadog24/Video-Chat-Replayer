@@ -44,6 +44,14 @@ var chatOffsetAdjustment = 0;
 var emotesThirdParty = {};
 var emotesFirstParty = {};
 
+
+// Cheer RegEx: Need to repeat the same pattern with both look forward and look behind:
+var regExCheersFragments = "Cheer1\\b|Cheer10\\b|Cheer100\\b|Cheer1000\\b|Cheer10000\\b|Cheer100000\\b";
+var regExCheers =  new RegExp(
+                        "((?=" + regExCheersFragments + ")|" + 
+                        "(?<=" + regExCheersFragments + "))", "i");
+
+
 function localFileVideoPlayer() {
   var URL = window.URL || window.webkitURL;
   var videoNode = document.querySelector("video");
@@ -1186,14 +1194,24 @@ function extractMessageFragments(comment) {
   let message = $("<span>").addClass("chatmessage");
   //.text( comment.message.body );
 
-  jQuery.each(comment.message.fragments, function (index, fragment) {
+  // Expands message fragments to isolate and mark Cheers:
+  //   Cheer is identified by: ( fragment.isCheer === true )
+  var fragments = getExpandedMessageFragments( comment.message.fragments );
+
+  jQuery.each(fragments, function (index, fragment) {
     var altName = fragment.text;
 	//if the message has "bits_spent", it gets sent for processing
     // if (comment.message["bits_spent"]) {
       // console.log("bits sent");
 	  // message.append(makeCheer(comment, altName));
     // }
-	if (fragment.emoticon && fragment.emoticon.emoticon_id) {
+
+    if ( fragment.isCheer ) {
+      // Process fragment as a Cheer:
+      message.append( buildFragmentCheer( fragment ) );
+
+    }
+    else if (fragment.emoticon && fragment.emoticon.emoticon_id) {
       message.append(makeEmoticon(fragment.emoticon.emoticon_id, altName));
     } else {
       message.append($('<span debug="extractMessageFragments">').text(altName));
@@ -1208,6 +1226,97 @@ function extractMessageFragments(comment) {
 
   return message;
 }
+
+/**
+ * This function, using the fragment, will construct a Cheer.
+ * This fragment has already been identified as being a cheer 
+ * and it's fragment.text contains the name of the cheer, in a
+ * case insensitive formatting (format may be unpredictable).
+ * 
+ * The nature of the fragment is an object:
+ * <pre>
+ *  {
+ *    text: <cheerId>,
+ *    isCheer: true,
+ *    emoticon: <clonedFromOriginalFragment>
+ * }
+ * </pre>
+ * 
+ * @param {} fragment 
+ * @returns 
+ */
+function buildFragmentCheer( fragment ) {
+  var cheer = fragment.text.trim();
+  var amount = cheer.replace(/cheer/gi, "");
+  var img = $("<img>")
+      .attr("title", cheer )
+      .addClass("cheer")
+      .attr("data-cheeramount", amount)
+      .attr("src", "img/cheer/cheer" + amount + "_1.gif");
+//      .attr("src", "https://d3aqoihi2n8ty8.cloudfront.net/actions/cheer/dark/animated/" + amount + "/1.gif`");
+
+  return img;
+}
+
+
+function getExpandedMessageFragments( fragments ) {
+  var results = [];
+
+  jQuery.each( fragments, function (index, fragment) {
+    
+    // If the fragment.text contains a cheer, then we need to process it
+    // and split them up.
+    if ( regExCheers.test( fragment.text ) ) {
+      var splits = processFragmentsSplitAltName( fragment.text );
+      
+      jQuery.each( splits, function (idx, splitText ) {
+
+        var newFragment = {
+          "text": splitText,
+          "emoticon": fragment.emoticon
+        };
+        
+        if ( regExCheers.test( splitText ) ) {
+          // We have a cheer node:  Mark it as such...
+          newFragment["isCheer"] = true;
+        }
+
+        results.push( newFragment );
+      });
+
+    }
+    else {
+      // No cheer, so just add the fragment:
+      results.push( fragment );
+    }
+  });
+
+  return results;
+}
+
+
+/**
+ * Using the sourceText, identify if this string contains a 
+ * cheer, and if it does, then split it up in to the multiple 
+ * parts and return as an array of strings.
+ * 
+ * @param {*} sourceText 
+ * @returns 
+ */
+function processFragmentsSplitAltName( sourceText ) {
+  var splits = [];
+  
+  if ( regExCheers.test( sourceText ) ) {
+    splits = sourceText.split(regExCheers).filter(Boolean) 
+  }
+  else {
+    // No Cheer, so just add to splits:
+    splits.push( sourceText );
+  }
+
+  return splits;
+}
+
 //makes Emotes ----------------------------------------
 function makeEmoticon(emoticonId, altName) {
   var emote = emotesThirdParty[emoticonId];
