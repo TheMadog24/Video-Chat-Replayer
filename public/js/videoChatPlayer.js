@@ -325,6 +325,24 @@ function localFileVideoPlayer() {
 			}
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
+		} else if (msg.message.user_notice_params["msg-id"] == "sub") {
+			let chatLine = $("<div>")
+			.attr("id", getChatId(curPos))
+			.attr("data-pos", curPos)
+			.addClass("chatline flex")
+			.addClass("issub");
+			
+			let chatSub = renderChatSub(msg);
+			
+			chatLine.append(chatSub);
+			
+			if (curPos == messagePos) {
+			chatLine.appendTo("#chat");
+			} else {
+			chatLine.insertBefore("#" + getChatId(curPos + 1));
+			}
+
+			$("#chat").scrollTop($("#chat")[0].scrollHeight);
 		}
 		else if (msg.message.user_notice_params["msg-id"] == "submysterygift") {
 			let chatLine = $("<div>")
