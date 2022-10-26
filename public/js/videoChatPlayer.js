@@ -620,9 +620,34 @@ $('.colorpicker').spectrum({
     }, 5000);
   });
 
+
+
+//width:calc(100% - 341px);
+	$("#collapseChat").click(function (e) {
+		$("#leftSidebar").hide();
+		$("#videoPlayer").css('width', 'calc(100% - 26px)');
+		$(".custom-controls").css('width', 'calc(100% - 26px)');
+		$("#video-PausePlay-container").css('width', 'calc(100% - 26px)');
+		previewBoxparams();
+		barSelectorparams();
+	}); 
+	$("#chatCover").click(function (e) {
+		$("#leftSidebar").show();
+		$("#videoPlayer").css('width', 'calc(100% - 341px)');
+		$(".custom-controls").css('width', 'calc(100% - 341px)');
+		$("#video-PausePlay-container").css('width', 'calc(100% - 341px)');
+		previewBoxparams();
+		barSelectorparams();
+	}); 
+
   //Re-grab Paramiters on Window Resize Stars
   $(window).on("resize", function () {
-    //PreviewBox Follows Mouse Xaxis
+	previewBoxparams();
+  });
+    
+	
+  function previewBoxparams() {
+	//PreviewBox Follows Mouse Xaxis
     var innerDiv = $("#previewBox");
     var outerDiv = $("#videoPlayer");
     var outDim = outerDiv.offset();
@@ -648,8 +673,11 @@ $('.colorpicker').spectrum({
         }
       }
     });
-  });
+  }
   $(window).on("resize", function () {
+	barSelectorparams();
+  });
+    function barSelectorparams() {
     //barSelector Follows Mouse Xaxis
     var innerClass = $(".timeSeekerBar");
     var outerClass = $(".progress-bar");
@@ -677,63 +705,10 @@ $('.colorpicker').spectrum({
         }
       }
     });
-  });
+  }
   //Re-grab Paramiters on Window Resize Ends
 
-  //PreviewBox Follows Mouse Xaxis
-  var innerDiv = $("#previewBox");
-  var outerDiv = $("#videoPlayer");
-  var outDim = outerDiv.offset();
-  outDim.right = outDim.left + outerDiv.width();
-  $(document).on("mousemove", function (e) {
-    var x = e.clientX - 90;
-    var x_allowed = x >= outDim.left && x <= outDim.right - innerDiv.width();
-    if (x_allowed) {
-      innerDiv.css({
-        left: x + "px",
-      });
-    } else {
-      //fine tune tweaks
-      if (x >= outDim.left) {
-        innerDiv.css({
-          left: outDim.right - innerDiv.width() + "px",
-        });
-      }
-      if (x <= outDim.right - innerDiv.width()) {
-        innerDiv.css({
-          left: outDim.left + "px",
-        });
-      }
-    }
-  });
 
-  //barSelector Follows Mouse Xaxis
-  var innerClass = $(".timeSeekerBar");
-  var outerClass = $(".progress-bar");
-  var outClass = outerClass.offset();
-  outClass.right = outClass.left + outerClass.width();
-  $(document).on("mousemove", function (e) {
-    var xc = e.clientX - 0;
-    var xc_allowed =
-      xc >= outClass.left && xc <= outClass.right - innerClass.width();
-    if (xc_allowed) {
-      innerClass.css({
-        left: xc + "px",
-      });
-    } else {
-      //fine tune tweaks
-      if (xc >= outClass.left) {
-        innerClass.css({
-          left: outClass.right - innerClass.width() + "px",
-        });
-      }
-      if (xc <= outClass.right - innerClass.width()) {
-        innerClass.css({
-          left: outClass.left + "px",
-        });
-      }
-    }
-  });
 
   // Video Shortcut Keys
 

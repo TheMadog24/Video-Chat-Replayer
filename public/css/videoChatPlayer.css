@@ -733,6 +733,7 @@ input[type=number] {
 }
 
 #clickOptions {
+	margin: auto auto auto 4px;
 	font-size: 14px;
 	width: 60px;
 	cursor: pointer;
@@ -746,7 +747,6 @@ input[type=number] {
                                   supported by Chrome, Edge, Opera and Firefox */	
 }
 
-
 #message {
 	margin-top: auto;
 	margin-bottom: auto;
@@ -754,8 +754,6 @@ input[type=number] {
 	font-size: 14px;
 	background-color: green;
 }
-
-
 #message.animate {
     animation: fadeOutInfo ease 0.3s;
     transition-delay:5s;
@@ -774,7 +772,72 @@ input[type=number] {
     display: inline-block;
 }
 
+#collapseChat {
+	position: absolute;
+	padding: 1px;
+	right: 4px;
+	top: 65px;
+	border-radius: 4px;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */	
+}
+#collapseChat:hover {
+	cursor: pointer;
+	background-color: #464649;
+}
+#collapseChat .collapsetooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #464649;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  right: 135%;
+}
+#collapseChat .collapsetooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #464649;
+}
 
+#collapseChat:hover .collapsetooltiptext {
+  visibility: visible;
+}
+
+#chatCover:hover {
+	background-color: #2b2b2f;
+	cursor: pointer;
+}
+#chatCover {
+	height: 100%;
+	width: 25px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	border-left: 1px solid #303032;
+	border-top: 1px solid #303032;
+	border-bottom: 1px solid #303032;
+	background-color: #1f1f23;
+}
+#chatCover svg{
+	fill: white;
+	position: absolute;
+	
+}
 #chat {
 	position: absolute;
 	bottom: 0;
