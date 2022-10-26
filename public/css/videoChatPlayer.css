@@ -783,7 +783,7 @@ input[type=number] {
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
     height: calc(100% - 96px);
-	overflow-y: auto;
+	overflow-y: scroll;
 	background-color:#18181b;
  	font-family: "Inter";
 	color: rgb(222, 222, 227);
@@ -873,7 +873,37 @@ input[type=number] {
 	position: relative;
 	width: 28px;
 	height: 28px;
-	margin-top: -4px;
+	margin: -4px 2px 0 2px;
+}
+.cheer1 {
+	margin-right: 4px;
+	font-weight: 900;
+	color: #6a696e;
+}
+.cheer100 {
+	margin-right: 4px;
+	font-weight: 900;
+	color: #913df7;
+}
+.cheer1000 {
+	margin-right: 4px;
+	font-weight: 900;
+	color: #3fd1be;
+}
+.cheer5000 {
+	margin-right: 4px;
+	font-weight: 900;
+	color: #2472d4;
+}
+.cheer10000 {
+	margin-right: 4px;
+	font-weight: 900;
+	color: #ff2b28;
+}
+.cheer100000 {
+	margin-right: 4px;
+	font-weight: 900;
+	color: #f1921a;
 }
 
 
@@ -907,7 +937,7 @@ input[type=number] {
 	bottom: 0;
 	right: 0;
     width: 8px;
-	height: calc(100% - 96px);
+	height: calc(100% - 92px);
 	background-color:#18181b;
 	z-index: 999;
 	opacity: 100%;
@@ -973,6 +1003,7 @@ input {
     display: flex;
     white-space: nowrap;
 	margin-top: 5px;
+	margin-right: 1px;
 }
 
 .chattime {

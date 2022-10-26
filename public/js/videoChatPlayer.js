@@ -46,7 +46,8 @@ var emotesFirstParty = {};
 
 
 // Cheer RegEx: Need to repeat the same pattern with both look forward and look behind:
-var regExCheersFragments = "Cheer1\\b|Cheer10\\b|Cheer100\\b|Cheer1000\\b|Cheer10000\\b|Cheer100000\\b";
+// var regExCheersFragments = "Cheer1\\b|Cheer10\\b|Cheer25\\b|Cheer100\\b|Cheer1000\\b|Cheer5000\\b|Cheer10000\\b|Cheer100000\\b";
+var regExCheersFragments = "Cheer[0-9]{1,6}\\b";
 var regExCheers =  new RegExp(
                         "((?=" + regExCheersFragments + ")|" + 
                         "(?<=" + regExCheersFragments + "))", "i");
@@ -723,7 +724,8 @@ $('.colorpicker').spectrum({
   function vidCtrl(e) {
     const vid = document.querySelector("#videoPlayer");
     const key = e.code;
-
+	
+  if ($("#videoPlayer").is(":visible")) {
     if (key === "ArrowLeft") {
       vid.currentTime -= 5;
       if (vid.currentTime < 0) {
@@ -767,6 +769,7 @@ $('.colorpicker').spectrum({
         $("#fill").css("width", "calc(0% - 9.5px)");
       }
     }
+  }
   }
 
   // Show current Video Time On Bar Hover
@@ -1209,6 +1212,7 @@ function extractMessageFragments(comment) {
     if ( fragment.isCheer ) {
       // Process fragment as a Cheer:
       message.append( buildFragmentCheer( fragment ) );
+      message.append( buildFragmentCheerNumber( fragment ) );
 
     }
     else if (fragment.emoticon && fragment.emoticon.emoticon_id) {
@@ -1248,14 +1252,54 @@ function extractMessageFragments(comment) {
 function buildFragmentCheer( fragment ) {
   var cheer = fragment.text.trim();
   var amount = cheer.replace(/cheer/gi, "");
+  var newcheeramount = 1;
+  
+  if ( amount > 0 && amount < 100) {
+      newcheeramount = 1;
+    } else if (amount < 1000) {
+      newcheeramount = 100;
+    } else if (amount < 5000) {
+      newcheeramount = 1000;
+    } else if (amount < 10000) {
+      newcheeramount = 5000;
+    } else if (amount < 100000) {
+      newcheeramount = 10000;
+    } else if (amount > 99999) {
+      newcheeramount = 100000;
+    };
+  
   var img = $("<img>")
       .attr("title", cheer )
       .addClass("cheer")
       .attr("data-cheeramount", amount)
-      .attr("src", "img/cheer/cheer" + amount + "_1.gif");
-//      .attr("src", "https://d3aqoihi2n8ty8.cloudfront.net/actions/cheer/dark/animated/" + amount + "/1.gif`");
+      .attr("src", "img/cheer/cheer" + newcheeramount + "_1.gif");
 
   return img;
+}
+function buildFragmentCheerNumber( fragment ) {
+  var cheer = fragment.text.trim();
+  var amount = cheer.replace(/cheer/gi, "");
+  var newcheeramount = 1;
+  
+  if ( amount > 0 && amount < 100) {
+      newcheeramount = 1;
+    } else if (amount < 1000) {
+      newcheeramount = 100;
+    } else if (amount < 5000) {
+      newcheeramount = 1000;
+    } else if (amount < 10000) {
+      newcheeramount = 5000;
+    } else if (amount < 100000) {
+      newcheeramount = 10000;
+    } else if (amount > 99999) {
+      newcheeramount = 100000;
+    };
+
+  var number = $("<span>")
+      .addClass("cheer" + newcheeramount)
+      .text(amount);
+
+  return number;
 }
 
 
@@ -1339,28 +1383,7 @@ function makeEmoticon(emoticonId, altName) {
 
   return $('<span debug="makeEmotiocon">').text(altName);
 }
-//makes Cheer Images (failed)----------------------------------------
 
-// function makeCheer(comment, altName) {
-	// console.log("Began Proccessing Bits");
-	// console.log(altName);
-  // if (altName.includes("Cheer1000")) {
-	  
-	  // var img = $("<img>")
-      // .attr("title", "Cheer1000")
-      // .addClass("cheer")
-      // .attr("src", "img/bits/1000.gif");
-	  
-    // console.log("Conatins 1000 bits!");
-	
-	// // let newCheer = altName.replace("Cheer1000", (img + "1000"));
-	// let newCheer = altName.replace("Cheer1000", "1000");
-	// console.log("Replaced!");
-	
-	// return img;
-  // }
-  // return "";
-// }
 function makeUserBadges(comment) {
   var userBadges = $("<span>").addClass("user-badges");
   if (comment.message.user_badges) {
