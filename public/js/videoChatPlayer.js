@@ -37,6 +37,16 @@ var chatThemeMode = "dark"; // valid values: light, dark
 var twitchEmoticonsUrl =
   "https://static-cdn.jtvnw.net/emoticons/v{{version}}/" +
   "{{id}}/{{format}}/{{theme_mode}}/{{scale}}.0";
+  
+  //Chat Badges Links
+  //Global
+var twitchGlobalBadgeUrl =
+  "https://badges.twitch.tv/v1/badges/global/display";
+  //Channel
+var twitchChannelBadgeUrl =
+  "https://badges.twitch.tv/v1/badges/channels/{{streamerId}}/" +
+  "display";
+  
 var maxChatMessages = 150;
 
 var chatOffsetAdjustment = 0;
