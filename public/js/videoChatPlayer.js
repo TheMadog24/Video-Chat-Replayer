@@ -61,6 +61,26 @@ var regExCheersFragments = "Cheer[0-9]{1,6}\\b";
 var regExCheers =  new RegExp(
                         "((?=" + regExCheersFragments + ")|" + 
                         "(?<=" + regExCheersFragments + "))", "i");
+						
+//Regex for sub and resub
+var regExSubResubFragments = ".{1,1000} subscribed (with Prime|at Tier \\d).";
+var regExSubResub =  new RegExp(
+                        "((?=" + regExSubResubFragments + ")|" + 
+                        "(?<=" + regExSubResubFragments + "))", "i");
+						
+//Regex for subgift
+var regExsubgiftFragments = ".{1,1000} gifted a Tier [0-9]{1,10}\\b sub to .{1,1000}";
+var regExsubgift =  new RegExp(
+                        "((?=" + regExsubgiftFragments + ")|" + 
+                        "(?<=" + regExsubgiftFragments + "))", "i");
+						
+//Regex for submysterygift
+var regExsubmysterygiftFragments = ".{1,1000} is gifting [0-9]{1,1000}\\b Tier [0-9]\\b Subs to .{1,1000}'s community!";
+var regExsubmysterygift =  new RegExp(
+                        "((?=" + regExsubmysterygiftFragments + ")|" + 
+                        "(?<=" + regExsubmysterygiftFragments + "))", "i");
+
+
 
 
 function localFileVideoPlayer() {
@@ -317,7 +337,7 @@ function localFileVideoPlayer() {
 		let chatBody = renderChatBody(msg);
 		
 			
-		if (msg.message.user_notice_params["msg-id"] == "resub") {
+		if ( regExSubResub.test( msg.message.body ) ) {
 			let chatLine = $("<div>")
 			.attr("id", getChatId(curPos))
 			.attr("data-pos", curPos)
@@ -335,7 +355,7 @@ function localFileVideoPlayer() {
 			}
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
-		} else if (msg.message.user_notice_params["msg-id"] == "sub") {
+		} else if ( regExSubResub.test( msg.message.body ) ) {
 			let chatLine = $("<div>")
 			.attr("id", getChatId(curPos))
 			.attr("data-pos", curPos)
@@ -354,7 +374,7 @@ function localFileVideoPlayer() {
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
 		}
-		else if (msg.message.user_notice_params["msg-id"] == "submysterygift") {
+		else if ( regExsubmysterygift.test( msg.message.body ) ) {
 			let chatLine = $("<div>")
 			.attr("id", getChatId(curPos))
 			.attr("data-pos", curPos)
@@ -373,7 +393,7 @@ function localFileVideoPlayer() {
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
 		}
-		else if (msg.message.user_notice_params["msg-id"] == "subgift") {
+		else if ( regExsubgift.test( msg.message.body ) ) {
 			let chatLine = $("<div>")
 			.attr("id", getChatId(curPos))
 			.attr("data-pos", curPos)
@@ -392,7 +412,7 @@ function localFileVideoPlayer() {
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
 		}
-		else if (msg.message.user_notice_params["msg-id"] !== "subgift" && msg.message.user_notice_params["msg-id"] !== "submysterygift" && msg.message.user_notice_params["msg-id"] !== "resub"){
+		else {
 			chatLine.append(chatTime);
 			chatLine.append(chatBody);
 
@@ -1375,12 +1395,23 @@ function makeEmoticon(emoticonId, altName) {
   // Make the icon if we have an emote to work with:
   if (emote && emote.data) {
     var emoteImagePrefix = "data:image/png;base64,";
+	
+	let emoteheight = emote.height;
+	let emotewidth = emote.width;
+	
+	if (emoteheight == null){
+		emoteheight = 24;
+	}
+	if (emotewidth == null){
+		emotewidth = 24;
+	}
 
-    var imageScaleClass = "chat-image-scale-" + emote.scale;
+    var imageScaleClass = "chat-image-scale-" + emote.imageScale;
     var img = $("<img>")
       .attr("title", altName)
       .addClass(imageScaleClass)
-      .attr("src", emoteImagePrefix + emote.data);
+      .attr("src", emoteImagePrefix + emote.data)
+      .css({"height": (emoteheight + "px") , "width": (emotewidth + "px")});
     return img;
   }
 
