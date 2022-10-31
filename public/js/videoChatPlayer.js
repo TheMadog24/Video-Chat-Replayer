@@ -1231,7 +1231,8 @@ function extractMessageFragments(comment) {
 
   // Expands message fragments to isolate and mark Cheers:
   //   Cheer is identified by: ( fragment.isCheer === true )
-  var fragments = getExpandedMessageFragments( comment.message.fragments );
+  var userName = comment.commenter.display_name;
+  var fragments = getExpandedMessageFragments( comment.message.fragments, userName );
 
   jQuery.each(fragments, function (index, fragment) {
     var altName = fragment.text;
@@ -1245,8 +1246,15 @@ function extractMessageFragments(comment) {
       // Process fragment as a Cheer:
       message.append( buildFragmentCheer( fragment ) );
       message.append( buildFragmentCheerNumber( fragment ) );
-
     }
+    else if ( fragment.isSubResub ) {
+      message.append( buildFragmentSubResub( fragment ) );
+    }
+    else if ( fragment.isSubResubTheyve ) {
+      message.append( buildFragmentSubResubTheyve( fragment ) );
+      
+    }
+
     else if (fragment.emoticon && fragment.emoticon.emoticon_id) {
       message.append(makeEmoticon(fragment.emoticon.emoticon_id, altName));
     } else {
@@ -1334,16 +1342,41 @@ function buildFragmentCheerNumber( fragment ) {
   return number;
 }
 
+function buildFragmentSubResub( fragment ) {
+  var msg = fragment.text.trim();
+  msg = msg.replace( "Prime", "<b>Prime</b>");
+  if ( msg.indexOf("Tier") > -1 ) {
+    msg = msg.replace("Tier", "<b>Tier").replace(".", "</b>.");
+  }
+  var result = $("<span>")
+      .addClass("subResub")
+      .text( msg );
 
-function getExpandedMessageFragments( fragments ) {
+  console.log("### buildFragmentSubResub (1355): msg=" + msg );
+  return result;
+}
+
+function buildFragmentSubResubTheyve( fragment ) {
+  var msg = fragment.text.trim();
+  msg = msg.replace( "for ", "for <b>").replace( "on a ", "on a <b>" )
+      .replace( " month", "</b> month");
+  var result = $("<span>")
+      .addClass("subResubTheyve")
+      .text( msg );
+
+  return result;
+}
+
+function getExpandedMessageFragments( fragments, userName ) {
   var results = [];
 
   jQuery.each( fragments, function (index, fragment) {
     
     // If the fragment.text contains a cheer, then we need to process it
     // and split them up.
-    if ( regExCheers.test( fragment.text ) ) {
-      var splits = processFragmentsSplitAltName( fragment.text );
+    if ( regExCheers.test( fragment.text ) || 
+         regExSubResub.test( fragment.text ) ) {
+      var splits = processFragmentsSplitText( fragment.text );
       
       jQuery.each( splits, function (idx, splitText ) {
 
@@ -1355,6 +1388,18 @@ function getExpandedMessageFragments( fragments ) {
         if ( regExCheers.test( splitText ) ) {
           // We have a cheer node:  Mark it as such...
           newFragment["isCheer"] = true;
+        }
+        else if ( regExSubResub.test( splitText ) ) {
+          splitText = splitText.replace( userName, "" ).trim();
+          splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+          console.log("### regExSubResub.test (1395): text= " + splitText );
+          
+          newFragment["text"] = splitText;
+          newFragment["isSubResub"] = true;
+        }
+        else if ( regExSubResubTheyve.test( splitText ) ) {
+          console.log("### regExSubResubTheyve.test (1401): text= " + splitText );
+          newFragment["isSubResubTheyve"] = true;
         }
 
         results.push( newFragment );
@@ -1373,25 +1418,34 @@ function getExpandedMessageFragments( fragments ) {
 
 /**
  * Using the sourceText, identify if this string contains a 
- * cheer, and if it does, then split it up in to the multiple 
+ * cheer, and subResub, and if it does, then split 
+ * it up in to the multiple 
  * parts and return as an array of strings.
  * 
  * @param {*} sourceText 
  * @returns 
  */
-function processFragmentsSplitAltName( sourceText ) {
+function processFragmentsSplitText( sourceText ) {
   var splits = [];
   
   if ( regExCheers.test( sourceText ) ) {
-    splits = sourceText.split(regExCheers).filter(Boolean) 
+    splits = sourceText.split(regExCheers).filter(Boolean);
+  }
+  if ( regExSubResub.test( sourceText ) ) {
+    var s = sourceText.split(regExSubResub).filter(Boolean);
+    splits.push( s=[0] );
+    if ( s.length === 2 ) {
+      splits = splits.concat( s[1].split(regExSubResubTheyve).filter(Boolean) );
+    }
   }
   else {
-    // No Cheer, so just add to splits:
+    // No Cheer, no subResub, so just add to splits:
     splits.push( sourceText );
   }
 
   return splits;
 }
+
 
 //makes Emotes ----------------------------------------
 function makeEmoticon(emoticonId, altName) {
