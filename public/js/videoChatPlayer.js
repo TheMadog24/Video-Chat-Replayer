@@ -63,10 +63,19 @@ var regExCheers =  new RegExp(
                         "(?<=" + regExCheersFragments + "))", "i");
 						
 //Regex for sub and resub
-var regExSubResubFragments = ".{1,1000} subscribed (with Prime|at Tier \\d).";
+var regExSubResubFragments = "\\b\\w+ subscribed (with Prime|at Tier \\d)\\.";
 var regExSubResub =  new RegExp(
                         "((?=" + regExSubResubFragments + ")|" + 
                         "(?<=" + regExSubResubFragments + "))", "i");
+console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
+            "(?<=" + regExSubResubFragments + "))");
+            
+var regExSubResubTheyveFragments = "\\bThey've subscribed for \\d+ months(!|, currently on a \\d+ month streak!)";
+var regExSubResubTheyve =  new RegExp(
+                      "((?=" + regExSubResubTheyveFragments + ")|" + 
+                      "(?<=" + regExSubResubTheyveFragments + "))", "i");
+console.log("### regExSubResubTheyveFragments (77): " + "((?=" + regExSubResubTheyveFragments + ")|" + 
+            "(?<=" + regExSubResubTheyveFragments + "))");
 						
 //Regex for subgift
 var regExsubgiftFragments = ".{1,1000} gifted a Tier [0-9]{1,10}\\b sub to .{1,1000}";
