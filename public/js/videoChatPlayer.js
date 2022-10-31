@@ -349,9 +349,9 @@ function localFileVideoPlayer() {
 			chatLine.append(chatSub);
 			
 			if (curPos == messagePos) {
-			chatLine.appendTo("#chat");
+			  chatLine.appendTo("#chat");
 			} else {
-			chatLine.insertBefore("#" + getChatId(curPos + 1));
+			  chatLine.insertBefore("#" + getChatId(curPos + 1));
 			}
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
@@ -367,9 +367,9 @@ function localFileVideoPlayer() {
 			chatLine.append(chatSub);
 			
 			if (curPos == messagePos) {
-			chatLine.appendTo("#chat");
+			  chatLine.appendTo("#chat");
 			} else {
-			chatLine.insertBefore("#" + getChatId(curPos + 1));
+			  chatLine.insertBefore("#" + getChatId(curPos + 1));
 			}
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
@@ -386,9 +386,9 @@ function localFileVideoPlayer() {
 			chatLine.append(mysterygift);
 			
 			if (curPos == messagePos) {
-			chatLine.appendTo("#chat");
+			  chatLine.appendTo("#chat");
 			} else {
-			chatLine.insertBefore("#" + getChatId(curPos + 1));
+			  chatLine.insertBefore("#" + getChatId(curPos + 1));
 			}
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
@@ -405,9 +405,9 @@ function localFileVideoPlayer() {
 			chatLine.append(subgift);
 			
 			if (curPos == messagePos) {
-			chatLine.appendTo("#chat");
+			  chatLine.appendTo("#chat");
 			} else {
-			chatLine.insertBefore("#" + getChatId(curPos + 1));
+			  chatLine.insertBefore("#" + getChatId(curPos + 1));
 			}
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
@@ -417,9 +417,9 @@ function localFileVideoPlayer() {
 			chatLine.append(chatBody);
 
 			if (curPos == messagePos) {
-			chatLine.appendTo("#chat");
+			  chatLine.appendTo("#chat");
 			} else {
-			chatLine.insertBefore("#" + getChatId(curPos + 1));
+			  chatLine.insertBefore("#" + getChatId(curPos + 1));
 			}
 
 			$("#chat").scrollTop($("#chat")[0].scrollHeight);
