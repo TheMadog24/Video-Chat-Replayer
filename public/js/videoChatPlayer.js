@@ -63,14 +63,14 @@ var regExCheers =  new RegExp(
                         "(?<=" + regExCheersFragments + "))", "i");
 						
 //Regex for sub and resub
-var regExSubResubFragments = "\\b\\w+ subscribed (with Prime|at Tier \\d)\\.";
+var regExSubResubFragments = "\\b\\w+ subscribed (?:with Prime|at Tier \\d+)\\.";
 var regExSubResub =  new RegExp(
                         "((?=" + regExSubResubFragments + ")|" + 
                         "(?<=" + regExSubResubFragments + "))", "i");
 console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
             "(?<=" + regExSubResubFragments + "))");
             
-var regExSubResubTheyveFragments = "\\bThey've subscribed for \\d+ months(!|, currently on a \\d+ month streak!)";
+var regExSubResubTheyveFragments = "\\bThey've subscribed for \\d+ months(?:!|, currently on a \\d+ month streak!)";
 var regExSubResubTheyve =  new RegExp(
                       "((?=" + regExSubResubTheyveFragments + ")|" + 
                       "(?<=" + regExSubResubTheyveFragments + "))", "i");
@@ -1350,7 +1350,7 @@ function buildFragmentSubResub( fragment ) {
   }
   var result = $("<span>")
       .addClass("subResub")
-      .text( msg );
+      .html( msg );
 
   console.log("### buildFragmentSubResub (1355): msg=" + msg );
   return result;
@@ -1362,7 +1362,7 @@ function buildFragmentSubResubTheyve( fragment ) {
       .replace( " month", "</b> month");
   var result = $("<span>")
       .addClass("subResubTheyve")
-      .text( msg );
+      .html( msg );
 
   return result;
 }
@@ -1375,7 +1375,14 @@ function getExpandedMessageFragments( fragments, userName ) {
     // If the fragment.text contains a cheer, then we need to process it
     // and split them up.
     if ( regExCheers.test( fragment.text ) || 
-         regExSubResub.test( fragment.text ) ) {
+          regExSubResub.test( fragment.text ) ) {
+           
+      if ( regExSubResub.test( fragment.text ) ) {
+        
+        console.log( "##### getExpandedMessageFragments (1382): regExSubResub.test(): " + 
+                      regExSubResub.test( fragment.text ) + " userName: " + userName );
+      }
+           
       var splits = processFragmentsSplitText( fragment.text );
       
       jQuery.each( splits, function (idx, splitText ) {
@@ -1433,10 +1440,9 @@ function processFragmentsSplitText( sourceText ) {
   }
   if ( regExSubResub.test( sourceText ) ) {
     var s = sourceText.split(regExSubResub).filter(Boolean);
-    splits.push( s=[0] );
-    if ( s.length === 2 ) {
-      splits = splits.concat( s[1].split(regExSubResubTheyve).filter(Boolean) );
-    }
+    splits.push( s[0] );
+    splits = splits.concat( s[1].trim().split(regExSubResubTheyve).filter(Boolean) );
+
   }
   else {
     // No Cheer, no subResub, so just add to splits:
