@@ -894,6 +894,9 @@ input[type=number] {
 	width: 16px;
 	height: 11px;
 }
+.prime {
+	color: #a970ff;
+}
 .tierOneSub {
 	position: relative;
 	margin: 0;
@@ -969,7 +972,240 @@ input[type=number] {
 	color: #f1921a;
 }
 
+/* Tier 2 Sub Animation */
 
+.animated-tier-star__star {
+  fill: #adadb8;
+  transform-origin: center;
+}
+
+.animated-tier-star__swipe {
+  height: 100%;
+  transform: translate(-100%);
+  transform-origin: center;
+  width: 20px;
+}
+
+.animated-tier-star--tier-2 .animated-tier-star__swipe--1 {
+  -webkit-animation: t2-swipe-1 3s linear 0s infinite;
+  animation: t2-swipe-1 3s linear 0s infinite;
+}
+
+.animated-tier-star--tier-2 .animated-tier-star__swipe--2 {
+  -webkit-animation: t2-swipe-2 3s linear 0s infinite;
+  animation: t2-swipe-2 3s linear 0s infinite;
+}
+
+
+@-webkit-keyframes t2-swipe-1 {
+  0% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  16.66667%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+@keyframes t2-swipe-1 {
+  0% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  16.66667%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+@-webkit-keyframes t2-swipe-2 {
+
+  0%,
+  5.55556% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  22.22222%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+@keyframes t2-swipe-2 {
+
+  0%,
+  5.55556% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  22.22222%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+/* Tier 2 Sub Animation */
+
+
+/* Tier 3 Sub Animation */
+
+.animated-tier-star__star {
+  fill: #adadb8;
+  transform-origin: center;
+}
+
+.animated-tier-star__swipe-mask {
+  transform-origin: center;
+}
+
+.animated-tier-star--tier-3 .animated-tier-star__star {
+  -webkit-animation: star-t3 3s ease-in-out 0s infinite;
+  animation: star-t3 3s ease-in-out 0s infinite;
+}
+
+.animated-tier-star--tier-3 .animated-tier-star__swipe-mask {
+  transform: rotate(72deg) scale(1.25);
+}
+
+.animated-tier-star--tier-3 .animated-tier-star__swipe-group {
+  transform: rotate(-72deg);
+  transform-origin: center;
+}
+
+.animated-tier-star--tier-3 .animated-tier-star__swipe--1 {
+  -webkit-animation: t3-swipe-1 3s linear 0s infinite;
+  animation: t3-swipe-1 3s linear 0s infinite;
+}
+
+.animated-tier-star--tier-3 .animated-tier-star__swipe--2 {
+  -webkit-animation: t3-swipe-2 3s linear 0s infinite;
+  animation: t3-swipe-2 3s linear 0s infinite;
+}
+
+.animated-tier-star--tier-3 .animated-tier-star__swipe--3 {
+  -webkit-animation: t3-swipe-3 3s linear 0s infinite;
+  animation: t3-swipe-3 3s linear 0s infinite;
+}
+
+.animated-tier-star__swipe {
+  height: 100%;
+  transform: translate(-100%);
+  transform-origin: center;
+  width: 20px;
+}
+
+@-webkit-keyframes t3-swipe-1 {
+
+  0%,
+  8.33333% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  25%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+@keyframes t3-swipe-1 {
+
+  0%,
+  8.33333% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  25%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+@-webkit-keyframes t3-swipe-2 {
+
+  0%,
+  13.88889% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  30.55556%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+@keyframes t3-swipe-2 {
+
+  0%,
+  13.88889% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  30.55556%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+@-webkit-keyframes t3-swipe-3 {
+
+  0%,
+  19.44444% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  36.11111%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+@keyframes t3-swipe-3 {
+
+  0%,
+  19.44444% {
+    transform: rotate(45deg) translate(-20px);
+  }
+
+  36.11111%,
+  to {
+    transform: rotate(45deg) translate(20px);
+  }
+}
+
+@-webkit-keyframes star-t3 {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50%,
+  8.33333% {
+    transform: rotate(72deg) scale(1.25);
+  }
+
+  58.33333%,
+  to {
+    transform: rotate(72deg) scale(1);
+  }
+}
+
+@keyframes star-t3 {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50%,
+  8.33333% {
+    transform: rotate(72deg) scale(1.25);
+  }
+
+  58.33333%,
+  to {
+    transform: rotate(72deg) scale(1);
+  }
+}
+
+/* Tier 3 Sub Animation */
 
 
 /* width */
