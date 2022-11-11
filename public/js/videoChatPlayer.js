@@ -64,30 +64,30 @@ var regExCheers =  new RegExp(
 						
 //Regex for sub and resub
 var regExSubResubFragments = "\\b\\w+ subscribed (?:with Prime|at Tier \\d+)\\.";
-var regExSubResub =  new RegExp(
+var regExSubResub = new RegExp(
                         "((?=" + regExSubResubFragments + ")|" + 
                         "(?<=" + regExSubResubFragments + "))", "i");
 console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
             "(?<=" + regExSubResubFragments + "))");
             
 var regExSubResubTheyveFragments = "\\bThey've subscribed for \\d+ months(?:!|, currently on a \\d+ month streak!)";
-var regExSubResubTheyve =  new RegExp(
+var regExSubResubTheyve = new RegExp(
                       "((?=" + regExSubResubTheyveFragments + ")|" + 
                       "(?<=" + regExSubResubTheyveFragments + "))", "i");
 console.log("### regExSubResubTheyveFragments (77): " + "((?=" + regExSubResubTheyveFragments + ")|" + 
             "(?<=" + regExSubResubTheyveFragments + "))");
 						
 //Regex for subgift
-var regExsubgiftFragments = ".{1,1000} gifted a Tier [0-9]{1,10}\\b sub to .{1,1000}";
-var regExsubgift =  new RegExp(
-                        "((?=" + regExsubgiftFragments + ")|" + 
-                        "(?<=" + regExsubgiftFragments + "))", "i");
+var regExSubGiftFragments = "\\b\\w+ gifted a Tier \\d+\\b sub to \\w+!";
+var regExSubGift = new RegExp(
+                        "((?=" + regExSubGiftFragments + ")|" + 
+                        "(?<=" + regExSubGiftFragments + "))", "i");
 						
 //Regex for submysterygift
-var regExsubmysterygiftFragments = ".{1,1000} is gifting [0-9]{1,1000}\\b Tier [0-9]\\b Subs to .{1,1000}'s community!";
-var regExsubmysterygift =  new RegExp(
-                        "((?=" + regExsubmysterygiftFragments + ")|" + 
-                        "(?<=" + regExsubmysterygiftFragments + "))", "i");
+var regExSubMysteryGiftFragments = ".{1,1000} is gifting [0-9]{1,1000}\\b Tier [0-9]\\b Subs to .{1,1000}'s community!";
+var regExSubMysteryGift = new RegExp(
+                        "((?=" + regExSubMysteryGiftFragments + ")|" + 
+                        "(?<=" + regExSubMysteryGiftFragments + "))", "i");
 
 
 
@@ -124,6 +124,8 @@ function localFileVideoPlayer() {
     var fileURL = URL.createObjectURL(file);
     videoNode.src = fileURL;
     PreviewVid.src = fileURL;
+
+    // console.log( videoNode );
   };
 
   var loadChat = function (event) {
@@ -337,102 +339,130 @@ function localFileVideoPlayer() {
       if (!$("#chat #" + getChatId(curPos)).length) {
         var msg = chatJson.comments.at(curPos);
 
-        // Add the next comment to the #chat pane:
-        let chatLine = $("<div>")
-          .attr("id", getChatId(curPos))
-          .attr("data-pos", curPos)
-          .addClass("chatline flex");
-		let chatTime = renderChatTime(msg);
-		let chatBody = renderChatBody(msg);
-		
-			
-		if ( regExSubResub.test( msg.message.body ) ) {
-			let chatLine = $("<div>")
-			.attr("id", getChatId(curPos))
-			.attr("data-pos", curPos)
-			.addClass("chatline flex")
-			.addClass("issub");
-			
-			let chatSub = renderChatSub(msg);
-			
-			chatLine.append(chatSub);
-			
-			if (curPos == messagePos) {
-			  chatLine.appendTo("#chat");
-			} else {
-			  chatLine.insertBefore("#" + getChatId(curPos + 1));
-			}
+        let chatTime = renderChatTime(msg);
+        
+        // chatBodies is an array, and it's already processed all of the specials: 
+        let chatBodies = renderChatBody(msg);
+        
+        // if ( chatBodies.length >= 2 ) {
+        //   console.log( "### chatBodies length: " + chatBodies.length + "  [" + curPos + "]" );
+        // }
+        jQuery.each( chatBodies, function ( index, chatBody ) {
+          
+          // Add the next comment to the #chat pane:
+          let chatLine = $("<div>")
+            .attr("id", getChatId(curPos))
+            .attr("data-pos", curPos)
+            .addClass("chatline flex");
 
-			$("#chat").scrollTop($("#chat")[0].scrollHeight);
-		} else if ( regExSubResub.test( msg.message.body ) ) {
-			let chatLine = $("<div>")
-			.attr("id", getChatId(curPos))
-			.attr("data-pos", curPos)
-			.addClass("chatline flex")
-			.addClass("issub");
-			
-			let chatSub = renderChatSub(msg);
-			
-			chatLine.append(chatSub);
-			
-			if (curPos == messagePos) {
-			  chatLine.appendTo("#chat");
-			} else {
-			  chatLine.insertBefore("#" + getChatId(curPos + 1));
-			}
+          // Only add chatTime to the chatLine if it's not a "special" message:
+          // Note: the classes have been set when processing the messages.
+          if ( !chatBody.hasClass("issubmessage") &&
+               !chatBody.hasClass("isbiggiftsubmessage") &&
+               !chatBody.hasClass("issubmessage") ) {
 
-			$("#chat").scrollTop($("#chat")[0].scrollHeight);
-		}
-		else if ( regExsubmysterygift.test( msg.message.body ) ) {
-			let chatLine = $("<div>")
-			.attr("id", getChatId(curPos))
-			.attr("data-pos", curPos)
-			.addClass("chatline flex")
-			.addClass("submysterygift");
-			
-			let mysterygift = renderChatsubmysterygift(msg);
-			
-			chatLine.append(mysterygift);
-			
-			if (curPos == messagePos) {
-			  chatLine.appendTo("#chat");
-			} else {
-			  chatLine.insertBefore("#" + getChatId(curPos + 1));
-			}
+            chatLine.append(chatTime);
+          }
 
-			$("#chat").scrollTop($("#chat")[0].scrollHeight);
-		}
-		else if ( regExsubgift.test( msg.message.body ) ) {
-			let chatLine = $("<div>")
-			.attr("id", getChatId(curPos))
-			.attr("data-pos", curPos)
-			.addClass("chatline flex")
-			.addClass("issubgift");
-			
-			let subgift = rendersubgift(msg);
-			
-			chatLine.append(subgift);
-			
-			if (curPos == messagePos) {
-			  chatLine.appendTo("#chat");
-			} else {
-			  chatLine.insertBefore("#" + getChatId(curPos + 1));
-			}
+          chatLine.append(chatBody);
+          
 
-			$("#chat").scrollTop($("#chat")[0].scrollHeight);
-		}
-		else {
-			chatLine.append(chatTime);
-			chatLine.append(chatBody);
+          if (curPos == messagePos) {
+            chatLine.appendTo("#chat");
+          } else {
+            chatLine.insertBefore("#" + getChatId(curPos + 1));
+          }
+    
+          $("#chat").scrollTop($("#chat")[0].scrollHeight);
+        });
+			
+		// if ( regExSubResub.test( msg.message.body ) ) {
+		// 	let chatLine = $("<div>")
+		// 	.attr("id", getChatId(curPos))
+		// 	.attr("data-pos", curPos)
+		// 	.addClass("chatline flex")
+		// 	.addClass("issub");
+			
+		// 	let chatSub = renderChatSub(msg);
+			
+		// 	chatLine.append(chatSub);
+			
+		// 	if (curPos == messagePos) {
+		// 	  chatLine.appendTo("#chat");
+		// 	} else {
+		// 	  chatLine.insertBefore("#" + getChatId(curPos + 1));
+		// 	}
 
-			if (curPos == messagePos) {
-			  chatLine.appendTo("#chat");
-			} else {
-			  chatLine.insertBefore("#" + getChatId(curPos + 1));
-			}
+		// 	$("#chat").scrollTop($("#chat")[0].scrollHeight);
+		// } else if ( regExSubResub.test( msg.message.body ) ) {
+		// 	let chatLine = $("<div>")
+		// 	.attr("id", getChatId(curPos))
+		// 	.attr("data-pos", curPos)
+		// 	.addClass("chatline flex")
+		// 	.addClass("issub");
+			
+		// 	let chatSub = renderChatSub(msg);
+			
+		// 	chatLine.append(chatSub);
+			
+		// 	if (curPos == messagePos) {
+		// 	  chatLine.appendTo("#chat");
+		// 	} else {
+		// 	  chatLine.insertBefore("#" + getChatId(curPos + 1));
+		// 	}
 
-			$("#chat").scrollTop($("#chat")[0].scrollHeight);
-		}
+		// 	$("#chat").scrollTop($("#chat")[0].scrollHeight);
+		// }
+		// else if ( regExSubMysteryGift.test( msg.message.body ) ) {
+		// 	let chatLine = $("<div>")
+		// 	.attr("id", getChatId(curPos))
+		// 	.attr("data-pos", curPos)
+		// 	.addClass("chatline flex")
+		// 	.addClass("submysterygift");
+			
+		// 	let mysterygift = renderChatsubmysterygift(msg);
+			
+		// 	chatLine.append(mysterygift);
+			
+		// 	if (curPos == messagePos) {
+		// 	  chatLine.appendTo("#chat");
+		// 	} else {
+		// 	  chatLine.insertBefore("#" + getChatId(curPos + 1));
+		// 	}
+
+		// 	$("#chat").scrollTop($("#chat")[0].scrollHeight);
+		// }
+		// else if ( regExSubGift.test( msg.message.body ) ) {
+		// 	let chatLine = $("<div>")
+		// 	.attr("id", getChatId(curPos))
+		// 	.attr("data-pos", curPos)
+		// 	.addClass("chatline flex")
+		// 	.addClass("issubgift");
+			
+		// 	let subgift = rendersubgift(msg);
+			
+		// 	chatLine.append(subgift);
+			
+		// 	if (curPos == messagePos) {
+		// 	  chatLine.appendTo("#chat");
+		// 	} else {
+		// 	  chatLine.insertBefore("#" + getChatId(curPos + 1));
+		// 	}
+
+		// 	$("#chat").scrollTop($("#chat")[0].scrollHeight);
+		// }
+		// else {
+		// 	chatLine.append(chatTime);
+		// 	chatLine.append(chatBody);
+
+		// 	if (curPos == messagePos) {
+		// 	  chatLine.appendTo("#chat");
+		// 	} else {
+		// 	  chatLine.insertBefore("#" + getChatId(curPos + 1));
+		// 	}
+
+		// 	$("#chat").scrollTop($("#chat")[0].scrollHeight);
+		// }
         
       }
       curPos--;
@@ -1046,6 +1076,7 @@ $('.colorpicker').spectrum({
       videoNode.currentTime = 0;
     }
   });
+
 }
 
 let TIME_MINUTE = 60;
@@ -1119,6 +1150,56 @@ function pad(num, size) {
 var accentColor = "#a970ff";
 
 function renderChatBody(comment) {
+
+  var chatBodies = [];
+
+  // if a special comment (system generated), then process that first, then allow 
+  // the user's part of the message be processed on it's own.  
+  // For this to work, the message fragments must be sliced and processed as two
+  // different messages:
+  if ( regExSubResub.test( comment.message.body )  ) {
+    comment.message["alt_fragments"] = [];
+    chatBodies.push( renderChatSub( comment ) );
+
+    if ( comment.message.alt_fragments ) {
+      // Clone the existing comment, then replace the fragments with the alt_fragments:
+      var clonedComment = JSON.parse(JSON.stringify(comment));
+      clonedComment.message.fragments = comment.message.alt_fragments;
+      comment = clonedComment;
+    }
+    else {
+      return chatBodies;
+    }
+  }
+  else if ( regExSubGift.test( comment.message.body )  ) {
+    comment.message["alt_fragments"] = [];
+    chatBodies.push( rendersubgift( comment ) );
+    
+    if ( comment.message.alt_fragments ) {
+      // Clone the existing comment, then replace the fragments with the alt_fragments:
+      var clonedComment = JSON.parse(JSON.stringify(comment));
+      clonedComment.message.fragments = comment.message.alt_fragments;
+      comment = clonedComment;
+    }
+    else {
+      return chatBodies;
+    }
+  }
+  else if ( regExSubMysteryGift.test( comment.message.body )  ) {
+    comment.message["alt_fragments"] = [];
+    chatBodies.push( renderChatsubmysterygift( comment ) );
+    
+    if ( comment.message.alt_fragments ) {
+      // Clone the existing comment, then replace the fragments with the alt_fragments:
+      var clonedComment = JSON.parse(JSON.stringify(comment));
+      clonedComment.message.fragments = comment.message.alt_fragments;
+      comment = clonedComment;
+    }
+    else {
+      return chatBodies;
+    }
+  }
+
   // comment.message.body;
   let message = extractMessageFragments(comment);
 
@@ -1137,8 +1218,12 @@ function renderChatBody(comment) {
   chatBody.append(messagePrefix);
   chatBody.append(message);
 
-  return chatBody;
+  chatBodies.push( chatBody );
+
+  return chatBodies;
 }
+
+
 function renderChatSub(comment) {
   // comment.message.body;
   let message = extractMessageFragments(comment);
@@ -1155,9 +1240,11 @@ function renderChatSub(comment) {
   
   
 
-  let chatBody = $("<div>").addClass("chatbody").addClass('issubmessage').css('border-left-color', accentColor);
+  let chatBody = $("<div>").addClass("chatbody issub issubmessage")
+        .css('border-left-color', accentColor);
+  
   // chatBody.append( makeUserBadges( comment ) );
-    if (message.is(':contains("subscribed with Prime")')){
+  if (message.is(':contains("subscribed with Prime")')){
 		let primeSub = $('<svg><path class="primeSub" d="M18 5v8a2 2 0 0 1-2 2H4a2.002 2.002 0 0 1-2-2V5l4 3 4-4 4 4 4-3z"/></svg>');
 		chatBody.append(primeSub);
 	}
@@ -1183,9 +1270,11 @@ function renderChatsubmysterygift(comment) {
     .text(comment.commenter.display_name);
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
-  let chatBody = $("<div>").addClass("chatbody").addClass('isbiggiftsubmessage').css('border-left-color', accentColor);
+  let chatBody = $("<div>").addClass("chatbody submysterygift isbiggiftsubmessage")
+        .css('border-left-color', accentColor);
+  
   // chatBody.append( makeUserBadges( comment ) );
-    if (message.is(':contains("is gifting")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
+  if (message.is(':contains("is gifting")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
 		let giftedsub = $('<img class="isbiggiftsubmessageimg" src="img/subs/gift.png"/>');
 		chatBody.append(giftedsub);
 	}
@@ -1210,9 +1299,10 @@ function rendersubgift(comment) {
   
   
 
-  let chatBody = $("<div>").addClass("chatbody").addClass('issubmessage').css('border-left-color', accentColor);
+  let chatBody = $("<div>").addClass("chatbody issubgift issubmessage")
+        .css('border-left-color', accentColor);
   // chatBody.append( makeUserBadges( comment ) );
-    if (message.is(':contains("gifted a Tier")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
+  if (message.is(':contains("gifted a Tier")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
 		let subgift = $('<svg><path class="subgift" fill-rule="evenodd" d="M16 6h2v6h-1v6H3v-6H2V6h2V4.793c0-2.507 3.03-3.762 4.803-1.99.131.131.249.275.352.429L10 4.5l.845-1.268a2.81 2.81 0 01.352-.429C12.969 1.031 16 2.286 16 4.793V6zM6 4.793V6h2.596L7.49 4.341A.814.814 0 006 4.793zm8 0V6h-2.596l1.106-1.659a.814.814 0 011.49.451zM16 8v2h-5V8h5zm-1 8v-4h-4v4h4zM9 8v2H4V8h5zm0 4H5v4h4v-4z" fill-rule="evenodd"/></svg>');
 		chatBody.append(subgift);
 	}
@@ -1231,8 +1321,7 @@ function extractMessageFragments(comment) {
 
   // Expands message fragments to isolate and mark Cheers:
   //   Cheer is identified by: ( fragment.isCheer === true )
-  var userName = comment.commenter.display_name;
-  var fragments = getExpandedMessageFragments( comment.message.fragments, userName );
+  var fragments = getExpandedMessageFragments( comment.message.fragments, comment );
 
   jQuery.each(fragments, function (index, fragment) {
     var altName = fragment.text;
@@ -1258,7 +1347,7 @@ function extractMessageFragments(comment) {
     else if (fragment.emoticon && fragment.emoticon.emoticon_id) {
       message.append(makeEmoticon(fragment.emoticon.emoticon_id, altName));
     } else {
-      message.append($('<span debug="extractMessageFragments">').text(altName));
+      message.append( $('<span debug="extractMessageFragments">').text(altName) );
     }
     // else {
     //     message.append(
@@ -1344,15 +1433,15 @@ function buildFragmentCheerNumber( fragment ) {
 
 function buildFragmentSubResub( fragment ) {
   var msg = fragment.text.trim();
-  msg = msg.replace( "Prime", "<b>Prime</b>");
+  msg = msg.replace( "Prime", '<b class="prime">Prime</b>');
   if ( msg.indexOf("Tier") > -1 ) {
-    msg = msg.replace("Tier", "<b>Tier").replace(".", "</b>.");
+    msg = msg.replace("Tier", '<b class="tier">Tier').replace(".", "</b>.");
   }
   var result = $("<span>")
       .addClass("subResub")
       .html( msg );
 
-  console.log("### buildFragmentSubResub (1355): msg=" + msg );
+  //console.log("### buildFragmentSubResub (1444): msg=" + msg );
   return result;
 }
 
@@ -1367,7 +1456,21 @@ function buildFragmentSubResubTheyve( fragment ) {
   return result;
 }
 
-function getExpandedMessageFragments( fragments, userName ) {
+/**
+ * This function will return the comment's message fragments.  What makes it
+ * special, is that if a message fragment needs to be split, then this is 
+ * where it will happen.  This will not change the actual contents to the 
+ * comment's json object.  
+ * 
+ * This function will return an array of fragments, which will be JSON.
+ * Some of the json text may be altered to fit the requirements, but no 
+ * html should be generated in this function.
+ * 
+ * @param {*} fragments 
+ * @param {*} comment 
+ * @returns 
+ */
+function getExpandedMessageFragments( fragments, comment ) {
   var results = [];
 
   jQuery.each( fragments, function (index, fragment) {
@@ -1375,16 +1478,18 @@ function getExpandedMessageFragments( fragments, userName ) {
     // If the fragment.text contains a cheer, then we need to process it
     // and split them up.
     if ( regExCheers.test( fragment.text ) || 
-          regExSubResub.test( fragment.text ) ) {
+          regExSubResub.test( fragment.text ) ||
+          regExSubGift.test( fragment.text ) ) {
            
-      if ( regExSubResub.test( fragment.text ) ) {
+      // if ( regExSubResub.test( fragment.text ) ) {
         
-        console.log( "##### getExpandedMessageFragments (1382): regExSubResub.test(): " + 
-                      regExSubResub.test( fragment.text ) + " userName: " + userName );
-      }
+      //   console.log( "##### getExpandedMessageFragments (1422): regExSubResub.test(): " + 
+      //                 regExSubResub.test( fragment.text ) + " userName: " + userName );
+      // }
            
       var splits = processFragmentsSplitText( fragment.text );
-      
+      var altFragmentProcessing = false;
+
       jQuery.each( splits, function (idx, splitText ) {
 
         var newFragment = {
@@ -1395,21 +1500,56 @@ function getExpandedMessageFragments( fragments, userName ) {
         if ( regExCheers.test( splitText ) ) {
           // We have a cheer node:  Mark it as such...
           newFragment["isCheer"] = true;
+          results.push( newFragment );
         }
         else if ( regExSubResub.test( splitText ) ) {
+          var userName = comment.commenter.display_name;
+
           splitText = splitText.replace( userName, "" ).trim();
           splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
-          console.log("### regExSubResub.test (1395): text= " + splitText );
+          // console.log("### regExSubResub.test (15105): text= " + splitText );
           
           newFragment["text"] = splitText;
           newFragment["isSubResub"] = true;
+
+          altFragmentProcessing = true;
+          results.push( newFragment );
         }
         else if ( regExSubResubTheyve.test( splitText ) ) {
-          console.log("### regExSubResubTheyve.test (1401): text= " + splitText );
+          // console.log("### regExSubResubTheyve.test (1519): text= " + splitText );
           newFragment["isSubResubTheyve"] = true;
+
+          altFragmentProcessing = true;
+          results.push( newFragment );
+        }
+        else if ( regExSubGift.test( splitText ) ) {
+          newFragment["isSubgift"] = true;
+
+          altFragmentProcessing = true;
+          results.push( newFragment );
+        }
+        else if ( regExSubMysteryGift.test( splitText ) ) {
+          newFragment["isSubMysteryGift"] = true;
+
+          altFragmentProcessing = true;
+          results.push( newFragment );
         }
 
-        results.push( newFragment );
+        else if ( altFragmentProcessing && comment ) {
+          // if processing altFragments, and if comment is not null, then we need to store
+          // these alt_fragments should not be returned from this function, but added to the
+          // comment.message.alt_fragments array.  These altFragments will be used to 
+          // construct a secondary message after the system-generate message has been 
+          // processed and added.
+          if ( !comment.message["alt_fragments"] ) {
+            comment.message["alt_fragments"] = [];
+          }
+          comment.message["alt_fragments"].push( newFragment );
+        }
+        else {
+
+          results.push( newFragment );
+        }
       });
 
     }
@@ -1438,11 +1578,14 @@ function processFragmentsSplitText( sourceText ) {
   if ( regExCheers.test( sourceText ) ) {
     splits = sourceText.split(regExCheers).filter(Boolean);
   }
-  if ( regExSubResub.test( sourceText ) ) {
+  else if ( regExSubResub.test( sourceText ) ) {
     var s = sourceText.split(regExSubResub).filter(Boolean);
     splits.push( s[0] );
     splits = splits.concat( s[1].trim().split(regExSubResubTheyve).filter(Boolean) );
 
+  }
+  else if ( regExSubGift.test( sourceText ) ) {
+    splits = sourceText.split(regExSubGift).filter(Boolean);
   }
   else {
     // No Cheer, no subResub, so just add to splits:
