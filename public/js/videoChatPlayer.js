@@ -1158,18 +1158,8 @@ function renderChatBody(comment) {
   // For this to work, the message fragments must be sliced and processed as two
   // different messages:
   if ( regExSubResub.test( comment.message.body )  ) {
-    comment.message["alt_fragments"] = [];
-    chatBodies.push( renderChatSub( comment ) );
-
-    if ( comment.message.alt_fragments ) {
-      // Clone the existing comment, then replace the fragments with the alt_fragments:
-      var clonedComment = JSON.parse(JSON.stringify(comment));
-      clonedComment.message.fragments = comment.message.alt_fragments;
-      comment = clonedComment;
-    }
-    else {
-      return chatBodies;
-    }
+    
+    return renderChatSub( comment );
   }
   else if ( regExSubGift.test( comment.message.body )  ) {
     comment.message["alt_fragments"] = [];
@@ -1225,6 +1215,9 @@ function renderChatBody(comment) {
 
 
 function renderChatSub(comment) {
+  var chatBodies = [];
+  comment.message["alt_fragments"] = [];
+
   // comment.message.body;
   let message = extractMessageFragments(comment);
 
@@ -1236,8 +1229,6 @@ function renderChatSub(comment) {
     .css(styles)
     .text(comment.commenter.display_name);
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
-  
-  
   
 
   let chatBody = $("<div>").addClass("chatbody issub issubmessage")
@@ -1264,8 +1255,36 @@ function renderChatSub(comment) {
 	}
 	chatBody.append(player);
 	chatBody.append(message);
-	return chatBody;
+	chatBodies.push( chatBody );
 
+  if ( comment.message.alt_fragments.length ) {
+    // Clone the existing comment, then replace the fragments with the alt_fragments:
+    var clonedComment = JSON.parse(JSON.stringify(comment));
+    clonedComment.message.fragments = comment.message.alt_fragments;
+    
+    let msg = extractMessageFragments(clonedComment);
+
+    let player = $("<span>")
+      .addClass("commenter")
+      .css(styles)
+      .text(clonedComment.commenter.display_name);
+    let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+
+    let chatBody2 = $("<div>").addClass("chatbody issubmessage")
+            .css('border-left-color', accentColor);
+
+    chatBody2.append( makeUserBadges( clonedComment ) );
+    chatBody2.append(player);
+    chatBody2.append(messagePrefix);
+    chatBody2.append(msg);
+
+    chatBodies.push( chatBody2 );
+  }
+
+return chatBodies;
+
+  
+  return chatBodies;
 }
 function renderChatsubmysterygift(comment) {
   // comment.message.body;
