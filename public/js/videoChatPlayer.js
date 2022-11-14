@@ -1263,6 +1263,8 @@ function renderChatSub(comment) {
     var clonedComment = JSON.parse(JSON.stringify(comment));
     clonedComment.message.fragments = comment.message.alt_fragments;
 	console.log(clonedComment);
+	
+	let userComment = $("<span>").addClass("userComment");
     
     let msg2 = extractMessageFragments(clonedComment);
 
@@ -1274,11 +1276,13 @@ function renderChatSub(comment) {
 
     // let chatBody2 = $("<div>").addClass("chatbody issubmessage")
             // .css('border-left-color', accentColor);
+			
+	chatBody.append(userComment);
 
     // chatBody2.append( makeUserBadges( clonedComment ) );
-    chatBody.append(player2);
-    chatBody.append(messagePrefix);
-    chatBody.append(msg2);
+    userComment.append(player2);
+    userComment.append(messagePrefix);
+    userComment.append(msg2);
 
     // chatBodies.push( chatBody2 );
   }

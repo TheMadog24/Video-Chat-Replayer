@@ -866,6 +866,7 @@ input[type=number] {
 	border-left-style: solid;
 	border-left-width: 5px;
 	background-color: #1f1f23;
+    overflow: auto;
 }
 .issubmessage .commenter{
 	position: relative;
@@ -881,11 +882,24 @@ input[type=number] {
 	margin: 0 auto 10px 45px;
 	display: block;
 }
+.issubmessage .subResubTheyve{
+	position: relative;
+	margin-left: 5px;
+}
+.issubmessage .userComment .chatmessage{
+	margin: 0;
+	display: inline;
+}
+.userComment {
+	display: block;
+	margin-bottom: 10px;
+}
+
 .issubmessage .commenter2{
 	position: relative;
 	left: 0;
 	margin: 0;
-	display: block;
+	display: inline;
 	font-weight: 700;
 	display: inline-block;
 }
@@ -1349,7 +1363,7 @@ input {
     vertical-align: top;
 }
 .chatmessage span {
-    display: inline-block;
+    display: inline;
     vertical-align: top;
 }
 
