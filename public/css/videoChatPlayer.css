@@ -893,6 +893,7 @@ input[type=number] {
 .userComment {
 	display: block;
 	margin-bottom: 10px;
+	margin-left: 16px;
 }
 
 .issubmessage .commenter2{
@@ -1369,14 +1370,17 @@ input {
 
 .chat-image-scale-1 {
     size: 100%;
+	margin: 0 2px 0 2px;
 }
 
 .chat-image-scale-2 {
-    size: 100%;
+    size: 200%;
+	margin: 0 2px 0 2px;
 }
 
 .chat-image-scale-3 {
-    size: 100%;
+    size: 300%;
+	margin: 0 2px 0 2px;
 }
 
 .video-time {
