@@ -1165,7 +1165,7 @@ function renderChatBody(comment) {
     comment.message["alt_fragments"] = [];
     chatBodies.push( rendersubgift( comment ) );
     
-    if ( comment.message.alt_fragments ) {
+    if ( comment.message.alt_fragments.length ) {
       // Clone the existing comment, then replace the fragments with the alt_fragments:
       var clonedComment = JSON.parse(JSON.stringify(comment));
       clonedComment.message.fragments = comment.message.alt_fragments;
@@ -1179,7 +1179,7 @@ function renderChatBody(comment) {
     comment.message["alt_fragments"] = [];
     chatBodies.push( renderChatsubmysterygift( comment ) );
     
-    if ( comment.message.alt_fragments ) {
+    if ( comment.message.alt_fragments.length ) {
       // Clone the existing comment, then replace the fragments with the alt_fragments:
       var clonedComment = JSON.parse(JSON.stringify(comment));
       clonedComment.message.fragments = comment.message.alt_fragments;
@@ -1235,6 +1235,7 @@ function renderChatSub(comment) {
         .css('border-left-color', accentColor);
   
   // chatBody.append( makeUserBadges( comment ) );
+  
 	if ( message.find(".prime").length ) {
 		let primeSub = $('<svg><path class="primeSub" d="M18 5v8a2 2 0 0 1-2 2H4a2.002 2.002 0 0 1-2-2V5l4 3 4-4 4 4 4-3z"/></svg>');
 		chatBody.append(primeSub);
@@ -1261,24 +1262,25 @@ function renderChatSub(comment) {
     // Clone the existing comment, then replace the fragments with the alt_fragments:
     var clonedComment = JSON.parse(JSON.stringify(comment));
     clonedComment.message.fragments = comment.message.alt_fragments;
+	console.log(clonedComment);
     
-    let msg = extractMessageFragments(clonedComment);
+    let msg2 = extractMessageFragments(clonedComment);
 
-    let player = $("<span>")
-      .addClass("commenter")
+    let player2 = $("<span>")
+      .addClass("commenter2")
       .css(styles)
       .text(clonedComment.commenter.display_name);
-    let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+    // let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
 
-    let chatBody2 = $("<div>").addClass("chatbody issubmessage")
-            .css('border-left-color', accentColor);
+    // let chatBody2 = $("<div>").addClass("chatbody issubmessage")
+            // .css('border-left-color', accentColor);
 
-    chatBody2.append( makeUserBadges( clonedComment ) );
-    chatBody2.append(player);
-    chatBody2.append(messagePrefix);
-    chatBody2.append(msg);
+    // chatBody2.append( makeUserBadges( clonedComment ) );
+    chatBody.append(player2);
+    chatBody.append(messagePrefix);
+    chatBody.append(msg2);
 
-    chatBodies.push( chatBody2 );
+    // chatBodies.push( chatBody2 );
   }
 
 return chatBodies;
@@ -1520,7 +1522,11 @@ function getExpandedMessageFragments( fragments, comment ) {
       var altFragmentProcessing = false;
 
       jQuery.each( splits, function (idx, splitText ) {
-
+		
+		if ( !splitText.trim().length ) {
+		  return;
+		}
+		
         var newFragment = {
           "text": splitText,
           "emoticon": fragment.emoticon
