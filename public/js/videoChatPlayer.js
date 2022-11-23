@@ -337,11 +337,15 @@ function localFileVideoPlayer() {
 
     while (curPos >= 0 && messagePos - curPos < maxChatMessages) {
       if (!$("#chat #" + getChatId(curPos)).length) {
+
+        // msg is the full JSON comment: It is not the formatted message:
         var msg = chatJson.comments.at(curPos);
 
         let chatTime = renderChatTime(msg);
         
-        // chatBodies is an array, and it's already processed all of the specials: 
+        // chatBodies is an array, and it's already processed all of the specials.
+        // Normally it would be just one HTML formatted message, but with 
+        // message splitting, it can be more than one HTML message.
         let chatBodies = renderChatBody(msg);
         
         // if ( chatBodies.length >= 2 ) {
@@ -355,11 +359,14 @@ function localFileVideoPlayer() {
             .attr("data-pos", curPos)
             .addClass("chatline flex");
 
-          // Only add chatTime to the chatLine if it's not a "special" message:
+          // Only add chatTime to the chatLine if it's not a "special" message, 
+          // or if it has been marked with the class "no-time".
           // Note: the classes have been set when processing the messages.
-          if ( !chatBody.hasClass("issubmessage") &&
-               !chatBody.hasClass("isbiggiftsubmessage") &&
-               !chatBody.hasClass("issubmessage") ) {
+          if ( 
+              // !chatBody.hasClass("issubmessage") &&
+              //  !chatBody.hasClass("isbiggiftsubmessage") &&
+              //  !chatBody.hasClass("issubmessage") && 
+               !chatBody.hasClass("no-time") ) {
 
             chatLine.append(chatTime);
           }
@@ -1231,7 +1238,7 @@ function renderChatSub(comment) {
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
 
-  let chatBody = $("<div>").addClass("chatbody issub issubmessage")
+  let chatBody = $("<div>").addClass("chatbody no-time issub issubmessage")
         .css('border-left-color', accentColor);
   
   // chatBody.append( makeUserBadges( comment ) );
@@ -1305,7 +1312,7 @@ function renderChatsubmysterygift(comment) {
     .text(comment.commenter.display_name);
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
-  let chatBody = $("<div>").addClass("chatbody submysterygift isbiggiftsubmessage")
+  let chatBody = $("<div>").addClass("chatbody no-time submysterygift isbiggiftsubmessage")
         .css('border-left-color', accentColor);
   
   // chatBody.append( makeUserBadges( comment ) );
@@ -1334,7 +1341,7 @@ function rendersubgift(comment) {
   
   
 
-  let chatBody = $("<div>").addClass("chatbody issubgift issubmessage")
+  let chatBody = $("<div>").addClass("chatbody no-time issubgift issubmessage")
         .css('border-left-color', accentColor);
   // chatBody.append( makeUserBadges( comment ) );
   if (message.is(':contains("gifted a Tier")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
@@ -1380,8 +1387,11 @@ function extractMessageFragments(comment) {
     }
 
     else if (fragment.emoticon && fragment.emoticon.emoticon_id) {
+
       message.append(makeEmoticon(fragment.emoticon.emoticon_id, altName));
-    } else {
+    } 
+    
+    else {
       message.append( $('<span debug="extractMessageFragments">').text(altName) );
     }
     // else {
@@ -1507,6 +1517,12 @@ function buildFragmentSubResubTheyve( fragment ) {
  */
 function getExpandedMessageFragments( fragments, comment ) {
   var results = [];
+  
+  // A comment contains one or more fragments.  If at any time the fragments are
+  // being processed and 'altFragmentProcessing' is set to true, then all fragments
+  // that follows must be added to the 'alt_fragments' array so they will 
+  // be generated in the next (secondary) message.
+  var altFragmentProcessing = false;
 
   jQuery.each( fragments, function (index, fragment) {
     
@@ -1523,13 +1539,12 @@ function getExpandedMessageFragments( fragments, comment ) {
       // }
            
       var splits = processFragmentsSplitText( fragment.text );
-      var altFragmentProcessing = false;
 
       jQuery.each( splits, function (idx, splitText ) {
 		
-		if ( !splitText.trim().length ) {
-		  return;
-		}
+        if ( !splitText.trim().length ) {
+          return;
+        }
 		
         var newFragment = {
           "text": splitText,
@@ -1591,6 +1606,17 @@ function getExpandedMessageFragments( fragments, comment ) {
         }
       });
 
+    }
+    else if ( altFragmentProcessing && comment ) {
+      // if processing altFragments, and if comment is not null, then we need to store
+      // these alt_fragments should not be returned from this function, but added to the
+      // comment.message.alt_fragments array.  These altFragments will be used to 
+      // construct a secondary message after the system-generate message has been 
+      // processed and added.
+      if ( !comment.message["alt_fragments"] ) {
+        comment.message["alt_fragments"] = [];
+      }
+      comment.message["alt_fragments"].push( fragment );
     }
     else {
       // No cheer, so just add the fragment:
