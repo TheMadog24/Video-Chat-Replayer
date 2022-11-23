@@ -44,6 +44,42 @@ video {
         opacity: 1;
      }
 }
+#selectVideo {
+	opacity: 50%;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+.selectVideoText {
+	position: absolute;
+	right: 410px;
+	top: 2px;
+	margin: 0;
+}
+.arrowHead {
+	position: absolute;
+	right: 350px;
+	top: 2px;
+	width: 0;
+	height: 0;
+	border-width: 10px 0 10px 20px;
+	border-color: transparent transparent transparent #FFFFFF;
+	border-style: solid;
+}
+.arrowBody {
+	position: absolute;
+	right: 370px;
+	top: 9px;
+	width: 30px;
+	height: 6px;
+	background-color: #FFFFFF;
+}
+
+
 
 /* Custom Video Controls bar */
 
@@ -733,9 +769,8 @@ input[type=number] {
 }
 
 #clickOptions {
-	margin: auto auto auto 4px;
+	margin: -4px auto auto 0;
 	font-size: 14px;
-	width: 60px;
 	cursor: pointer;
 	padding: 2px;
 	-webkit-touch-callout: none; /* iOS Safari */
@@ -745,6 +780,50 @@ input[type=number] {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */	
+}
+
+.optionsGear {
+	fill: #dedede;
+	padding: 1px;
+	border-radius: 4px;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */	
+}
+.optionsGear:hover {
+	cursor: pointer;
+	background-color: #464649;
+}	
+#clickOptions .clickOptionstiptext {
+  visibility: hidden;
+  width: 60px;
+  background-color: #464649;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: 62px;
+  left: 10%;
+}
+#clickOptions .clickOptionstiptext::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #464649 transparent transparent;
+}
+
+#clickOptions:hover .clickOptionstiptext {
+  visibility: visible;
 }
 
 #message {
