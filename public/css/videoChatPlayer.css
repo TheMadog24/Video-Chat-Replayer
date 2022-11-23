@@ -1001,7 +1001,7 @@ input[type=number] {
 }
 
 #clickOptions {
-	margin: -4px auto auto 4px;
+	margin: -4px auto auto 0;
 	font-size: 14px;
 	cursor: pointer;
 	padding: 2px;

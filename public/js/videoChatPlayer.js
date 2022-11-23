@@ -1512,6 +1512,7 @@ function renderChatSub(comment) {
 
   // comment.message.body;
   let message = extractMessageFragments(comment);
+  let messageSubBold = message[0].outerHTML.replace("Subscribed", "<strong>Subscribed</strong>");
 
   let colorHex = comment.message.user_color;
   let styles = { color: colorHex };
@@ -1547,7 +1548,7 @@ function renderChatSub(comment) {
 		}
 	}
 	chatBody.append(player);
-	chatBody.append(message);
+	chatBody.append(messageSubBold);
 	chatBodies.push( chatBody );
 
   if ( comment.message.alt_fragments.length ) {
@@ -1585,6 +1586,7 @@ return chatBodies;
 function renderChatsubmysterygift(comment) {
   // comment.message.body;
   let message = extractMessageFragments(comment);
+  let messageNameRemoved = message[0].outerHTML.replace(comment.commenter.display_name, "");
 
   let colorHex = comment.message.user_color;
   let styles = { color: colorHex };
@@ -1604,13 +1606,15 @@ function renderChatsubmysterygift(comment) {
 		chatBody.append(giftedsub);
 	}
 	chatBody.append(player);
-	chatBody.append(message);
+	chatBody.append(messageNameRemoved);
 	return chatBody;
 
 }
 function rendersubgift(comment) {
   // comment.message.body;
   let message = extractMessageFragments(comment);
+  let messageNameRemoved = message[0].outerHTML.replace(comment.commenter.display_name, "");
+  let messageBold = messageNameRemoved.replace("!", "</strong>!").replace("sub to ", "sub to </strong>!");
 
   let colorHex = comment.message.user_color;
   let styles = { color: colorHex };
@@ -1632,7 +1636,7 @@ function rendersubgift(comment) {
 		chatBody.append(subgift);
 	}
 	chatBody.append(player);
-	chatBody.append(message);
+	chatBody.append(messageBold);
 	return chatBody;
 
 }
@@ -1763,7 +1767,9 @@ function buildFragmentSubResub( fragment ) {
   var msg = fragment.text.trim();
   msg = msg.replace( "Prime", '<b class="prime">Prime</b>');
   if ( msg.indexOf("Tier") > -1 ) {
-    msg = msg.replace("Tier", '<b class="tier">Tier').replace(".", "</b>.");
+    msg = msg.replace("Tier 1", '<b class="tier tier1">Tier 1').replace(".", "</b>.");
+    msg = msg.replace("Tier 2", '<b class="tier tier2">Tier 2').replace(".", "</b>.");
+    msg = msg.replace("Tier 3", '<b class="tier tier3">Tier 3').replace(".", "</b>.");
   }
   var result = $("<span>")
       .addClass("subResub")
