@@ -259,7 +259,7 @@ video {
     top: 0;
     left: 0;
 	z-index: 98;
-	display: flex;
+	display: none;
 	align-items: center;
 	background-color: rgb(0,0,0,0.4);
 }
@@ -329,10 +329,8 @@ video {
 }
 
 .time-container{
-	position: absolute;
-	left: 225px;
-	margin: 10px 0 10px 0px;
-	display: inline-block;
+	margin: 10px 0 10px 15px;
+	float: left;
 	width: 100px;
 	height: 25px;
 	top: 0;
@@ -825,7 +823,7 @@ input[type=number] {
 
 #topBox {
 	width: 340px;
-	height:89px;
+	height:90px;
 	border-left: 1px solid #303032;
 	position:absolute;
 	top: 0;
@@ -853,7 +851,7 @@ input[type=number] {
 }
 
 #clickOptions {
-	margin: -4px auto auto 0;
+	margin: -4px auto auto 4px;
 	font-size: 14px;
 	cursor: pointer;
 	padding: 2px;
@@ -977,6 +975,12 @@ input[type=number] {
   border-color: transparent transparent transparent #464649;
 }
 
+#collapseChat svg {
+  fill: #dedede;
+}
+#collapseChat:hover svg {
+  fill: #ffffff;
+}
 #collapseChat:hover .collapsetooltiptext {
   visibility: visible;
 }
@@ -1027,7 +1031,7 @@ input[type=number] {
 .issubmessage {
 	border-left-color: #a970ff;
 	border-left-style: solid;
-	border-left-width: 5px;
+	border-left-width: 6px;
 	background-color: #1f1f23;
     overflow: auto;
 }
@@ -1096,7 +1100,7 @@ input[type=number] {
 .isbiggiftsubmessage {
 	border-left-color: #a970ff;
 	border-left-style: solid;
-	border-left-width: 5px;
+	border-left-width: 6px;
 	background-color: #1f1f23;
 	margin: 0;
 }
