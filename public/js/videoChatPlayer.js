@@ -520,7 +520,6 @@ $('.colorpicker').spectrum({
   $(".CurrentChatOffset").click(function () {
     var timeOffset = $(".OffsetTime").val();
     chatOffsetAdjustment = timeOffset;
-    console.log(timeOffset);
   });
   //	Custom Control Bar Starts
 
@@ -529,9 +528,9 @@ $('.colorpicker').spectrum({
   $("#volume").click(function () {
     if ($("#videoPlayer").prop("muted")) {
       $("#videoPlayer").prop("muted", false); //unmute
-      $(".Volume-animated-speaker").show();
-      $(".Volume-animated-speaker-half").hide();
-      $(".Volume-speaker-muted").hide();
+      $(".volume-animated-speaker").show();
+      $(".volume-animated-speaker-half").hide();
+      $(".volume-speaker-muted").hide();
       videoNode.volume = savedVol / 100;
       $("#bar").css("left", "calc(" + savedVol + "% - 9.5px)");
       $("#fill").css("width", "calc(" + savedVol + "% - 9.5px)");
@@ -539,9 +538,9 @@ $('.colorpicker').spectrum({
       // or toggle class, style it with a volume icon sprite, change background-position
     } else {
       $("#videoPlayer").prop("muted", true); //mute
-      $(".Volume-animated-speaker").hide();
-      $(".Volume-animated-speaker-half").hide();
-      $(".Volume-speaker-muted").show();
+      $(".volume-animated-speaker").hide();
+      $(".volume-animated-speaker-half").hide();
+      $(".volume-speaker-muted").show();
       videoNode.volume = 0;
       $("#bar").css("left", "calc(0% - 9.5px)");
       $("#fill").css("width", "calc(0% - 9.5px)");
@@ -554,8 +553,8 @@ $('.colorpicker').spectrum({
       var $bar = $("#bar");
       var $fill = $("#fill");
       var barWidth = $bar.outerWidth();
-      var sliderWidth = $(this).outerWidth();
-      var sliderX = $(this).offset().left;
+      var sliderWidth = $(this).width();
+      var sliderX = ($(this).offset().left+10);
       var downX = e.clientX - sliderX;
       var multiplier = 100 / sliderWidth;
       var curPercent = downX * multiplier;
@@ -577,9 +576,9 @@ $('.colorpicker').spectrum({
 
   //Moves slider bar.
   function moveSliderBar($bar, $fill, percent, barWidth) {
-    var VolumeFull = $(".Volume-animated-speaker");
-    var VolumeHalf = $(".Volume-animated-speaker-half");
-    var VolumeMuted = $(".Volume-speaker-muted");
+    var VolumeFull = $(".volume-animated-speaker");
+    var VolumeHalf = $(".volume-animated-speaker-half");
+    var VolumeMuted = $(".volume-speaker-muted");
     var Vid = $("#videoPlayer");
 
     if (percent <= 0) {
@@ -940,9 +939,12 @@ $('.colorpicker').spectrum({
     if ($("#videoPlayer")[0].readyState === 4) {
       $("#videoPlayer").fadeIn(0);
       $(".custom-controls").fadeIn(200);
-      $("#video-PausePlay-container").fadeIn(200);
+      $("#video-PausePlay-container").css("display", "flex").fadeIn(200);
       console.log("Video Loaded");
       updateCountersProgressBar();
+	  previewBoxparams();
+	  barSelectorparams();
+	  $("#selectVideo").hide();
     }
   });
 
