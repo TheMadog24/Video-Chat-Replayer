@@ -1070,6 +1070,7 @@ input[type=number] {
 	display: inline;
 	font-weight: 700;
 	display: inline-block;
+	vertical-align: top;
 }
 .issubmessage svg{
 	margin: 9px auto auto 15px;
@@ -1097,6 +1098,9 @@ input[type=number] {
 .subgift {
 	fill: #efeff1;
 }
+.issubgift {
+	margin-top: -4px;
+}
 .isbiggiftsubmessage {
 	border-left-color: #a970ff;
 	border-left-style: solid;
@@ -1108,7 +1112,6 @@ input[type=number] {
 	position: relative;
 	top: 12px;
 	left: 9px;
-	margin: 0;
 	display: block;
 	font-size: 16px;
 	font-weight: 900;
@@ -1160,6 +1163,10 @@ input[type=number] {
 	margin-right: 4px;
 	font-weight: 900;
 	color: #f1921a;
+}
+
+.badge {
+	margin-right: 3px;
 }
 
 /* Tier 2 Sub Animation */
@@ -1491,8 +1498,8 @@ input {
 .chatline {
     display: flex;
     white-space: nowrap;
-	margin-top: 5px;
-	margin-right: 1px;
+	margin-bottom: 5px;
+	padding-top: 5px;
 }
 
 .chattime {

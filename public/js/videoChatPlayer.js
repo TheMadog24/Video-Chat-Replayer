@@ -44,8 +44,7 @@ var twitchGlobalBadgeUrl =
   "https://badges.twitch.tv/v1/badges/global/display";
   //Channel
 var twitchChannelBadgeUrl =
-  "https://badges.twitch.tv/v1/badges/channels/{{streamerId}}/" +
-  "display";
+  "https://badges.twitch.tv/v1/badges/channels/{{streamerId}}/display";
   
 var maxChatMessages = 150;
 
@@ -89,6 +88,9 @@ var regExSubMysteryGift = new RegExp(
                         "((?=" + regExSubMysteryGiftFragments + ")|" + 
                         "(?<=" + regExSubMysteryGiftFragments + "))", "i");
 
+
+var globalBadgesJson;
+var streamerBadgesJson;
 
 
 
@@ -137,6 +139,7 @@ function localFileVideoPlayer() {
     reader.onload = function () {
       chatJson = JSON.parse(reader.result);
       initChat(timingLoadStart);
+	  loadBadgesJson(chatJson);
     };
 
     reader.readAsText(input.files[0]);
@@ -1112,8 +1115,23 @@ $('.colorpicker').spectrum({
       videoNode.currentTime = 0;
     }
   });
-
 }
+
+
+ function loadBadgesJson(chatJson) {
+	var streamerID = chatJson.streamer.id;
+  $.getJSON(twitchGlobalBadgeUrl, function ( data) {
+     globalBadgesJson = data;
+	 console.log("Global Badges URL: " + twitchGlobalBadgeUrl);
+   });
+   
+   var streamerBadgesURL = twitchChannelBadgeUrl.replace("{{streamerId}}", streamerID);
+   $.getJSON(streamerBadgesURL, function (data) {
+     streamerBadgesJson = data;
+	 console.log("Channel Badges URL: " + streamerBadgesURL);
+   });
+}
+
 
 let TIME_MINUTE = 60;
 let TIME_HOUR = TIME_MINUTE * 60;
@@ -1239,7 +1257,13 @@ function renderChatBody(comment) {
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
 
   let chatBody = $("<div>").addClass("chatbody");
-  // chatBody.append( makeUserBadges( comment ) );
+	if (typeof streamerBadgesJson === 'undefined' && typeof globalBadgesJson === 'undefined') {
+		
+	} 
+	else {
+		chatBody.append( makeUserBadges( comment ) );
+	}
+  
   chatBody.append(player);
   chatBody.append(messagePrefix);
   chatBody.append(message);
@@ -1298,7 +1322,7 @@ function renderChatSub(comment) {
     // Clone the existing comment, then replace the fragments with the alt_fragments:
     var clonedComment = JSON.parse(JSON.stringify(comment));
     clonedComment.message.fragments = comment.message.alt_fragments;
-	console.log(clonedComment);
+	// console.log(clonedComment);
 	
 	let userComment = $("<span>").addClass("userComment");
     
@@ -1315,7 +1339,7 @@ function renderChatSub(comment) {
 			
 	chatBody.append(userComment);
 
-    // chatBody2.append( makeUserBadges( clonedComment ) );
+    userComment.append( makeUserBadges( clonedComment ) );
     userComment.append(player2);
     userComment.append(messagePrefix);
     userComment.append(msg2);
@@ -1520,7 +1544,7 @@ function buildFragmentSubResub( fragment ) {
 function buildFragmentSubResubTheyve( fragment ) {
   var msg = fragment.text.trim();
   msg = msg.replace( "for ", "for <b>").replace( "on a ", "on a <b>" )
-      .replace( " month", "</b> month");
+      .replace( " months", " months</b>");
   var result = $("<span>")
       .addClass("subResubTheyve")
       .html( msg );
@@ -1727,20 +1751,46 @@ function makeEmoticon(emoticonId, altName) {
 }
 
 function makeUserBadges(comment) {
-  var userBadges = $("<span>").addClass("user-badges");
+  
   if (comment.message.user_badges) {
-    var url = twitchEmoticonsUrl
-      .replace("{{format}}", "static")
-      .replace("{{theme_mode}}", chatThemeMode);
+	var userBadges = $("<span>").addClass("user-badges");
+	  // console.log("Making Badges!");
+    var url = twitchGlobalBadgeUrl
     // .replace("{{id}}", id)
-
-    jQuery.each(comment.message.user_badges, function (index, badge) {
-      var imgSrc = url
-        .replace("{{id}}", badge._id)
-        .replace("{{version}}", badge.version)
-        .replace("{{scale}}", badge.scale ? badge.scale : "1");
-      var badgeImg = $("<img>").attr("src", imgSrc);
-    });
+    // var url = twitchEmoticonsUrl
+      // .replace("{{format}}", "static")
+      // .replace("{{theme_mode}}", chatThemeMode);
+    // .replace("{{id}}", id)
+	
+	jQuery.each(comment.message.user_badges, function (index, badge) {
+			
+		var badgeID = badge["_id"];
+		var badgeVersion = badge.version;
+		
+		// console.log("Badge ID: " + badgeID);
+		// console.log("Badge Version: " + badgeVersion);
+		var imgSrc;
+		
+		if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+			imgSrc = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+		} else {
+			imgSrc = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+		}
+		// console.log("imgSrc: " + imgSrc);
+        
+		var badgeTitle;
+        
+		if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+			badgeTitle = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+		} else {
+			badgeTitle = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+		}
+	
+		// console.log("badgeTitle: " + badgeTitle);
+	
+		var badgeImg = $("<img>").attr("src", imgSrc).addClass("badge").attr("title", badgeTitle);
+		userBadges.append(badgeImg);
+	});
   }
   return userBadges;
 }
