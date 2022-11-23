@@ -86,7 +86,7 @@ video {
 
 
 .custom-controls {
-	/* display: none; */
+	display: none;
 	position: absolute;
 	width:calc(100% - 341px);
 	height: 65px;
@@ -230,6 +230,148 @@ video {
 	height: 100%;
 	width: 15px;
 	float: left;
+}
+
+#chapters {
+	position: relative;
+	margin: 8px 10px 8px 0;
+	float: left;
+	width: 29px;
+	height: 29px;
+	fill: #fff;
+	opacity: 90%;
+}
+
+.chapterstooltiptext {
+	vertical-align: super;
+	position: relative;
+	display: inline-block;
+	border-bottom: 1px dotted black;
+	font-size: 15px;
+}
+#chapters .chapterstooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color: #555;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	position: absolute;
+	z-index: 1;
+	bottom: 125%;
+	left: 200%;
+	margin-left: -60px;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+#chapters .chapterstooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 15%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+#chapters:hover .chapterstooltiptext {
+  visibility: visible;
+  opacity: 100%;
+}
+
+#chapters svg {
+	display: block;
+	height: 29px;
+	width: 29px;
+	margin: 4.5px;
+}
+
+#chapterSelector {
+	position: absolute;
+	left: 10px;
+	bottom: 90px;
+	height: auto;
+	min-height: 60px;
+	max-height: calc(100% - 120px);
+	flex: 1;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	scrollbar-width: thin;
+	width: 300px;
+	display: block;
+	/* border-radius: 9px; */
+	z-index: 99999;
+	background-color:#1f1f23;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.show {
+  display: block !important;
+}
+.hide {
+  display: none !important;
+}
+
+.chapter {
+	width: 250px;
+	padding: 5px 10px;
+	margin: 5px auto 5px auto;
+	height:auto;
+	min-height:30px;
+	/* height: 80px; */
+	/* border-radius: 9px; */
+	cursor: pointer;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+.chapter:hover {
+    background-color: #464649;
+}
+.chapterName {
+	position: relative;
+	display: block;
+	width: auto;
+	margin: 5px;
+	display: flex;
+	font-size: 15px;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+.chapterTime {
+	position: relative;
+	display: block;
+	width: auto;
+	margin: 5px;
+	display: flex;
+	color: #a7a7a7;
+	font-size: 13px;
+	display: block;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 .custom-controls .button {
@@ -531,7 +673,15 @@ video {
 }
 
 
-
+.cannotSelect {
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
 
 
 
@@ -914,6 +1064,7 @@ input[type=number] {
 	margin-left: 5px;
 	font-size: 14px;
 	background-color: green;
+	padding: 1px 5px;
 }
 #message.animate {
     animation: fadeOutInfo ease 0.3s;
@@ -1033,7 +1184,6 @@ input[type=number] {
 	border-left-style: solid;
 	border-left-width: 6px;
 	background-color: #1f1f23;
-    overflow: auto;
 }
 .issubmessage .commenter{
 	position: relative;
@@ -1112,6 +1262,7 @@ input[type=number] {
 	position: relative;
 	top: 12px;
 	left: 9px;
+	margin: 0;
 	display: block;
 	font-size: 16px;
 	font-weight: 900;
@@ -1433,7 +1584,7 @@ input[type=number] {
 	bottom: 0;
 	right: 0;
     width: 8px;
-	height: calc(100% - 92px);
+	height: calc(100% - 91px);
 	background-color:#18181b;
 	z-index: 999;
 	opacity: 100%;

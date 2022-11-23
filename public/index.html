@@ -12,16 +12,19 @@
         <link rel="stylesheet" 
                 href="Resources/jquery-ui-1.13.2/jquery-ui.css">
         <script src="Resources/jquery-ui-1.13.2/jquery-ui.min.js"></script>
+		
+		<script type="text/javascript" src="https://unpkg.com/mediainfo.js/dist/mediainfo.min.js"></script>
 
-        <link rel="stylesheet" href="css/videoChatPlayer.css"></link>
+        <link rel="stylesheet" 
+                href="css/videoChatPlayer.css"></link>
         <script type="text/javascript" src="js/videoChatPlayer.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.css"></link>
 		<script src="https://cdn.jsdelivr.net/npm/spectrum-colorpicker2/dist/spectrum.min.js"></script>
 
     </head>
-    <body>
+    <body>	
 	
-		<div id="selectVideo">
+	<div id="selectVideo">
 		<p class="selectVideoText">Select video to show player</p>
 		<div class="arrowBody"></div>
 		<div class="arrowHead"></div>
@@ -97,13 +100,16 @@
 	
 	
 	<div class="scroll-bar-wrap">
-		<div id="chat"></div>
+		<div id="chat">
+			<!-- <textarea id="output"></textarea> -->
+			<!-- <textarea id="output2"></textarea> -->
+		</div>
 		<div class="cover-bar"></div>
 	</div>
         <div id="topBox">
             <div class="flex header">
                 <div class="topBoxTitle" title="Select a video">Video:</div>
-                <div><input id="vidinput" type="file" accept="video/*"/></div>
+                <div><input id="vidinput" type="file" accept="video/*" name="fileinput" /></div>
             </div>
             <div class="flex header">
                 <div class="topBoxTitle" title="Select a JSON chat file">Chat:</div>
@@ -124,7 +130,7 @@
             </div>
 			<div id="collapseChat">
 				<span class="collapsetooltiptext">Collapse Chat</span>
-				<svg width="20" height="20" viewBox="0 0 20 20" fill="white">
+				<svg width="20" height="20" viewBox="0 0 20 20">
 					<path d="M4 16V4H2v12h2zM13 15l-1.5-1.5L14 11H6V9h8l-2.5-2.5L13 5l5 5-5 5z"></path>
 				</svg>
 			</div>
@@ -133,6 +139,12 @@
 		
 	
         <div class="video-container">
+			<div id="chapterSelector" class="hide">
+				<!-- <div id="chapterExample" class="chapter"> -->
+					<!-- <div id="chapterName" class="chapterName" >The Legend of Zelda: Breath of the Wild</div> -->
+					<!-- <div id="chapterTime" class="chapterTime">0:00:00</div> -->
+				<!-- </div> -->
+			</div>
             <video id="videoPlayer" ></video>
 			
 				<div id="video-PausePlay-container">
@@ -143,7 +155,7 @@
 			
 			
 			
-            <div class="custom-controls">
+			<div class="custom-controls">
 				
 				<div class="progress-bar-container">
 					<div class="progress-bar">
@@ -153,8 +165,9 @@
 							<div class="barSelector"></div>
 							
 						</div>
+						<!-- <div id="chapterMarker4327" class="chapterMarker" style="left: calc(39.0755% - 2px);"></div> -->
 					</div>
-                </div>
+				</div>
 				
 				
 				<div id="previewBox">
@@ -167,9 +180,14 @@
 					
 				</div>
 				
-                
 				<div class="buttons-container">
 				<div id="leftButtonbuffer"></div>
+					<div id="chapters" class="button">
+					<span class="chapterstooltiptext">Chapter Select</span>
+						<svg>
+							<g><path d="M6 2H2v4h4V2zM18 3H8v2h10V3zM8 9h10v2H8V9zM18 15H8v2h10v-2zM2 8h4v4H2V8zM6 14H2v4h4v-4z"></path></g>
+						</svg>
+					</div>
 					<div id="playpause" class="button play">
 						<span class="play-button play-button-before"></span>
 						<span class="play-button play-button-after"></span>

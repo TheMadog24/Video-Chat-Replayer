@@ -94,6 +94,176 @@ var streamerBadgesJson;
 
 
 
+//MediaInfo - Extract Video Data from MP4
+
+
+
+function getVideoMetadata() {
+	const fileinput = document.getElementById('vidinput')
+	
+	
+	var videoDatajson;
+	
+	const onChangeFile = (mediainfo) => {
+		const file = fileinput.files[0]
+		if (file) {
+			removeCurrentChapter();
+			window.setTimeout(function () {
+				$("#message").text("Looking for Chapters...").css({"background-color": "yellow", "color": "black"});
+			}, 500);
+			
+
+		const getSize = () => file.size
+
+		const readChunk = (chunkSize, offset) =>
+			new Promise((resolve, reject) => {
+				const reader = new FileReader()
+				reader.onload = (event) => {
+					if (event.target.error) {
+						reject(event.target.error)
+					}
+					resolve(new Uint8Array(event.target.result))
+				}
+				reader.readAsArrayBuffer(file.slice(offset, offset + chunkSize))
+			})
+
+			mediainfo
+				.analyzeData(getSize, readChunk)
+				.then((result) => {
+					console.log("Chapters Loaded!");
+					
+					var videoMetadata = result;
+					saveResults(videoMetadata);
+					extractChapters();
+        
+				})
+			.catch((error) => {
+				// output.value = `An error occured:\n${error.stack}`
+				
+			})
+		}
+	}
+	
+
+	MediaInfo({ format: 'JSON' }, (mediainfo) => {
+	fileinput.addEventListener('change', () => onChangeFile(mediainfo))
+	})
+
+	function saveResults(videoMetadata) {
+		videoDatajson = JSON.parse( videoMetadata );
+	}
+	
+	
+	function extractChapters() { 
+		if (typeof videoDatajson.media.track[4] === `undefined`) {
+			$("#chapters").hide();
+			$("#message").text("No Chapters Found").css({"background-color": "red", "color": "white"}).delay(2000).fadeOut(5000);
+			
+		} else if (videoDatajson.media.track[4]) {
+			$("#chapters").show();
+			$("#message").text("Chapters Found!").css({"background-color": "green", "color": "white"}).delay(2000).fadeOut(5000);
+			var chapters = videoDatajson.media.track[4].extra;
+			console.log(chapters);
+			jQuery.each(chapters, function (chapter, name){
+  
+				var newChapter = chapter.substr(1).slice(0, -4).replace(/\_/g, ":").replace(/\"/g, "");
+				var newtime;
+				if (chapter) {
+					newtime = convertChapterTime(newChapter);
+				}
+    
+				$('#output2').append( newtime +" - " +name + "\n");
+				// setVideoChapters(newtime, name);
+				setChapterMenu(newChapter, newtime, name);
+			})
+		}
+	} 
+	
+	//converts time to seconds
+	function convertChapterTime(newChapter) {
+		// console.log("------Making New Time!------");
+		// console.log("newChapter: "+newChapter);
+		var hms = newChapter;
+		var a = hms.split(':');
+		var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]); 
+		// console.log("seconds: "+seconds);
+		// console.log("++++++New Time Finished++++++");
+  
+	return seconds;
+	}
+	
+	
+	
+	function setVideoChapters(newtime, name) {
+		console.log("Setting Chapter!");
+	
+		var video = $("#videoPlayer");
+		var vidTime = video[0].duration;
+		console.log("Video Time: "+vidTime);
+		var timeOnBarPercent = (newtime / vidTime) * 100;
+		console.log("Bar Time: "+timeOnBarPercent);
+		
+		if (timeOnBarPercent === 0) {
+			return;
+		} else {
+		
+		let chapterMarker = $("<div>")
+		.attr("id", "chapterMarker"+newtime)
+		.addClass("chapterMarker")
+		.css({ "left" :  "calc(" + timeOnBarPercent + "%" + " - 4px)" });
+		
+		
+		$(".progress-bar").prepend(chapterMarker);
+		}
+	}
+	
+	//adds entries to the chapter menu.
+	function setChapterMenu(newChapter, newtime, name) {
+		  // let chatTime = $("<div>")
+		// .addClass("chattime")
+		// .attr("data-time", timeSeconds.toString())
+		// .attr("title", "Jump to video")
+		// .text(timeHtml);
+		
+		let chapterEntry = $("<div>")
+		.addClass("chapter")
+		.attr("data-time", newtime.toString())
+		.attr("title", "Jump to video");
+		
+		$("#chapterSelector").append(chapterEntry);		
+		
+		let chapterName = $("<div>")
+		.addClass("chapterName")
+		.text(name);
+		
+		let chapterTime = $("<div>")
+		.addClass("chapterTime")
+		.text(newChapter);
+		
+		chapterEntry.append(chapterName);
+		chapterEntry.append(chapterTime);
+		
+	}
+	//removes existing Chapters on Load
+	function removeCurrentChapter() {
+		console.log("Removing!");
+		const chapterMenu = document.getElementById("chapterSelector");
+		chapterMenu.replaceChildren();
+		
+		document.querySelectorAll('.chapterMarker').forEach(function(a){
+			a.remove()
+		})
+	}
+
+}
+	
+
+
+
+
+
+
+
 function localFileVideoPlayer() {
   var URL = window.URL || window.webkitURL;
   var videoNode = document.querySelector("video");
@@ -104,6 +274,7 @@ function localFileVideoPlayer() {
   var currentChatPos = -1;
 
   var displayMessage = function (message, isError) {
+	$("#message").show().css({"background-color": "green", "color": "white"});
     var element = document.querySelector("#message");
     element.innerHTML = message;
     element.className = isError ? "error" : "info";
@@ -526,6 +697,43 @@ $('.colorpicker').spectrum({
   });
   //	Custom Control Bar Starts
 
+
+
+//Chapter Menu Function
+$("#chapters").click(function (e) {
+	e.stopPropagation();
+	$("#chapterSelector").toggleClass("show hide");
+});
+
+$(document).click(function(e) {
+	
+    var container = $("#chapterSelector");
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0) 
+    {
+		e.stopPropagation();
+		if (container.hasClass("show")) {
+			container.removeClass("show").addClass("hide");
+		}
+    }
+});
+
+
+  $("#chapterSelector").on("click", ".chapter", function () {
+    var timeSecond = $(this).attr("data-time");
+    if (timeSecond) {
+      timeSecond = Number(timeSecond);
+    }
+    videoNode.currentTime = timeSecond;
+	$("#chapterSelector").toggleClass("show hide");
+	
+  });
+
+
+
+
+
   //Mute Button Function
   var savedVol = 100;
   $("#volume").click(function () {
@@ -639,7 +847,7 @@ $('.colorpicker').spectrum({
   //Hides Overlay on Play
   videoNode.onplay = function () {
     $("#video-PausePlay-container").fadeOut(100);
-    $(".custom-controls").fadeOut(200);
+    $(".custom-controls").delay(1000).fadeOut(200);
     $("#videoPlayer").removeClass("show-cursor");
     // $("#videoPlayer").delay(2000).queue(function(next){
     // $(this).removeClass("show-cursor");
@@ -811,8 +1019,10 @@ $('.colorpicker').spectrum({
       }
     } else if (key === "Space") {
       if (vid.paused || vid.ended) {
+		  $(".custom-controls #playpause").toggleClass("play pause");
         vid.play();
       } else {
+		  $(".custom-controls #playpause").toggleClass("play pause");
         vid.pause();
       }
     } else if (key === "KeyM") {
@@ -864,6 +1074,27 @@ $('.colorpicker').spectrum({
     var percentage = 100 * (relX / progressWidth);
     GetHoverTime(percentage);
   });
+  $(document).on("mousemove", function (e) {
+	  if (timeDrag) {
+		//gets progressbar offset from left, where cursor is
+		var progress = $(".progress-bar");
+		var progressOffset = progress.offset();
+		var relX = e.pageX - progressOffset.left;
+		//get width of progressbar
+		var progressWidth = progress[0].offsetWidth;
+		//Error Correction
+		if (relX > progressWidth) {
+			relX = progressWidth;
+		}
+		if (relX < 0) {
+			relX = 0;
+		}
+		//calculate percentage
+		var percentage = 100 * (relX / progressWidth);
+		GetHoverTime(percentage);
+	  }
+  });
+  
   //Gets video time based on mouse position
   function GetHoverTime(percentage) {
     // console.log(percentage);
@@ -933,8 +1164,9 @@ $('.colorpicker').spectrum({
 
   //Disable on Page load
   $(document).ready(function () {
-    $("#video-PausePlay-container").fadeOut(1);
-    $(".custom-controls").fadeOut(1);
+	  $("#chapterSelector").removeClass("show").addClass("hide");
+	  $("#chapters").hide();
+	  $("#message").hide();
   });
 
   //Video player not loaded until video is loaded
@@ -1828,4 +2060,5 @@ $(document).ready(function () {
   return /^-?\d*[.]?\d{0,3}$/.test(value); }, "Must be a Number with 3 or less decimal places.");
 
   localFileVideoPlayer();
+  getVideoMetadata();
 });
