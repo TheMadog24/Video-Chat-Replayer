@@ -284,7 +284,7 @@ function localFileVideoPlayer() {
         chatPos < len &&
         chatPos > 0 &&
         currentTime <
-          chatJson.comments.at(chatPos).content_offset_seconds
+          (chatJson.comments.at(chatPos).content_offset_seconds + +chatOffsetAdjustment)
       ) {
         chatPos--;
       }
@@ -294,7 +294,7 @@ function localFileVideoPlayer() {
         chatPos + 1 < len &&
         chatPos + 1 >= 0 &&
         currentTime >
-          chatJson.comments.at(chatPos + 1).content_offset_seconds
+          (chatJson.comments.at(chatPos + 1).content_offset_seconds + +chatOffsetAdjustment)
       ) {
         chatPos++;
       }
@@ -1092,7 +1092,7 @@ let TIME_MINUTE = 60;
 let TIME_HOUR = TIME_MINUTE * 60;
 
 function renderChatTime(comment) {
-  let timeSeconds = comment.content_offset_seconds;
+  let timeSeconds = comment.content_offset_seconds + +chatOffsetAdjustment;
 
   let timeHtml = formatElapsedTime(timeSeconds);
 
@@ -1297,10 +1297,8 @@ function renderChatSub(comment) {
   }
 
 return chatBodies;
-
-  
-  return chatBodies;
 }
+
 function renderChatsubmysterygift(comment) {
   // comment.message.body;
   let message = extractMessageFragments(comment);
@@ -1716,40 +1714,37 @@ function makeUserBadges(comment) {
   return userBadges;
 }
 // Restricts input for each element in the set of matched elements to the given inputFilter.
-(function ($) {
-  $.fn.inputFilter = function (callback, errMsg) {
-    return this.on(
-      "input keydown keyup mousedown mouseup select contextmenu drop focusout",
-      function (e) {
-        if (callback(this.value)) {
-          // Accepted value
-          if (["keydown", "mousedown", "focusout"].indexOf(e.type) >= 0) {
-            $(this).removeClass("input-error");
-            this.setCustomValidity("");
-          }
-          this.oldValue = this.value;
-          this.oldSelectionStart = this.selectionStart;
-          this.oldSelectionEnd = this.selectionEnd;
-        } else if (this.hasOwnProperty("oldValue")) {
-          // Rejected value - restore the previous one
-          $(this).addClass("input-error");
-          this.setCustomValidity(errMsg);
-          this.reportValidity();
-          this.value = this.oldValue;
-          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-        } else {
-          // Rejected value - nothing to restore
-          this.value = "";
+(function($) {
+  $.fn.inputFilter = function(callback, errMsg) {
+    return this.on("input keydown keyup mousedown mouseup select contextmenu drop focusout", function(e) {
+      if (callback(this.value)) {
+        // Accepted value
+        if (["keydown","mousedown","focusout"].indexOf(e.type) >= 0){
+          $(this).removeClass("input-error");
+          this.setCustomValidity("");
         }
+        this.oldValue = this.value;
+        this.oldSelectionStart = this.selectionStart;
+        this.oldSelectionEnd = this.selectionEnd;
+      } else if (this.hasOwnProperty("oldValue")) {
+        // Rejected value - restore the previous one
+        $(this).addClass("input-error");
+        this.setCustomValidity(errMsg);
+        this.reportValidity();
+        this.value = this.oldValue;
+        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+      } else {
+        // Rejected value - nothing to restore
+        this.value = "";
       }
-    );
+    });
   };
-})(jQuery);
+}(jQuery));
 
 $(document).ready(function () {
-  $("#intTextBox").inputFilter(function (value) {
-    return /^-?\d*$/.test(value);
-  }, "Must be an Number");
+	// Install input filter
+	$("#currencyTextBox").inputFilter(function(value) {
+  return /^-?\d*[.]?\d{0,3}$/.test(value); }, "Must be a Number with 3 or less decimal places.");
 
   localFileVideoPlayer();
 });
