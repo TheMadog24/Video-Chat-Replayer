@@ -1703,20 +1703,24 @@ function makeEmoticon(emoticonId, altName) {
 	let emoteheight = emote.height;
 	let emotewidth = emote.width;
 	
-	if (emoteheight == null){
-		emoteheight = 24;
+	if (emoteheight == null && emotewidth == null){
+		var imageScaleClass = "chat-image-scale-" + emote.imageScale;
+		var img = $("<img>")
+			.attr("title", altName)
+			.addClass(imageScaleClass)
+			.attr("src", emoteImagePrefix + emote.data);
+		return img;
 	}
-	if (emotewidth == null){
-		emotewidth = 24;
+	else {
+		var imageScaleClass = "chat-image-scale-" + emote.imageScale;
+		var img = $("<img>")
+			.attr("title", altName)
+			.addClass(imageScaleClass)
+			.attr("src", emoteImagePrefix + emote.data)
+			.css({"height": (emoteheight + "px") , "width": (emotewidth + "px")});
+		return img;
+		
 	}
-
-    var imageScaleClass = "chat-image-scale-" + emote.imageScale;
-    var img = $("<img>")
-      .attr("title", altName)
-      .addClass(imageScaleClass)
-      .attr("src", emoteImagePrefix + emote.data)
-      .css({"height": (emoteheight + "px") , "width": (emotewidth + "px")});
-    return img;
   }
 
   return $('<span debug="makeEmotiocon">').text(altName);
