@@ -1251,6 +1251,27 @@ input[type=number] {
 .issubgift {
 	margin-top: -4px;
 }
+.issubgift .subgiftcontainer{
+	margin-left: 45px;
+}
+.issubgift .subgiftcontainer .chatmessage{
+	margin-left: 0;
+}
+.issubgift svg{
+	margin-left: 15px;
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+.issubgift .issubmessage svg{
+	margin-top: auto;
+	margin-left: 15px;
+	display: inline;
+	vertical-align: middle;
+}
+
 .isbiggiftsubmessage {
 	border-left-color: #a970ff;
 	border-left-style: solid;
@@ -1272,6 +1293,7 @@ input[type=number] {
 	position: relative;
 	margin: -16px auto 14px 65px;
 	display: block;
+	color: #adadb8;
 }
 .isbiggiftsubmessageimg {
 	position: relative;
