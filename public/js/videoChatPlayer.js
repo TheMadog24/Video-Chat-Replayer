@@ -1611,11 +1611,12 @@ function renderChatsubmysterygift(comment) {
 
 }
 function rendersubgift(comment) {
+	
   // comment.message.body;
   let message = extractMessageFragments(comment);
+  console.log(message);
   // let messageNameRemoved = message[0].outerHTML.replace(comment.commenter.display_name, "");
   // let messageBold = message[0].outerHTML.replace("!", "</b>!").replace("sub to ", "sub to <b>");
-
   let colorHex = comment.message.user_color;
   let styles = { color: colorHex };
 
@@ -1710,7 +1711,8 @@ function extractMessageFragments(comment) {
       message.append( fragment );
     }
     else if ( fragment.isSubMysteryGiftTotalGifts ) {
-      message.append( fragment );
+      message.append( buildFragmentMysteryGift(fragment) );
+      message.append( buildFragmentMysteryGiftTheyve(fragment) );
     }
 
     else if (fragment.emoticon && fragment.emoticon.emoticon_id) {
@@ -1719,8 +1721,10 @@ function extractMessageFragments(comment) {
     } 
     else if ( fragment.isSubgift ) {
 		message.addClass("subgiftcontainer").removeClass("chatmessage");
-		makeSubGiftMiddleMessage( fragment, comment, message );
-		makeSubGiftReciever( fragment, comment, message );
+		console.log(fragment);
+		message.append(buildFragmentSubGift( fragment ));
+		// makeSubGiftMiddleMessage( fragment, comment, message );
+		// makeSubGiftReciever( fragment, comment, message );
     }
     
     else {
@@ -1834,6 +1838,29 @@ function buildFragmentSubResubTheyve( fragment ) {
 
   return result;
 }
+
+function buildFragmentMysteryGift(fragment) {
+  var msg = fragment.text.trim();
+  
+  var mystergiftmessage = msg.match(regExSubMysteryGift);
+  
+  let giftmessage = $("<span>")
+      .addClass("giftmessage")
+      .text( mystergiftmessage );
+  
+  return giftmessage;
+}
+function buildFragmentMysteryGiftTheyve(fragment) {
+  var msg = fragment.text.trim();
+  
+  var messageTheyve = msg.match(" They've gifted a total of [0-9]+ in the channel!");
+  
+  let giftmessagetheyve = $("<span>")
+      .addClass("giftmessagetheyve")
+      .text( messageTheyve );
+  
+  return giftmessagetheyve;
+}
 function makeSubGiftMiddleMessage( fragment, comment, message ) {
   var msg = fragment.text.trim();
   var middleText = msg.match("\\b gifted a Tier [0-9] sub to \\b");
@@ -1856,6 +1883,16 @@ function makeSubGiftReciever( fragment, comment, message ) {
       .html( msgReciever );
 
   message.append(reciever);
+}
+function buildFragmentSubGift( fragment ) {
+  var msg = fragment.text.trim();
+  
+	  
+  var result = $("<span>")
+      .addClass("SubGift")
+      .html( msg );
+
+  return result;
 }
 
 /**

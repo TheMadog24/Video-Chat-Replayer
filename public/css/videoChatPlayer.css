@@ -1274,13 +1274,16 @@ input[type=number] {
 }.subgiftcontainer .chatmessage{
 	margin: 0;
 }
-.reciever  {
+.subgiftcontainer .reciever  {
 	font-weight: 900;
 }
-.middlemessage  {
+.subgiftcontainer .middlemessage  {
 	color: #adadb8;
 }
-.exclamation  {
+.subgiftcontainer .exclamation  {
+	color: #adadb8;
+}
+.subgiftcontainer .restofmessage  {
 	color: #adadb8;
 }
 .issubgift .subgiftcontainer{
