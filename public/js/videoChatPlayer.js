@@ -1608,7 +1608,7 @@ function renderChatSubMysteryGift(comment) {
 	
 	let isgiftingTEXT = msg.match("Is gifting ");
 	
-	let toCommunity = msg.match("\Tier [0-9]+ Subs to .+'s community!");
+	let toCommunity = msg.match("\Tier [0-9]+ Subs to .+'s community! ");
 	
 	let giftednumber = msg.replace(isgiftingTEXT , "").replace(toCommunity , "");
   
@@ -1702,9 +1702,9 @@ function rendersubgift(comment) {
     .addClass("middlemessage")
     .text(middlemessageTEXT);
 	
-	let restofmessage = $("<span>")
-    .addClass("restofmessage")
-    .text(theyvemessage);
+	// let restofmessage = $("<span>")
+    // .addClass("restofmessage")
+    // .text(theyvemessage);
 	
 	
   
@@ -1724,8 +1724,37 @@ function rendersubgift(comment) {
 	subgiftcontainer.append(middlemessage);
 	subgiftcontainer.append(reciever);
 	subgiftcontainer.append(exclamation);
-	if (restofmessage.text().trim().length) {
-		subgiftcontainer.append(restofmessage);		
+	if (theyvemessage) {
+		
+		let theyvecontainer = $("<span>").addClass("theyvecontainer");
+		subgiftcontainer.append(theyvecontainer);
+		
+		var msg = theyvemessage[0];
+		console.log(msg);
+		
+		let channelText = msg.match(" Gift Subs in the channel!");
+	
+		let msgGiftTotal = msg.match("They have given ");
+	
+		let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+		let giftedTotal = $("<span>")
+		.addClass("giftmessagetotal")
+		.text(msgGiftTotal);
+	  
+		let giftednumber = $("<span>")
+		.addClass("giftednumber")
+		.text(giftedtotalnumber);
+	  
+		let toChannel = $("<span>")
+		.addClass("tochannel")
+		.text(channelText);
+
+		theyvecontainer.append( giftedTotal );
+		theyvecontainer.append( giftednumber );
+		theyvecontainer.append( toChannel );
+		
+		// theyvecontainer.append(restofmessage);		
 	}
 	return chatBody;
 
