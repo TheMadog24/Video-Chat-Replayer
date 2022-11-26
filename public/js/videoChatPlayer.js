@@ -83,7 +83,7 @@ var regExSubGift = new RegExp(
                         "(?<=" + regExSubGiftFragments + "))", "i");
 						
 //Regex for submysterygift
-var regExSubMysteryGiftFragments = ".{1,1000} is gifting [0-9]{1,1000}\\b Tier [0-9]\\b Subs to .{1,1000}'s community!";
+var regExSubMysteryGiftFragments = ".+ is gifting [0-9]+\\b Tier [0-9]+\\b Subs to .+'s community!";
 var regExSubMysteryGift = new RegExp(
                         "((?=" + regExSubMysteryGiftFragments + ")|" + 
                         "(?<=" + regExSubMysteryGiftFragments + "))", "i");
@@ -1705,6 +1705,14 @@ function extractMessageFragments(comment) {
       message.append( buildFragmentSubResubTheyve( fragment ) );
       
     }
+
+    else if ( fragment.isMysteryGift ) {
+      message.append( fragment );
+    }
+    else if ( fragment.isSubMysteryGiftTotalGifts ) {
+      message.append( fragment );
+    }
+
     else if (fragment.emoticon && fragment.emoticon.emoticon_id) {
 
       message.append(makeEmoticon(fragment.emoticon.emoticon_id, altName));
@@ -1889,6 +1897,8 @@ function getExpandedMessageFragments( fragments, comment ) {
            
       var splits = processFragmentsSplitText( fragment.text );
 
+      var isMysteryGift = false;
+
       jQuery.each( splits, function (idx, splitText ) {
 		
         if ( !splitText.trim().length ) {
@@ -1923,7 +1933,7 @@ function getExpandedMessageFragments( fragments, comment ) {
           newFragment["isSubResubTheyve"] = true;
 
           altFragmentProcessing = true;
-          results.push( newFragment );
+          results.push( newFragment.trim() );
         }
         else if ( regExSubGift.test( splitText ) ) {
           newFragment["isSubgift"] = true;
@@ -1932,8 +1942,15 @@ function getExpandedMessageFragments( fragments, comment ) {
           results.push( newFragment );
         }
         else if ( regExSubMysteryGift.test( splitText ) ) {
-          newFragment["isSubMysteryGift"] = true;
 
+          if ( isMysteryGift ) {
+            newFragment["isSubMysteryGiftTotalGifts"] = true;
+          }
+          else {
+            newFragment["isSubMysteryGift"] = true;
+          }
+
+          isMysteryGift = true;
           altFragmentProcessing = true;
           results.push( newFragment );
         }
@@ -2000,6 +2017,13 @@ function processFragmentsSplitText( sourceText ) {
   }
   else if ( regExSubGift.test( sourceText ) ) {
     splits = sourceText.split(regExSubGift).filter(Boolean);
+  }
+  else if ( regExSubMysteryGift.test( sourceText ) ) {
+    var s = sourceText.split(regExSubMysteryGift).filter(Boolean);
+    splits.push( s[0] );
+    if ( s.length > 1 ) {
+      splits = splits.concat( s[1].trim() );
+    }
   }
   else {
     // No Cheer, no subResub, so just add to splits:
