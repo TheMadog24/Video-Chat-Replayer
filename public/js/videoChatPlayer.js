@@ -66,15 +66,15 @@ var regExSubResubFragments = "\\b\\w+ subscribed (?:with Prime|at Tier \\d+)\\."
 var regExSubResub = new RegExp(
                         "((?=" + regExSubResubFragments + ")|" + 
                         "(?<=" + regExSubResubFragments + "))", "i");
-console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
-            "(?<=" + regExSubResubFragments + "))");
+// console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
+//             "(?<=" + regExSubResubFragments + "))");
             
 var regExSubResubTheyveFragments = "\\bThey've subscribed for \\d+ months(?:!|, currently on a \\d+ month streak!)";
 var regExSubResubTheyve = new RegExp(
                       "((?=" + regExSubResubTheyveFragments + ")|" + 
                       "(?<=" + regExSubResubTheyveFragments + "))", "i");
-console.log("### regExSubResubTheyveFragments (77): " + "((?=" + regExSubResubTheyveFragments + ")|" + 
-            "(?<=" + regExSubResubTheyveFragments + "))");
+// console.log("### regExSubResubTheyveFragments (77): " + "((?=" + regExSubResubTheyveFragments + ")|" + 
+//             "(?<=" + regExSubResubTheyveFragments + "))");
 						
 //Regex for subgift
 var regExSubGiftFragments = "\\b\\w+ gifted a Tier \\d+\\b sub to \\w+!";
@@ -83,7 +83,7 @@ var regExSubGift = new RegExp(
                         "(?<=" + regExSubGiftFragments + "))", "i");
 						
 //Regex for submysterygift
-var regExSubMysteryGiftFragments = ".+ is gifting [0-9]+\\b Tier [0-9]+\\b Subs to .+'s community!";
+var regExSubMysteryGiftFragments = "^.+ is gifting [0-9]+\\b Tier [0-9]+\\b Subs to .+'s community!";
 var regExSubMysteryGift = new RegExp(
                         "((?=" + regExSubMysteryGiftFragments + ")|" + 
                         "(?<=" + regExSubMysteryGiftFragments + "))", "i");
@@ -1707,12 +1707,11 @@ function extractMessageFragments(comment) {
       
     }
 
-    else if ( fragment.isMysteryGift ) {
-      message.append( fragment );
+    else if ( fragment.isSubMysteryGift ) {
+      message.append( buildFragmentMysteryGift(fragment) );
     }
     else if ( fragment.isSubMysteryGiftTotalGifts ) {
-      message.append( buildFragmentMysteryGift(fragment) );
-      message.append( buildFragmentMysteryGiftTheyve(fragment) );
+      message.append( buildFragmentMysteryGiftTotalGifts(fragment) );
     }
 
     else if (fragment.emoticon && fragment.emoticon.emoticon_id) {
@@ -1842,24 +1841,20 @@ function buildFragmentSubResubTheyve( fragment ) {
 function buildFragmentMysteryGift(fragment) {
   var msg = fragment.text.trim();
   
-  var mystergiftmessage = msg.match(regExSubMysteryGift);
-  
   let giftmessage = $("<span>")
       .addClass("giftmessage")
-      .text( mystergiftmessage );
+      .text( msg );
   
   return giftmessage;
 }
-function buildFragmentMysteryGiftTheyve(fragment) {
+function buildFragmentMysteryGiftTotalGifts(fragment) {
   var msg = fragment.text.trim();
   
-  var messageTheyve = msg.match(" They've gifted a total of [0-9]+ in the channel!");
-  
-  let giftmessagetheyve = $("<span>")
+  let giftmessageTotalGifts = $("<span>")
       .addClass("giftmessagetheyve")
-      .text( messageTheyve );
+      .text( msg );
   
-  return giftmessagetheyve;
+  return giftmessageTotalGifts;
 }
 function makeSubGiftMiddleMessage( fragment, comment, message ) {
   var msg = fragment.text.trim();
@@ -1924,7 +1919,9 @@ function getExpandedMessageFragments( fragments, comment ) {
     // and split them up.
     if ( regExCheers.test( fragment.text ) || 
           regExSubResub.test( fragment.text ) ||
-          regExSubGift.test( fragment.text ) ) {
+          regExSubGift.test( fragment.text ) ||
+          regExSubMysteryGift.test( fragment.text )
+          ) {
            
       // if ( regExSubResub.test( fragment.text ) ) {
         
@@ -1970,7 +1967,7 @@ function getExpandedMessageFragments( fragments, comment ) {
           newFragment["isSubResubTheyve"] = true;
 
           altFragmentProcessing = true;
-          results.push( newFragment.trim() );
+          results.push( newFragment );
         }
         else if ( regExSubGift.test( splitText ) ) {
           newFragment["isSubgift"] = true;
