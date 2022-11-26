@@ -1462,18 +1462,8 @@ function renderChatBody(comment) {
     }
   }
   else if ( regExSubMysteryGift.test( comment.message.body )  ) {
-    comment.message["alt_fragments"] = [];
-    chatBodies.push( renderChatsubmysterygift( comment ) );
-    
-    if ( comment.message.alt_fragments.length ) {
-      // Clone the existing comment, then replace the fragments with the alt_fragments:
-      var clonedComment = JSON.parse(JSON.stringify(comment));
-      clonedComment.message.fragments = comment.message.alt_fragments;
-      comment = clonedComment;
-    }
-    else {
-      return chatBodies;
-    }
+
+    return renderChatSubMysteryGift( comment );
   }
 
   // comment.message.body;
@@ -1555,9 +1545,9 @@ function renderChatSub(comment) {
     // Clone the existing comment, then replace the fragments with the alt_fragments:
     var clonedComment = JSON.parse(JSON.stringify(comment));
     clonedComment.message.fragments = comment.message.alt_fragments;
-	// console.log(clonedComment);
+	  // console.log(clonedComment);
 	
-	let userComment = $("<span>").addClass("userComment");
+	  let userComment = $("<span>").addClass("userComment");
     
     let msg2 = extractMessageFragments(clonedComment);
 
@@ -1570,7 +1560,7 @@ function renderChatSub(comment) {
     // let chatBody2 = $("<div>").addClass("chatbody issubmessage")
             // .css('border-left-color', accentColor);
 			
-	chatBody.append(userComment);
+	  chatBody.append(userComment);
 
     userComment.append( makeUserBadges( clonedComment ) );
     userComment.append(player2);
@@ -1583,10 +1573,10 @@ function renderChatSub(comment) {
 return chatBodies;
 }
 
-function renderChatsubmysterygift(comment) {
-  // comment.message.body;
+function renderChatSubMysteryGift(comment) {
+  var chatBodies = [];
+
   let message = extractMessageFragments(comment);
-  let messageNameRemoved = message[0].outerHTML.replace(comment.commenter.display_name, "");
 
   let colorHex = comment.message.user_color;
   let styles = { color: colorHex };
@@ -1595,20 +1585,35 @@ function renderChatsubmysterygift(comment) {
     .addClass("commenter")
     .css(styles)
     .text(comment.commenter.display_name);
-  let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+  //let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
   let chatBody = $("<div>").addClass("chatbody no-time submysterygift isbiggiftsubmessage")
         .css('border-left-color', accentColor);
   
   // chatBody.append( makeUserBadges( comment ) );
-  if (message.is(':contains("is gifting")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
-		let giftedsub = $('<img class="isbiggiftsubmessageimg" src="img/subs/gift.png"/>');
-		chatBody.append(giftedsub);
-	}
-	chatBody.append(player);
-	chatBody.append(messageNameRemoved);
-	return chatBody;
+  // The following does not work: message.is is not a function. Also with it being a mysteryGift
+  // then it will always start with "is gifting" and will never have "subscribed"... so not needed:
+  // if (message.is(':contains("is gifting")') && 
+  //   !message.is(':contains("subscribed with Prime")') && 
+  //   !message.is(':contains("subscribed at Tier")')){
+	let giftedsub = $('<img class="isbiggiftsubmessageimg" src="img/subs/gift.png"/>');
+	chatBody.append(giftedsub);
+	// }
 
+	chatBody.append(player);
+	chatBody.append(message);
+	chatBodies.push( chatBody );
+
+  // If a mysteryGift has a Total Gifts component, then process that:
+  if ( comment.message.alt_fragments.length ) {
+    let fragment = comment.message.alt_fragments[0];
+
+    let messageTotalGifts = buildFragmentMysteryGiftTotalGifts( fragment );
+
+    chatBody.append( messageTotalGifts );
+  }
+
+  return chatBodies;
 }
 function rendersubgift(comment) {
 	
@@ -1851,7 +1856,7 @@ function buildFragmentMysteryGiftTotalGifts(fragment) {
   var msg = fragment.text.trim();
   
   let giftmessageTotalGifts = $("<span>")
-      .addClass("giftmessagetheyve")
+      .addClass("giftmessagetotalgifts")
       .text( msg );
   
   return giftmessageTotalGifts;
@@ -1976,17 +1981,25 @@ function getExpandedMessageFragments( fragments, comment ) {
           results.push( newFragment );
         }
         else if ( regExSubMysteryGift.test( splitText ) ) {
+          var userName = comment.commenter.display_name;
 
-          if ( isMysteryGift ) {
-            newFragment["isSubMysteryGiftTotalGifts"] = true;
-          }
-          else {
-            newFragment["isSubMysteryGift"] = true;
-          }
+          splitText = splitText.replace( userName, "" ).replace( "An anonymous user", "" ).trim();
+          splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+          newFragment["text"] = splitText;
 
+          newFragment["isSubMysteryGift"] = true;
+          
           isMysteryGift = true;
-          altFragmentProcessing = true;
           results.push( newFragment );
+        }
+        else if ( isMysteryGift ) {
+          newFragment["isSubMysteryGiftTotalGifts"] = true;
+          
+          altFragmentProcessing = true;
+          if ( !comment.message["alt_fragments"] ) {
+            comment.message["alt_fragments"] = [];
+          }
+          comment.message["alt_fragments"].push( newFragment );
         }
 
         else if ( altFragmentProcessing && comment ) {
