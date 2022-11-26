@@ -1750,7 +1750,7 @@ function rendersubgift(comment) {
 
   // comment.message.body;
   let message = extractMessageFragments(comment);
-  // console.log(message);
+  
   // let messageNameRemoved = message[0].outerHTML.replace(comment.commenter.display_name, "");
   // let messageBold = message[0].outerHTML.replace("!", "</b>!").replace("sub to ", "sub to <b>");
   let colorHex = comment.message.user_color;
@@ -1763,24 +1763,29 @@ function rendersubgift(comment) {
   
   
   // let workingmessage = comment.message.body;
+  let workingmessage = message[0].textContent;
+  workingmessage = workingmessage.replace("gifted a Tier ", " gifted a Tier ");
+  // console.log(workingmessage);
   
   // let theyvemessage = workingmessage.match("\They have given [0-9]{1,10} Gift Subs in the channel!");
   // let theyveremoved = workingmessage.replace(theyvemessage, "").trim();
   
-  // let middlemessageTEXT = theyveremoved.match("\\b gifted a Tier [0-9] sub to \\b", "");
-  // let recievertext = theyveremoved.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace("!", "").trim();
   
-  // let reciever = $("<span>")
-  //   .addClass("reciever")
-  //   .text(recievertext);
+  let middlemessageTEXT = workingmessage.match("\\ gifted a Tier [0-9] sub to \\b", "");
+  let recievertext = workingmessage.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace("!", "").trim();
+  
+  let reciever = $("<span>")
+    .addClass("reciever")
+    .text(recievertext);
+  
   let exclamation  = $("<span>")
     .addClass("exclamation ")
     .text("! ");
 	
 	
-  // let middlemessage = $("<span>")
-  //   .addClass("middlemessage")
-  //   .text(middlemessageTEXT);
+  let middlemessage = $("<span>")
+    .addClass("middlemessage")
+    .text(middlemessageTEXT);
 	
 	// let restofmessage = $("<span>")
     // .addClass("restofmessage")
@@ -1801,9 +1806,9 @@ function rendersubgift(comment) {
 	
 	chatBody.append(subgiftcontainer);
 	subgiftcontainer.append(player);
-	subgiftcontainer.append(message);
-	// subgiftcontainer.append(middlemessage);
-	// subgiftcontainer.append(reciever);
+	// subgiftcontainer.append(message);
+	subgiftcontainer.append(middlemessage);
+	subgiftcontainer.append(reciever);
 	subgiftcontainer.append(exclamation);
 
 	chatBodies.push( chatBody );
@@ -1814,7 +1819,7 @@ function rendersubgift(comment) {
 
     var msg = fragment.text;
 
-    console.log(msg);
+    // console.log(msg);
 		
 		let channelText = msg.match(" Gift Subs in the channel!");
 	
@@ -1914,10 +1919,10 @@ function extractMessageFragments(comment) {
     }
 
     else if ( fragment.isSubGift ) {
-      message.append( $('<span debug="extractMessageFragments">').text(altName) );
+      message.append( altName );
     }
     else if ( fragment.isSubGiftTotalGifts ) {
-      message.append( $('<span debug="extractMessageFragments">').text(altName) );
+      message.append( altName );
     }
 
     else if ( fragment.isSubMysteryGift ) {
@@ -2217,7 +2222,7 @@ function getExpandedMessageFragments( fragments, comment ) {
           var userName = comment.commenter.display_name;
   
           splitText = splitText.replace( userName, "" ).replace( "An anonymous user", "" ).trim();
-          splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+          splitText = splitText.charAt(0) + splitText.slice(1);
           newFragment["text"] = splitText;
   
           newFragment["isSubGift"] = true;
