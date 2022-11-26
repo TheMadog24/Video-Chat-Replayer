@@ -1286,6 +1286,17 @@ input[type=number] {
 .subgiftcontainer .restofmessage  {
 	color: #adadb8;
 }
+
+.giftednumber {
+	color: white;
+	font-weight: 700;
+}
+.giftingnumber {
+	color: white;
+	font-weight: 700;
+}
+
+
 .issubgift .subgiftcontainer{
 	margin-left: 55px;
 }
@@ -1318,7 +1329,7 @@ input[type=number] {
 	font-weight: 900;
 	display: inline-block;
 }
-.isbiggiftsubmessage .chatmessage{
+.isbiggiftsubmessage .bigsubgiftcontainer{
 	position: relative;
 	margin: -16px auto 14px 65px;
 	display: block;

@@ -1599,18 +1599,69 @@ function renderChatSubMysteryGift(comment) {
 	let giftedsub = $('<img class="isbiggiftsubmessageimg" src="img/subs/gift.png"/>');
 	chatBody.append(giftedsub);
 	// }
+	
+	
+	
+	
+	var msg = message.text();
+	
+	
+	let isgiftingTEXT = msg.match("Is gifting ");
+	
+	let toCommunity = msg.match("\Tier [0-9]+ Subs to .+'s community!");
+	
+	let giftednumber = msg.replace(isgiftingTEXT , "").replace(toCommunity , "");
+  
+	let giftingmessage = $("<span>")
+      .addClass("giftingmessage")
+      .text(isgiftingTEXT);
+	  
+	let giftingnumber = $("<span>")
+      .addClass("giftingnumber")
+      .text(giftednumber);
+	  
+	let tostreamercommunity = $("<span>")
+      .addClass("tocommunity")
+      .text(toCommunity);
 
 	chatBody.append(player);
-	chatBody.append(message);
+	
+	let bigsubgiftcontainer = $("<div>").addClass("bigsubgiftcontainer");
+	chatBody.append(bigsubgiftcontainer);
+
+    bigsubgiftcontainer.append( giftingmessage );
+    bigsubgiftcontainer.append( giftingnumber );
+    bigsubgiftcontainer.append( tostreamercommunity );
+
+	// chatBody.append(message);
 	chatBodies.push( chatBody );
 
   // If a mysteryGift has a Total Gifts component, then process that:
   if ( comment.message.alt_fragments.length ) {
     let fragment = comment.message.alt_fragments[0];
 
-    let messageTotalGifts = buildFragmentMysteryGiftTotalGifts( fragment );
+    var msg = fragment.text;
+	let channelText = msg.match(" in the channel!");
+	
+	let msgGiftTotal = msg.match("They've gifted a total of ");
+	
+	let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+	let giftedTotal = $("<span>")
+      .addClass("giftmessagetotal")
+      .text(msgGiftTotal);
+	  
+	let giftednumber = $("<span>")
+      .addClass("giftednumber")
+      .text(giftedtotalnumber);
+	  
+	let toChannel = $("<span>")
+      .addClass("tochannel")
+      .text(channelText);
 
-    chatBody.append( messageTotalGifts );
+    bigsubgiftcontainer.append( giftedTotal );
+    bigsubgiftcontainer.append( giftednumber );
+    bigsubgiftcontainer.append( toChannel );
   }
 
   return chatBodies;
@@ -1619,7 +1670,7 @@ function rendersubgift(comment) {
 	
   // comment.message.body;
   let message = extractMessageFragments(comment);
-  console.log(message);
+  // console.log(message);
   // let messageNameRemoved = message[0].outerHTML.replace(comment.commenter.display_name, "");
   // let messageBold = message[0].outerHTML.replace("!", "</b>!").replace("sub to ", "sub to <b>");
   let colorHex = comment.message.user_color;
@@ -1725,7 +1776,7 @@ function extractMessageFragments(comment) {
     } 
     else if ( fragment.isSubgift ) {
 		message.addClass("subgiftcontainer").removeClass("chatmessage");
-		console.log(fragment);
+		// console.log(fragment);
 		message.append(buildFragmentSubGift( fragment ));
 		// makeSubGiftMiddleMessage( fragment, comment, message );
 		// makeSubGiftReciever( fragment, comment, message );
@@ -1844,13 +1895,13 @@ function buildFragmentSubResubTheyve( fragment ) {
 }
 
 function buildFragmentMysteryGift(fragment) {
-  var msg = fragment.text.trim();
+  var msg = fragment.text.trim().replace("community!", "community! ");
   
-  let giftmessage = $("<span>")
-      .addClass("giftmessage")
-      .text( msg );
+  // let giftmessage = $("<span>")
+      // .addClass("giftmessage")
+      // .text( msg );
   
-  return giftmessage;
+  return msg;
 }
 function buildFragmentMysteryGiftTotalGifts(fragment) {
   var msg = fragment.text.trim();
