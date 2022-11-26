@@ -1716,7 +1716,7 @@ function renderChatSubMysteryGift(comment) {
 	chatBodies.push( chatBody );
 
   // If a mysteryGift has a Total Gifts component, then process that:
-  if ( comment.message.alt_fragments.length ) {
+  if ( comment.message.alt_fragments && comment.message.alt_fragments.length ) {
     let fragment = comment.message.alt_fragments[0];
 
     var msg = fragment.text;
@@ -1814,7 +1814,7 @@ function rendersubgift(comment) {
 	chatBodies.push( chatBody );
 
   // If a mysteryGift has a Total Gifts component, then process that:
-  if ( comment.message.alt_fragments.length ) {
+  if ( comment.message.alt_fragments && comment.message.alt_fragments.length ) {
     let fragment = comment.message.alt_fragments[0];
 
     var msg = fragment.text;
