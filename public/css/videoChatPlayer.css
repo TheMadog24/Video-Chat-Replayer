@@ -1274,6 +1274,15 @@ input[type=number] {
 }.subgiftcontainer .chatmessage{
 	margin: 0;
 }
+.reciever  {
+	font-weight: 900;
+}
+.middlemessage  {
+	color: #adadb8;
+}
+.exclamation  {
+	color: #adadb8;
+}
 .issubgift .subgiftcontainer{
 	margin-left: 55px;
 }
