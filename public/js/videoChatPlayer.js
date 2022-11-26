@@ -1460,18 +1460,8 @@ function renderChatBody(comment) {
     return renderChatAdvanceSub( comment );
   }
   else if ( regExSubGift.test( comment.message.body )  ) {
-    comment.message["alt_fragments"] = [];
-    chatBodies.push( rendersubgift( comment ) );
-    
-    if ( comment.message.alt_fragments.length ) {
-      // Clone the existing comment, then replace the fragments with the alt_fragments:
-      var clonedComment = JSON.parse(JSON.stringify(comment));
-      clonedComment.message.fragments = comment.message.alt_fragments;
-      comment = clonedComment;
-    }
-    else {
-      return chatBodies;
-    }
+
+    return rendersubgift( comment );
   }
   else if ( regExSubMysteryGift.test( comment.message.body )  ) {
 
@@ -1730,23 +1720,23 @@ function renderChatSubMysteryGift(comment) {
     let fragment = comment.message.alt_fragments[0];
 
     var msg = fragment.text;
-	let channelText = msg.match(" in the channel!");
-	
-	let msgGiftTotal = msg.match("They've gifted a total of ");
-	
-	let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
-  
-	let giftedTotal = $("<span>")
-      .addClass("giftmessagetotal")
-      .text(msgGiftTotal);
-	  
-	let giftednumber = $("<span>")
-      .addClass("giftednumber")
-      .text(giftedtotalnumber);
-	  
-	let toChannel = $("<span>")
-      .addClass("tochannel")
-      .text(channelText);
+    let channelText = msg.match(" in the channel!");
+    
+    let msgGiftTotal = msg.match("They've gifted a total of ");
+    
+    let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+    
+    let giftedTotal = $("<span>")
+        .addClass("giftmessagetotal")
+        .text(msgGiftTotal);
+      
+    let giftednumber = $("<span>")
+        .addClass("giftednumber")
+        .text(giftedtotalnumber);
+      
+    let toChannel = $("<span>")
+        .addClass("tochannel")
+        .text(channelText);
 
     bigsubgiftcontainer.append( giftedTotal );
     bigsubgiftcontainer.append( giftednumber );
@@ -1756,7 +1746,8 @@ function renderChatSubMysteryGift(comment) {
   return chatBodies;
 }
 function rendersubgift(comment) {
-	
+  var chatBodies = [];
+
   // comment.message.body;
   let message = extractMessageFragments(comment);
   // console.log(message);
@@ -1771,25 +1762,25 @@ function rendersubgift(comment) {
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
   
-  let workingmessage = comment.message.body;
+  // let workingmessage = comment.message.body;
   
-  let theyvemessage = workingmessage.match("\They have given [0-9]{1,10} Gift Subs in the channel!");
-  let theyveremoved = workingmessage.replace(theyvemessage, "").trim();
+  // let theyvemessage = workingmessage.match("\They have given [0-9]{1,10} Gift Subs in the channel!");
+  // let theyveremoved = workingmessage.replace(theyvemessage, "").trim();
   
-  let middlemessageTEXT = theyveremoved.match("\\b gifted a Tier [0-9] sub to \\b", "");
-  let recievertext = theyveremoved.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace("!", "").trim();
+  // let middlemessageTEXT = theyveremoved.match("\\b gifted a Tier [0-9] sub to \\b", "");
+  // let recievertext = theyveremoved.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace("!", "").trim();
   
-  let reciever = $("<span>")
-    .addClass("reciever")
-    .text(recievertext);
+  // let reciever = $("<span>")
+  //   .addClass("reciever")
+  //   .text(recievertext);
   let exclamation  = $("<span>")
     .addClass("exclamation ")
     .text("! ");
 	
 	
-  let middlemessage = $("<span>")
-    .addClass("middlemessage")
-    .text(middlemessageTEXT);
+  // let middlemessage = $("<span>")
+  //   .addClass("middlemessage")
+  //   .text(middlemessageTEXT);
 	
 	// let restofmessage = $("<span>")
     // .addClass("restofmessage")
@@ -1802,24 +1793,28 @@ function rendersubgift(comment) {
   let chatBody = $("<div>").addClass("chatbody no-time issubgift issubmessage")
         .css('border-left-color', accentColor);
   // chatBody.append( makeUserBadges( comment ) );
-  if (message.is(':contains("gifted a Tier")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
-		let subgift = $('<svg class="smallgifticon"><path class="subgift" fill-rule="evenodd" d="M16 6h2v6h-1v6H3v-6H2V6h2V4.793c0-2.507 3.03-3.762 4.803-1.99.131.131.249.275.352.429L10 4.5l.845-1.268a2.81 2.81 0 01.352-.429C12.969 1.031 16 2.286 16 4.793V6zM6 4.793V6h2.596L7.49 4.341A.814.814 0 006 4.793zm8 0V6h-2.596l1.106-1.659a.814.814 0 011.49.451zM16 8v2h-5V8h5zm-1 8v-4h-4v4h4zM9 8v2H4V8h5zm0 4H5v4h4v-4z" fill-rule="evenodd"/></svg>');
-		chatBody.append(subgift);
-	}
+  // if (message.is(':contains("gifted a Tier")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
+	let subgift = $('<svg class="smallgifticon"><path class="subgift" fill-rule="evenodd" d="M16 6h2v6h-1v6H3v-6H2V6h2V4.793c0-2.507 3.03-3.762 4.803-1.99.131.131.249.275.352.429L10 4.5l.845-1.268a2.81 2.81 0 01.352-.429C12.969 1.031 16 2.286 16 4.793V6zM6 4.793V6h2.596L7.49 4.341A.814.814 0 006 4.793zm8 0V6h-2.596l1.106-1.659a.814.814 0 011.49.451zM16 8v2h-5V8h5zm-1 8v-4h-4v4h4zM9 8v2H4V8h5zm0 4H5v4h4v-4z" fill-rule="evenodd"/></svg>');
+	chatBody.append(subgift);
+	// }
 	// chatBody.append(player);
 	
 	chatBody.append(subgiftcontainer);
 	subgiftcontainer.append(player);
-	subgiftcontainer.append(middlemessage);
-	subgiftcontainer.append(reciever);
+	subgiftcontainer.append(message);
+	// subgiftcontainer.append(middlemessage);
+	// subgiftcontainer.append(reciever);
 	subgiftcontainer.append(exclamation);
-	if (theyvemessage) {
-		
-		let theyvecontainer = $("<span>").addClass("theyvecontainer");
-		subgiftcontainer.append(theyvecontainer);
-		
-		var msg = theyvemessage[0];
-		console.log(msg);
+
+	chatBodies.push( chatBody );
+
+  // If a mysteryGift has a Total Gifts component, then process that:
+  if ( comment.message.alt_fragments.length ) {
+    let fragment = comment.message.alt_fragments[0];
+
+    var msg = fragment.text;
+
+    console.log(msg);
 		
 		let channelText = msg.match(" Gift Subs in the channel!");
 	
@@ -1828,24 +1823,58 @@ function rendersubgift(comment) {
 		let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
   
 		let giftedTotal = $("<span>")
-		.addClass("giftmessagetotal")
-		.text(msgGiftTotal);
+      .addClass("giftmessagetotal")
+      .text(msgGiftTotal);
 	  
 		let giftednumber = $("<span>")
-		.addClass("giftednumber")
-		.text(giftedtotalnumber);
+      .addClass("giftednumber")
+      .text(giftedtotalnumber);
 	  
 		let toChannel = $("<span>")
-		.addClass("tochannel")
-		.text(channelText);
+      .addClass("tochannel")
+      .text(channelText);
 
-		theyvecontainer.append( giftedTotal );
-		theyvecontainer.append( giftednumber );
-		theyvecontainer.append( toChannel );
+		subgiftcontainer.append( giftedTotal );
+		subgiftcontainer.append( giftednumber );
+		subgiftcontainer.append( toChannel );
 		
-		// theyvecontainer.append(restofmessage);		
-	}
-	return chatBody;
+  }
+
+  return chatBodies;
+
+	// if (theyvemessage) {
+		
+	// 	let theyvecontainer = $("<span>").addClass("theyvecontainer");
+	// 	subgiftcontainer.append(theyvecontainer);
+		
+	// 	var msg = theyvemessage[0];
+	// 	console.log(msg);
+		
+	// 	let channelText = msg.match(" Gift Subs in the channel!");
+	
+	// 	let msgGiftTotal = msg.match("They have given ");
+	
+	// 	let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+	// 	let giftedTotal = $("<span>")
+	// 	.addClass("giftmessagetotal")
+	// 	.text(msgGiftTotal);
+	  
+	// 	let giftednumber = $("<span>")
+	// 	.addClass("giftednumber")
+	// 	.text(giftedtotalnumber);
+	  
+	// 	let toChannel = $("<span>")
+	// 	.addClass("tochannel")
+	// 	.text(channelText);
+
+	// 	theyvecontainer.append( giftedTotal );
+	// 	theyvecontainer.append( giftednumber );
+	// 	theyvecontainer.append( toChannel );
+		
+	// 	// theyvecontainer.append(restofmessage);		
+	// }
+	// return chatBody;
 
 }
 
@@ -1882,6 +1911,13 @@ function extractMessageFragments(comment) {
     else if ( fragment.isSubResubTheyve ) {
       message.append( buildFragmentSubResubTheyve( fragment ) );
       
+    }
+
+    else if ( fragment.isSubGift ) {
+      message.append( $('<span debug="extractMessageFragments">').text(altName) );
+    }
+    else if ( fragment.isSubGiftTotalGifts ) {
+      message.append( $('<span debug="extractMessageFragments">').text(altName) );
     }
 
     else if ( fragment.isSubMysteryGift ) {
@@ -2125,6 +2161,7 @@ function getExpandedMessageFragments( fragments, comment ) {
            
       var splits = processFragmentsSplitText( fragment.text );
 
+      var isSubGift = false;
       var isMysteryGift = false;
 
       jQuery.each( splits, function (idx, splitText ) {
@@ -2177,10 +2214,25 @@ function getExpandedMessageFragments( fragments, comment ) {
           results.push( newFragment );
         }
         else if ( regExSubGift.test( splitText ) ) {
-          newFragment["isSubgift"] = true;
-
-          altFragmentProcessing = true;
+          var userName = comment.commenter.display_name;
+  
+          splitText = splitText.replace( userName, "" ).replace( "An anonymous user", "" ).trim();
+          splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+          newFragment["text"] = splitText;
+  
+          newFragment["isSubGift"] = true;
+          
+          isSubGift = true;
           results.push( newFragment );
+        }
+        else if ( isSubGift ) {
+          newFragment["isSubGiftTotalGifts"] = true;
+          
+          altFragmentProcessing = true;
+          if ( !comment.message["alt_fragments"] ) {
+            comment.message["alt_fragments"] = [];
+          }
+          comment.message["alt_fragments"].push( newFragment );
         }
         else if ( regExSubMysteryGift.test( splitText ) ) {
           var userName = comment.commenter.display_name;
@@ -2265,11 +2317,15 @@ function processFragmentsSplitText( sourceText ) {
 
   }
   else if ( regExSubGift.test( sourceText ) ) {
-    splits = sourceText.split(regExSubGift).filter(Boolean);
+    var s = sourceText.split(regExSubGift).filter(Boolean);
+    splits.push( s[0].trim() );
+    if ( s.length > 1 ) {
+      splits = splits.concat( s[1].trim() );
+    }
   }
   else if ( regExSubMysteryGift.test( sourceText ) ) {
     var s = sourceText.split(regExSubMysteryGift).filter(Boolean);
-    splits.push( s[0] );
+    splits.push( s[0].trim() );
     if ( s.length > 1 ) {
       splits = splits.concat( s[1].trim() );
     }
