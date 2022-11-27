@@ -99,6 +99,9 @@ var regExSubMysteryGift = new RegExp(
 
 var globalBadgesJson;
 var streamerBadgesJson;
+var currentFile;
+var lastStoredTime;
+var localstoragevidID;
 
 
 
@@ -170,7 +173,7 @@ function getVideoMetadata() {
 		} else if (videoDatajson.media.track[4]) {
 			$("#message").text("Chapters Found!").css({"background-color": "green", "color": "white"}).delay(2000).fadeOut(5000);
 			var chapters = videoDatajson.media.track[4].extra;
-			console.log("Chapters: ");
+			// console.log("Chapters: ");
 			console.log(chapters);
 			jQuery.each(chapters, function (chapter, name){
   
@@ -333,6 +336,7 @@ function localFileVideoPlayer() {
 
   var playSelectedFile = function (event) {
     var file = this.files[0];
+	currentFile = file;
     var type = file.type;
 
     var canPlay = videoNode.canPlayType(type);
@@ -493,6 +497,9 @@ function localFileVideoPlayer() {
     $("#videoDuration").text(formatElapsedTime(duration));
 
     $(".progress-bar .bar").css({ width: percent + "%" });
+	// console.log(currentFile);
+	// console.log(currentTime);
+	
 	
 	
 	
@@ -504,12 +511,12 @@ function localFileVideoPlayer() {
 		let currentTime = videoNode.currentTime;
 		timeSecond = Number(timeSecond);
 		
-		console.log(timeSecond);
-		console.log(currentTime);
+		// console.log(timeSecond);
+		// console.log(currentTime);
 		
 	
 		if ( currentTime === timeSecond ) {
-			console.log($(this).attr('id'));
+			// console.log($(this).attr('id'));
 			$(".active").removeClass("active");
 			$(this).addClass("active");
 		}
@@ -519,6 +526,17 @@ function localFileVideoPlayer() {
 			$(this).addClass("active");
 		}
 	})
+  }
+  
+var saveVideo = setInterval(saveLocalVideoTime, 5000);
+  function saveLocalVideoTime() {
+	  // console.log("Saving Video Time");
+	  var currentTime = videoNode.currentTime;
+	  if ($("#videoPlayer")[0].readyState === 4) {
+		// console.log("saving");
+		var videoUniqueID = currentFile.name + currentFile.size;
+		localStorage.setItem(videoUniqueID, currentTime);
+	}
   }
 
   /**
@@ -1278,8 +1296,35 @@ $(document).click(function(e) {
 	  previewBoxparams();
 	  barSelectorparams();
 	  $("#selectVideo").hide();
+	  
+	  saveVideo;
+	  
+	  var videoUniqueID = currentFile.name + currentFile.size;
+	  localstoragevidID = localStorage.getItem(videoUniqueID);
+	  console.log(localstoragevidID);
+	  
+	  if (localstoragevidID !== "null" && localstoragevidID > 200) {
+		  // videoNode.currentTime = localstoragevidID;
+		  
+		  lastStoredTime = localstoragevidID;
+		  $("#continuetimeOption").show();
+		  
+	  }
+	  	  
     }
   });
+  
+  
+  $("#continueConfirm").click(function (e) {
+	  videoNode.currentTime = lastStoredTime
+	  saveLocalVideoTime();
+	  $("#continuetimeOption").hide();
+  });
+  $("#continueClose").click(function (e) {
+	  $("#continuetimeOption").hide();
+  });
+  
+  
 
   //Options menu Open/Close
   $("#clickOptions").click(function (e) {

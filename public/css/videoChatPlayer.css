@@ -44,6 +44,71 @@ video {
         opacity: 1;
      }
 }
+
+#continuetimeOption {
+	display: none;
+	z-index: 999;
+	height: 35px;
+	width:calc(100% - 341px);
+	position: absolute;
+	top: 0;
+	left: 0;
+	border-bottom: 1px solid #303032;
+	background-color:#18181b;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+#continuetimeOption #continueText {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	/* margin-right: 10px; */
+	margin-left: 10px;
+	float: left;
+}
+#continuecontainer {
+	position: relative;
+	float: right;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+}
+#continuecontainer #continueConfirm {
+	margin-right: 50px;
+	margin-left: 10px;
+	float: left;
+	padding: 2px 4px;
+}
+#continuecontainer #continueClose {
+	margin-right: 10px;
+	margin-left: 10px;
+	float: left;
+	padding: 2px 6px;
+}
+#continuecontainer .button {
+    background: transparent;
+    cursor: pointer;    
+    transition: 100ms all ease;
+}
+#continuecontainer .button:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: 2px;
+	
+}
 #selectVideo {
 	opacity: 50%;
 	-webkit-touch-callout: none; /* iOS Safari */
