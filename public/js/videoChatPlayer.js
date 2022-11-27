@@ -168,9 +168,9 @@ function getVideoMetadata() {
 			$("#message").text("No Chapters Found").css({"background-color": "red", "color": "white"}).delay(2000).fadeOut(5000);
 			
 		} else if (videoDatajson.media.track[4]) {
-			$("#chapters").show();
 			$("#message").text("Chapters Found!").css({"background-color": "green", "color": "white"}).delay(2000).fadeOut(5000);
 			var chapters = videoDatajson.media.track[4].extra;
+			console.log("Chapters: ");
 			console.log(chapters);
 			jQuery.each(chapters, function (chapter, name){
   
@@ -185,6 +185,26 @@ function getVideoMetadata() {
 				setChapterMenu(newChapter, newtime, name);
 			})
 		}
+		$("#chapters").show();
+		
+		var chapter = $(".chapter");
+	
+		jQuery.each(chapter, function (index, chapter) {
+		// console.log($(this).attr('id'));
+		let timeSecond = $(this).attr("data-time");
+		var videoNode = document.querySelector("video");
+		let currentTime = videoNode.currentTime;
+		timeSecond = Number(timeSecond);
+		
+		// console.log(timeSecond);
+		// console.log(currentTime);		
+	
+		if ( currentTime === timeSecond ) {
+			// console.log($(this).attr('id'));
+			$(".active").removeClass("active");
+			$(this).addClass("active");
+		}
+	})
 	} 
 	
 	//converts time to seconds
@@ -234,6 +254,7 @@ function getVideoMetadata() {
 		// .text(timeHtml);
 		
 		let chapterEntry = $("<div>")
+		.attr('id',name+newtime.toString())
 		.addClass("chapter")
 		.attr("data-time", newtime.toString())
 		.attr("title", "Jump to video");
@@ -262,6 +283,28 @@ function getVideoMetadata() {
 			a.remove()
 		})
 	}
+	
+	function setActiveChapter() {
+		consol.log("Setting active chapter");
+		var chapter = $(".chapter");
+	
+		jQuery.each(chapter, function (index, chapter) {
+			// console.log($(this).attr('id'));
+			let timeSecond = $(this).attr("data-time");
+			let currentTime = videoNode.currentTime;
+			timeSecond = Number(timeSecond);
+		
+			console.log(timeSecond);
+			console.log(currentTime);
+		
+	
+			if ( currentTime === timeSecond ) {
+				console.log($(this).attr('id'));
+				$(".active").removeClass("active");
+				$(this).addClass("active");
+			}
+		})
+	}
 
 }
 	
@@ -282,7 +325,7 @@ function localFileVideoPlayer() {
   var currentChatPos = -1;
 
   var displayMessage = function (message, isError) {
-	$("#message").show().css({"background-color": "green", "color": "white"});
+	$("#message").show().css({"background-color": "green", "color": "white"}).clearQueue();
     var element = document.querySelector("#message");
     element.innerHTML = message;
     element.className = isError ? "error" : "info";
@@ -305,6 +348,11 @@ function localFileVideoPlayer() {
     var fileURL = URL.createObjectURL(file);
     videoNode.src = fileURL;
     PreviewVid.src = fileURL;
+	
+	
+	$("#chapters").hide();
+	$("#videoPlayer").fadeOut(0);
+	
 
     // console.log( videoNode );
   };
@@ -445,6 +493,32 @@ function localFileVideoPlayer() {
     $("#videoDuration").text(formatElapsedTime(duration));
 
     $(".progress-bar .bar").css({ width: percent + "%" });
+	
+	
+	
+	var chapter = $(".chapter");
+	
+	jQuery.each(chapter, function (index, chapter) {
+		// console.log($(this).attr('id'));
+		let timeSecond = $(this).attr("data-time");
+		let currentTime = videoNode.currentTime;
+		timeSecond = Number(timeSecond);
+		
+		console.log(timeSecond);
+		console.log(currentTime);
+		
+	
+		if ( currentTime === timeSecond ) {
+			console.log($(this).attr('id'));
+			$(".active").removeClass("active");
+			$(this).addClass("active");
+		}
+		else if (currentTime >  timeSecond) {
+			//now have all chapters that are before current video time.
+			$(".active").removeClass("active");
+			$(this).addClass("active");
+		}
+	})
   }
 
   /**
@@ -711,6 +785,13 @@ $('.colorpicker').spectrum({
 $("#chapters").click(function (e) {
 	e.stopPropagation();
 	$("#chapterSelector").toggleClass("show hide");
+	
+	if ( $("#chapterSelector").hasClass("show") ) {
+		// console.log("Scrolling to middle!");
+		scrollCenterActive();
+	}
+	
+	
 });
 
 $(document).click(function(e) {
@@ -737,8 +818,17 @@ $(document).click(function(e) {
 	$("#chapterSelector").toggleClass("show hide");
 	
   });
+  
 
-
+  function scrollCenterActive() {
+	  var active = $(".active");
+	  var menu = $("#chapterSelector");
+	  
+	  menu.scrollTop(menu.scrollTop() + active.position().top - menu.height()/2 + active.height()/2);
+	  
+	  
+  }
+  
 
 
 

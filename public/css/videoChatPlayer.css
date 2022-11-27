@@ -314,6 +314,8 @@ video {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+
+
 .show {
   display: block !important;
 }
@@ -341,6 +343,29 @@ video {
 .chapter:hover {
     background-color: #464649;
 }
+
+#chapterSelector .active {
+	background-color: #9147ff;
+}
+#chapterSelector .active .chapterName{
+	color: #dedee3;
+}
+#chapterSelector .active .chapterTime{
+	color: #adadad;
+}
+#chapterSelector .active:hover .chapterName{
+	color: #ffffff;
+}
+#chapterSelector .active:hover .chapterTime{
+	color: #ffffff;
+}
+.chapter:hover .chapterName{
+	color: #d1d1d1;
+}
+.chapter:hover .chapterTime{
+	color: #b2b2b2;
+}
+
 .chapterName {
 	position: relative;
 	display: block;
@@ -348,6 +373,7 @@ video {
 	margin: 5px;
 	display: flex;
 	font-size: 15px;
+	color: #dedede;
 	-webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -362,7 +388,7 @@ video {
 	width: auto;
 	margin: 5px;
 	display: flex;
-	color: #a7a7a7;
+	color: #adadad;
 	font-size: 13px;
 	display: block;
 	-webkit-touch-callout: none; /* iOS Safari */
