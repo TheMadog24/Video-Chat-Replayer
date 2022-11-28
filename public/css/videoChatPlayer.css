@@ -1835,7 +1835,7 @@ input {
 
 .messagePrefix {
     vertical-align: top;
-    margin-right: 3px;
+    margin-right: 1px;
 }
 
 .chatmessage {

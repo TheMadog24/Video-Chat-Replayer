@@ -2047,7 +2047,7 @@ function extractMessageFragments(comment) {
   var fragments = getExpandedMessageFragments( comment.message.fragments, comment );
 
   jQuery.each(fragments, function (index, fragment) {
-    var altName = fragment.text.trim();
+    var altName = " " + fragment.text.trim();
 	//if the message has "bits_spent", it gets sent for processing
     // if (comment.message["bits_spent"]) {
       // console.log("bits sent");
