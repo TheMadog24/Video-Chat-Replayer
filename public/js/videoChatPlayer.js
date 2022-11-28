@@ -102,6 +102,8 @@ var streamerBadgesJson;
 var currentFile;
 var lastStoredTime;
 var localstoragevidID;
+var accentColor = "#a970ff";
+  getsavedaccentColor();
 
 
 
@@ -189,25 +191,8 @@ function getVideoMetadata() {
 			})
 		}
 		$("#chapters").show();
+		setActiveChapter();
 		
-		var chapter = $(".chapter");
-	
-		jQuery.each(chapter, function (index, chapter) {
-		// console.log($(this).attr('id'));
-		let timeSecond = $(this).attr("data-time");
-		var videoNode = document.querySelector("video");
-		let currentTime = videoNode.currentTime;
-		timeSecond = Number(timeSecond);
-		
-		// console.log(timeSecond);
-		// console.log(currentTime);		
-	
-		if ( currentTime === timeSecond ) {
-			// console.log($(this).attr('id'));
-			$(".active").removeClass("active");
-			$(this).addClass("active");
-		}
-	})
 	} 
 	
 	//converts time to seconds
@@ -288,33 +273,52 @@ function getVideoMetadata() {
 	}
 	
 	function setActiveChapter() {
-		consol.log("Setting active chapter");
-		var chapter = $(".chapter");
+		var chapters = $(".chapter");
 	
-		jQuery.each(chapter, function (index, chapter) {
+		jQuery.each(chapters, function (index, chapter) {
 			// console.log($(this).attr('id'));
 			let timeSecond = $(this).attr("data-time");
+			var videoNode = document.querySelector("video");
 			let currentTime = videoNode.currentTime;
 			timeSecond = Number(timeSecond);
 		
-			console.log(timeSecond);
-			console.log(currentTime);
+			// console.log(timeSecond);
+			// console.log("currentTime = "+currentTime);
 		
-	
 			if ( currentTime === timeSecond ) {
-				console.log($(this).attr('id'));
+				// console.log($(this).attr('id'));
+				$(".active").removeClass("active");
+				$(this).addClass("active");
+			}
+			else if (currentTime >  timeSecond) {
+				//now have all chapters that are before current video time.
 				$(".active").removeClass("active");
 				$(this).addClass("active");
 			}
 		})
 	}
-
 }
+
+	function hexToRgb(hex){
+		if(/^#([a-f0-9]{3}){1,2}$/.test(hex)){
+			if(hex.length== 4){
+				hex= '#'+[hex[1], hex[1], hex[2], hex[2], hex[3], hex[3]].join('');
+			}
+			var c= '0x'+hex.substring(1);
+			return 'rgb('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+')';
+		}
+	}
+
+	function getsavedaccentColor() {
+		var savedaccentColor = localStorage.getItem("colorpickercolor");
+		accentColor = savedaccentColor;
+		// console.log("Local Storage : "+accentColor);
+	}
+	function setsavedaccentColor() {
+		$(".colorpicker").css('background-color', hexToRgb(accentColor));
+	}
+
 	
-
-
-
-
 
 
 
@@ -503,9 +507,9 @@ function localFileVideoPlayer() {
 	
 	
 	
-	var chapter = $(".chapter");
+	var chapters = $(".chapter");
 	
-	jQuery.each(chapter, function (index, chapter) {
+	jQuery.each(chapters, function (index, chapter) {
 		// console.log($(this).attr('id'));
 		let timeSecond = $(this).attr("data-time");
 		let currentTime = videoNode.currentTime;
@@ -769,20 +773,26 @@ var saveVideo = setInterval(saveLocalVideoTime, 5000);
 
 //Color Picker
 
+
 $('.colorpicker').spectrum({
-	color: "#a970ff",
+	color: accentColor,
 	type: "color",
-	showPalette: false,
+	showPalette: true,
+    showSelectionPalette: true,
+    palette: [ ],
+    localStorageKey: "spectrum.homepage",
 	showInput: true,
 	showInitial: true,
 	showAlpha: false,
 	showButtons: false,
 	allowEmpty: false,
-	move: function(color) {
+	move: function(color) {		
+		
 		$(".colorpicker").css('background-color', color.toHexString());
 		$(".issubmessage").css('border-left-color', color.toHexString());
 		$(".isbiggiftsubmessage").css('border-left-color', color.toHexString());
 		accentColor = color.toHexString();
+		localStorage.setItem("colorpickercolor", accentColor);
 	},
 });
 
@@ -1301,7 +1311,7 @@ $(document).click(function(e) {
 	  
 	  var videoUniqueID = currentFile.name + currentFile.size;
 	  localstoragevidID = localStorage.getItem(videoUniqueID);
-	  console.log(localstoragevidID);
+	  // console.log(localstoragevidID);
 	  
 	  if (localstoragevidID !== "null" && localstoragevidID > 200) {
 		  // videoNode.currentTime = localstoragevidID;
@@ -1576,7 +1586,7 @@ function pad(num, size) {
   return str.substring(str.length - size);
 }
 
-var accentColor = "#a970ff";
+
 
 function renderChatBody(comment) {
 
@@ -2596,4 +2606,5 @@ $(document).ready(function () {
 
   localFileVideoPlayer();
   getVideoMetadata();
+  setsavedaccentColor();
 });
