@@ -310,8 +310,15 @@ function getVideoMetadata() {
 	}
 
 	function getsavedaccentColor() {
+		// console.log("Getting Color");
 		var savedaccentColor = localStorage.getItem("colorpickercolor");
-		accentColor = savedaccentColor;
+		if (!savedaccentColor) {
+			// console.log("Color Was Null");
+			accentColor = "#a970ff";
+		} else {
+			// console.log("savedaccentColor");
+			accentColor = savedaccentColor;
+		}
 		// console.log("Local Storage : "+accentColor);
 	}
 	function setsavedaccentColor() {
@@ -773,7 +780,7 @@ var saveVideo = setInterval(saveLocalVideoTime, 5000);
 
 //Color Picker
 
-
+// console.log("Color Picker : "+accentColor);
 $('.colorpicker').spectrum({
 	color: accentColor,
 	type: "color",
