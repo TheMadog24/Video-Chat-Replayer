@@ -104,6 +104,8 @@ var lastStoredTime;
 var localstoragevidID;
 var accentColor = "#a970ff";
   getsavedaccentColor();
+  
+var pausescroll = "false";
 
 
 
@@ -665,7 +667,16 @@ var saveVideo = setInterval(saveLocalVideoTime, 5000);
             chatLine.insertBefore("#" + getChatId(curPos + 1));
           }
     
-          $("#chat").scrollTop($("#chat")[0].scrollHeight);
+          // $("#chat").scrollTop($("#chat")[0].scrollHeight);
+		  if (pausescroll === "false") {
+				// console.log("is false ");
+				// console.log(pausescroll);
+				$("#chat").scrollTop($("#chat")[0].scrollHeight);
+		  } else if (pausescroll === "true") {
+				// console.log("is true ");
+				// console.log(pausescroll);
+		
+		  } 	
         });
 			
 		// if ( regExSubResub.test( msg.message.body ) ) {
@@ -759,10 +770,18 @@ var saveVideo = setInterval(saveLocalVideoTime, 5000);
       }
       curPos--;
     }
-
-    setTimeout(() => {
-      $("#chat").scrollTop($("#chat")[0].scrollHeight);
-    }, 20);
+	// if (pausescroll = "true") {
+		// console.log("is true ");
+		// console.log(pausescroll);
+		
+	// } else if (pausescroll = "false") {
+		// console.log("is false ");
+		// console.log(pausescroll);
+		// setTimeout(() => {
+		// $("#chat").scrollTop($("#chat")[0].scrollHeight);
+		// }, 20);
+	// }
+    
   }
 
   var inputNodeVideo = document.querySelector("#vidinput");
@@ -1129,6 +1148,60 @@ $(document).click(function(e) {
 
 
 
+//Detect Scroll Direction
+	//Firefox
+	$('#chat').bind('DOMMouseScroll', function(e){
+		if(e.originalEvent.detail > 0) {
+			//scroll down
+			// console.log('Down');
+		} else {
+			//scroll up
+			// console.log('Up');
+			pausescroll = "true";
+			$('#autoscroller').show();
+		}
+
+		//prevent page fom scrolling
+		// return false;
+	});
+	//IE, Opera, Safari
+	$('#elem').bind('mousewheel', function(e){
+		if(e.originalEvent.wheelDelta < 0) {
+			//scroll down
+			// console.log('Down');
+		} else {
+			//scroll up
+			// console.log('Up');
+			pausescroll = "true";
+			$('#autoscroller').show();
+		}
+
+		
+	});
+ 
+ $('#autoscroller').on("click", function () {
+	pausescroll = "false";
+	// console.log("pausescroll set ");
+	// console.log(pausescroll);
+	$('#autoscroller').hide();
+	$("#chat").scrollTop($("#chat")[0].scrollHeight);
+ });
+ 
+ jQuery(function($) {
+    $('#chat').on('scroll', function() {
+        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+            if (pausescroll === "true") {
+				pausescroll = "false";
+				$('#autoscroller').hide();
+				// console.log("is false ");
+				// console.log(pausescroll);
+				$("#chat").scrollTop($("#chat")[0].scrollHeight);
+				// console.log("bottom");
+			}
+		}
+    })
+});
+
   // Video Shortcut Keys
 
   window.onkeydown = vidCtrl;
@@ -1300,6 +1373,7 @@ $(document).click(function(e) {
 	  $("#chapterSelector").removeClass("show").addClass("hide");
 	  $("#chapters").hide();
 	  $("#message").hide();
+	  $('#autoscroller').hide();
   });
 
   //Video player not loaded until video is loaded
