@@ -1164,8 +1164,8 @@ $(document).click(function(e) {
 		//prevent page fom scrolling
 		// return false;
 	});
-	//IE, Opera, Safari
-	$('#elem').bind('mousewheel', function(e){
+	//Chrome, IE, Opera, Safari
+	$('#chat').bind('mousewheel', function(e){
 		if(e.originalEvent.wheelDelta < 0) {
 			//scroll down
 			// console.log('Down');
