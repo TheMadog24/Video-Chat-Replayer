@@ -94,7 +94,12 @@ var regExSubGift = new RegExp(
 var regExSubMysteryGiftFragments = "^.+ is gifting [0-9]+\\b Tier [0-9]+\\b Subs to .+'s community!";
 var regExSubMysteryGift = new RegExp(
                         "((?=" + regExSubMysteryGiftFragments + ")|" + 
-                        "(?<=" + regExSubMysteryGiftFragments + "))", "i");
+                        "(?<=" + regExSubMysteryGiftFragments + "))", "i");						
+//Regex for continuing GiftSub
+var regExContinueSubFragment = "^.+ is continuing the Gift Sub they got from ";
+var regExContinueSub = new RegExp(
+                        "((?=" + regExContinueSubFragment + ")|" + 
+                        "(?<=" + regExContinueSubFragment + "))", "i");
 
 
 var globalBadgesJson;
@@ -1689,6 +1694,10 @@ function renderChatBody(comment) {
 
     return rendersubgift( comment );
   }
+  else if ( regExContinueSub.test( comment.message.body )  ) {
+
+    return rendersubgiftContinue( comment );
+  }
   else if ( regExSubMysteryGift.test( comment.message.body )  ) {
 
     return renderChatSubMysteryGift( comment );
@@ -1998,6 +2007,144 @@ function rendersubgift(comment) {
   
   
   let middlemessageTEXT = workingmessage.match("\\ gifted a Tier [0-9] sub to \\b", "");
+  let recievertext = workingmessage.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace("!", "").trim();
+  
+  let reciever = $("<span>")
+    .addClass("reciever")
+    .text(recievertext);
+  
+  let exclamation  = $("<span>")
+    .addClass("exclamation ")
+    .text("! ");
+	
+	
+  let middlemessage = $("<span>")
+    .addClass("middlemessage")
+    .text(middlemessageTEXT);
+	
+	// let restofmessage = $("<span>")
+    // .addClass("restofmessage")
+    // .text(theyvemessage);
+	
+	
+  
+  let subgiftcontainer = $("<div>").addClass("subgiftcontainer")
+
+  let chatBody = $("<div>").addClass("chatbody no-time issubgift issubmessage")
+        .css('border-left-color', accentColor);
+  // chatBody.append( makeUserBadges( comment ) );
+  // if (message.is(':contains("gifted a Tier")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
+	let subgift = $('<svg class="smallgifticon"><path class="subgift" fill-rule="evenodd" d="M16 6h2v6h-1v6H3v-6H2V6h2V4.793c0-2.507 3.03-3.762 4.803-1.99.131.131.249.275.352.429L10 4.5l.845-1.268a2.81 2.81 0 01.352-.429C12.969 1.031 16 2.286 16 4.793V6zM6 4.793V6h2.596L7.49 4.341A.814.814 0 006 4.793zm8 0V6h-2.596l1.106-1.659a.814.814 0 011.49.451zM16 8v2h-5V8h5zm-1 8v-4h-4v4h4zM9 8v2H4V8h5zm0 4H5v4h4v-4z" fill-rule="evenodd"/></svg>');
+	chatBody.append(subgift);
+	// }
+	// chatBody.append(player);
+	
+	chatBody.append(subgiftcontainer);
+	subgiftcontainer.append(player);
+	// subgiftcontainer.append(message);
+	subgiftcontainer.append(middlemessage);
+	subgiftcontainer.append(reciever);
+	subgiftcontainer.append(exclamation);
+
+	chatBodies.push( chatBody );
+
+  // If a mysteryGift has a Total Gifts component, then process that:
+  if ( comment.message.alt_fragments && comment.message.alt_fragments.length ) {
+    let fragment = comment.message.alt_fragments[0];
+
+    var msg = fragment.text;
+
+    // console.log(msg);
+		
+		let channelText = msg.match(" Gift Subs in the channel!");
+	
+		let msgGiftTotal = msg.match("They have given ");
+	
+		let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+		let giftedTotal = $("<span>")
+      .addClass("giftmessagetotal")
+      .text(msgGiftTotal);
+	  
+		let giftednumber = $("<span>")
+      .addClass("giftednumber")
+      .text(giftedtotalnumber);
+	  
+		let toChannel = $("<span>")
+      .addClass("tochannel")
+      .text(channelText);
+
+		subgiftcontainer.append( giftedTotal );
+		subgiftcontainer.append( giftednumber );
+		subgiftcontainer.append( toChannel );
+		
+  }
+
+  return chatBodies;
+
+	// if (theyvemessage) {
+		
+	// 	let theyvecontainer = $("<span>").addClass("theyvecontainer");
+	// 	subgiftcontainer.append(theyvecontainer);
+		
+	// 	var msg = theyvemessage[0];
+	// 	console.log(msg);
+		
+	// 	let channelText = msg.match(" Gift Subs in the channel!");
+	
+	// 	let msgGiftTotal = msg.match("They have given ");
+	
+	// 	let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+	// 	let giftedTotal = $("<span>")
+	// 	.addClass("giftmessagetotal")
+	// 	.text(msgGiftTotal);
+	  
+	// 	let giftednumber = $("<span>")
+	// 	.addClass("giftednumber")
+	// 	.text(giftedtotalnumber);
+	  
+	// 	let toChannel = $("<span>")
+	// 	.addClass("tochannel")
+	// 	.text(channelText);
+
+	// 	theyvecontainer.append( giftedTotal );
+	// 	theyvecontainer.append( giftednumber );
+	// 	theyvecontainer.append( toChannel );
+		
+	// 	// theyvecontainer.append(restofmessage);		
+	// }
+	// return chatBody;
+
+}
+
+function rendersubgiftContinue(comment) {
+  var chatBodies = [];
+
+  // comment.message.body;
+  let message = extractMessageFragments(comment);
+  
+  // let messageNameRemoved = message[0].outerHTML.replace(comment.commenter.display_name, "");
+  // let messageBold = message[0].outerHTML.replace("!", "</b>!").replace("sub to ", "sub to <b>");
+  let colorHex = comment.message.user_color;
+  let styles = { color: colorHex };
+
+  let player = $("<span>")
+    .addClass("commenter2")
+    .text(comment.commenter.display_name);
+  let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+  
+  
+  // let workingmessage = comment.message.body;
+  let workingmessage = message[0].textContent;
+  workingmessage = workingmessage.replace("gifted a Tier ", " gifted a Tier ");
+  // console.log(workingmessage);
+  
+  // let theyvemessage = workingmessage.match("\They have given [0-9]{1,10} Gift Subs in the channel!");
+  // let theyveremoved = workingmessage.replace(theyvemessage, "").trim();
+  
+  
+  let middlemessageTEXT = workingmessage.match("\\ is continuing the Gift Sub they got from \\b", "");
   let recievertext = workingmessage.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace("!", "").trim();
   
   let reciever = $("<span>")
