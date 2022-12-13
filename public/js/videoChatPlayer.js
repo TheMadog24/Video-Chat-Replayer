@@ -414,6 +414,11 @@ function localFileVideoPlayer() {
 
     // chatJson.comments - Array of chat messages
     var chatSize = chatJson.comments.length;
+	if (typeof chatJson.emotes === "undefined") {
+		var chatEmotes = chatJson.embeddedData;
+	} else {
+		var chatEmotes = chatJson.emotes;
+	}
     var timingReadChatStart = window.performance.now();
     var maxTime = 0;
     // Timings: 32,089 recs takes about 3.2 ms
@@ -425,10 +430,14 @@ function localFileVideoPlayer() {
     var timingReadChatMs = window.performance.now() - timingReadChatStart;
 
     // chatJson.emotes.thirdParty - Array of emotes
-    var thirdParySize = chatJson.emotes.thirdParty.length;
+	if (typeof chatJson.emotes === "undefined") {
+		var thirdParySize = chatJson.embeddedData.thirdParty.length;
+	} else {
+		var thirdParySize = chatJson.emotes.thirdParty.length;
+	}
     var timingReadThirdPartyStart = window.performance.now();
     // Timeings: 101 recs less than 1 ms
-    jQuery.each(chatJson.emotes.thirdParty, function (index, emote) {
+    jQuery.each(chatEmotes.thirdParty, function (index, emote) {
       emotesThirdParty[emote.name] = emote;
       if (emote.name === "testIgnore") {
       }
@@ -437,10 +446,10 @@ function localFileVideoPlayer() {
       window.performance.now() - timingReadThirdPartyStart;
 
     // chatJson.emotes.firstParty - Array of emotes
-    var firstParySize = chatJson.emotes.firstParty.length;
+    var firstParySize = chatEmotes.firstParty.length;
     var timingReadFirstPartyStart = window.performance.now();
     // Timeings: 622 recs less than 1 ms
-    jQuery.each(chatJson.emotes.firstParty, function (index, emote) {
+    jQuery.each(chatEmotes.firstParty, function (index, emote) {
       emotesFirstParty[emote.id] = emote;
       if (emote.id === 99199099199) {
       }
