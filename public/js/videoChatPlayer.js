@@ -111,6 +111,10 @@ var accentColor = "#a970ff";
   getsavedaccentColor();
   
 var pausescroll = "false";
+var chatJson;
+var chatEmotes;
+var emotesBadges = {};
+
 
 
 
@@ -341,7 +345,7 @@ function localFileVideoPlayer() {
   var videoNode = document.querySelector("video");
   var PreviewVid = document.querySelector("#previewVid");
   //var chatNode = document.querySelector('#chat');
-  var chatJson;
+  
 
   var currentChatPos = -1;
 
@@ -415,9 +419,9 @@ function localFileVideoPlayer() {
     // chatJson.comments - Array of chat messages
     var chatSize = chatJson.comments.length;
 	if (typeof chatJson.emotes === "undefined") {
-		var chatEmotes = chatJson.embeddedData;
+		chatEmotes = chatJson.embeddedData;
 	} else {
-		var chatEmotes = chatJson.emotes;
+		chatEmotes = chatJson.emotes;
 	}
     var timingReadChatStart = window.performance.now();
     var maxTime = 0;
@@ -442,6 +446,11 @@ function localFileVideoPlayer() {
       if (emote.name === "testIgnore") {
       }
     });
+	jQuery.each(chatEmotes.twitchBadges, function (index, badge) {
+      emotesBadges[badge.name] = badge;
+	  // console.log("emotesBadges: " + JSON.stringify(emotesBadges));
+    });
+	
     var timingReadThirdPartyMs =
       window.performance.now() - timingReadThirdPartyStart;
 
@@ -1725,9 +1734,13 @@ function renderChatBody(comment) {
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
 
   let chatBody = $("<div>").addClass("chatbody");
-	if (typeof streamerBadgesJson === 'undefined' && typeof globalBadgesJson === 'undefined') {
+	 
+	if (chatEmotes.twitchBadges){
+		chatBody.append( makeUserBadges( comment ) );
+		// console.log("Embedded Badges Test");
+	} else if (typeof streamerBadgesJson === 'undefined' && typeof globalBadgesJson === 'undefined') {
 		
-	} 
+	}
 	else {
 		chatBody.append( makeUserBadges( comment ) );
 	}
@@ -2766,45 +2779,128 @@ function makeEmoticon(emoticonId, altName) {
 
 function makeUserBadges(comment) {
   
-  if (comment.message.user_badges) {
-	var userBadges = $("<span>").addClass("user-badges");
-	  // console.log("Making Badges!");
-    var url = twitchGlobalBadgeUrl
-    // .replace("{{id}}", id)
-    // var url = twitchEmoticonsUrl
-      // .replace("{{format}}", "static")
-      // .replace("{{theme_mode}}", chatThemeMode);
-    // .replace("{{id}}", id)
+  if (typeof comment.message.user_badges === 'null' || comment.message.user_badges === 'null' || !comment.message.user_badges) {
+	  // console.log("user_badges for user " + comment.commenter.display_name + " :" + comment.message.user_badges);
+	  // console.log("returning");
+	  return;
+  } else if (!comment.message.user_badges.length) {
+	  // console.log("user_badges for user " + comment.commenter.display_name + " :" + comment.message.user_badges);
+	  // console.log("!returning");
+	  return;
+  } else {
+		// console.log("user_badges for user " + comment.commenter.display_name + " :" + comment.message.user_badges);
+		var userBadges = $("<span>").addClass("user-badges");
+		// console.log("Making Badges!");
+		var url = twitchGlobalBadgeUrl
+		// .replace("{{id}}", id)
+		// var url = twitchEmoticonsUrl
+		// .replace("{{format}}", "static")
+		// .replace("{{theme_mode}}", chatThemeMode);
+		// .replace("{{id}}", id)
+		// var emotesBadges = chatJson.embeddedData.twitchBadges;
+		// console.log("emotesBadges: " + JSON.stringify(emotesBadges));
 	
-	jQuery.each(comment.message.user_badges, function (index, badge) {
+	
+	if (chatEmotes.twitchBadges){
+		
+		
+		
+		jQuery.each(comment.message.user_badges, function (index, badge) {
 			
-		var badgeID = badge["_id"];
-		var badgeVersion = badge.version;
+			var badgeID = badge["_id"];
+			var badgeVersion = badge.version;
+			var badgeImagePrefix = "data:image/png;base64,";
+			
+			// console.log("Badge ID: " + badgeID);
+			// console.log("Badge Version: " + badgeVersion);
+			
+			var imgSrc;
+			var badgeTitle;
+			
+			var badges = emotesBadges[badgeID];
+			// console.log("badges: " + JSON.stringify(badges));
+			
+			
+			imgSrc = badges.versions[badgeVersion];
+			// console.log("imgSrc: " + imgSrc);
+			
+			badgeTitle = badges.name;
+			// console.log("badgeTitle: " + badgeTitle);
+			
+			
+			if (typeof imgSrc === 'undefined') {
+				// console.log("imgSrc undefined: " + imgSrc);
+				
+				if (typeof streamerBadgesJson === 'undefined' && typeof globalBadgesJson === 'undefined') {
+					return;
+				} else if (typeof streamerBadgesJson === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+					imgSrc = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+				} else {
+					imgSrc = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+				}
+				
+				
+				
+				if (typeof badgeTitle === 'undefined') {
+					if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+						badgeTitle = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+					} else {
+						badgeTitle = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+					}
+				}				
+				
+				var badgeImg = $("<img>")
+					.attr("src", imgSrc)
+					.addClass("badge-size")
+					.attr("title", badgeTitle);
+				userBadges.append(badgeImg);
+				
+			} else {
+				
+				var badgeImg = $("<img>")
+					.attr("src", badgeImagePrefix + imgSrc)
+					.addClass("badge-size")
+					.attr("title", badgeTitle);
+				userBadges.append(badgeImg);
+				
+			}
+			
+		});
 		
-		// console.log("Badge ID: " + badgeID);
-		// console.log("Badge Version: " + badgeVersion);
-		var imgSrc;
 		
-		if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
-			imgSrc = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
-		} else {
-			imgSrc = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
-		}
-		// console.log("imgSrc: " + imgSrc);
-        
-		var badgeTitle;
-        
-		if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
-			badgeTitle = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
-		} else {
-			badgeTitle = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
-		}
+		
+	} else {
 	
-		// console.log("badgeTitle: " + badgeTitle);
+		jQuery.each(comment.message.user_badges, function (index, badge) {
+			
+			var badgeID = badge["_id"];
+			var badgeVersion = badge.version;
+		
+			// console.log("Badge ID: " + badgeID);
+			// console.log("Badge Version: " + badgeVersion);
+			var imgSrc;
+		
+			if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+				imgSrc = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+			} else {
+				imgSrc = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+			}
+			// console.log("imgSrc: " + imgSrc);
+        
+			var badgeTitle;
+        
+			if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+				badgeTitle = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+			} else {
+				badgeTitle = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+			}
 	
-		var badgeImg = $("<img>").attr("src", imgSrc).addClass("badge").attr("title", badgeTitle);
-		userBadges.append(badgeImg);
-	});
+			// console.log("badgeTitle: " + badgeTitle);
+	
+			var badgeImg = $("<img>").attr("src", imgSrc).addClass("badge").attr("title", badgeTitle);
+			userBadges.append(badgeImg);
+		});
+	}
   }
   return userBadges;
 }

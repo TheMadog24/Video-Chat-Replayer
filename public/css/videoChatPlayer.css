@@ -1510,6 +1510,11 @@ input[type=number] {
 .badge {
 	margin-right: 3px;
 }
+.badge-size {
+	margin-right: 3px;
+	height: 18px;
+	width: 18px;
+}
 
 /* Tier 2 Sub Animation */
 
