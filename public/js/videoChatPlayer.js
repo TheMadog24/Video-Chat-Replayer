@@ -56,10 +56,21 @@ var emotesFirstParty = {};
 
 // Cheer RegEx: Need to repeat the same pattern with both look forward and look behind:
 // var regExCheersFragments = "Cheer1\\b|Cheer10\\b|Cheer25\\b|Cheer100\\b|Cheer1000\\b|Cheer5000\\b|Cheer10000\\b|Cheer100000\\b";
+//Regex for Regular Cheers
 var regExCheersFragments = "Cheer[0-9]{1,6}\\b";
 var regExCheers =  new RegExp(
                         "((?=" + regExCheersFragments + ")|" + 
                         "(?<=" + regExCheersFragments + "))", "i");
+//Regex for embedded bits Cheers
+var regExBitsFragments;
+var regExBits;
+						
+//Regex for embedded bits Cheers
+// var regExBitsFragments = "Corgo[0-9]{1,6}\\b";
+// var regExBits =  new RegExp(
+                        // "((?=" + regExBitsFragments + ")|" + 
+                        // "(?<=" + regExBitsFragments + "))", "i");
+						// console.log("Before :"+regExBits);
 						
 //Regex for sub and resub
 var regExSubResubFragments = "\\b\\w+ subscribed (?:with Prime|at Tier \\d+)\\.";
@@ -114,6 +125,8 @@ var pausescroll = "false";
 var chatJson;
 var chatEmotes;
 var emotesBadges = {};
+var bitsArray = {};
+var bitsFilter;
 
 
 
@@ -432,6 +445,19 @@ function localFileVideoPlayer() {
       }
     });
     var timingReadChatMs = window.performance.now() - timingReadChatStart;
+	
+	//loading array of twitchBits emotes
+	if (chatEmotes.twitchBits) {
+		jQuery.each(chatEmotes.twitchBits, function (index, bits) {
+			bitsArray[bits.prefix] = bits;
+		});
+		// console.log("bitsArray: " + JSON.stringify(bitsArray));
+		cheerfilter(bitsArray);
+	} else {
+		
+	}
+	
+	
 
     // chatJson.emotes.thirdParty - Array of emotes
 	if (typeof chatJson.emotes === "undefined") {
@@ -448,8 +474,8 @@ function localFileVideoPlayer() {
     });
 	jQuery.each(chatEmotes.twitchBadges, function (index, badge) {
       emotesBadges[badge.name] = badge;
-	  // console.log("emotesBadges: " + JSON.stringify(emotesBadges));
     });
+	// console.log("emotesBadges: " + JSON.stringify(emotesBadges));
 	
     var timingReadThirdPartyMs =
       window.performance.now() - timingReadThirdPartyStart;
@@ -516,6 +542,36 @@ function localFileVideoPlayer() {
 
     addNewMessages(messagePos);
   };
+  
+  
+  function cheerfilter(bitsArray) {
+	bitsFilter;
+	var bitsFilterpart;
+	bitsFilterpart;
+	// $("#chat").append(JSON.stringify(bitsArray));
+	jQuery.each(bitsArray, function (index, prefix) {
+		var prefix = this["prefix"];
+		// var prefix = bitsArray[prefix];
+		// console.log("Prefix: "+JSON.stringify(prefix));
+		bitsFilterpart = bitsFilterpart + "|" + prefix;
+	});
+	bitsFilter = bitsFilterpart.replace("undefined|", "").replace("Cheer|", "").replace(/(\r\n|\n|\r)/gm, "").trim();
+	// $("#chat").append(bitsFilter);
+	// console.log("Prefixes: "+bitsFilterpart);
+	
+	// console.log("regExBits :"+regExBits);
+	// console.log(regExBits);
+	
+	regExBitsFragments = "(" + bitsFilter + ")" + "[0-9]{1,6}\\b";
+	regExBits =  new RegExp(
+                        "((?=" + regExBitsFragments + ")|" + 
+                        "(?<=" + regExBitsFragments + "))", "i");
+						console.log(regExBitsFragments);
+	
+	
+  }
+  
+  
 
   /**
    * This function will update the two video counters with the
@@ -2302,6 +2358,11 @@ function extractMessageFragments(comment) {
       message.append( buildFragmentCheer( fragment ) );
       message.append( buildFragmentCheerNumber( fragment ) );
     }
+    else if ( fragment.isBits ) {
+      // Process fragment as a Cheer:
+      message.append( buildFragmentBits( fragment ) );
+      message.append( buildFragmentBitsNumber( fragment ) );
+    }
     else if ( fragment.isSubResub ) {
       message.append( buildFragmentSubResub( fragment ) );
     }
@@ -2401,6 +2462,99 @@ function buildFragmentCheer( fragment ) {
 function buildFragmentCheerNumber( fragment ) {
   var cheer = fragment.text.trim();
   var amount = cheer.replace(/cheer/gi, "");
+  var newcheeramount = 1;
+  
+  if ( amount > 0 && amount < 100) {
+      newcheeramount = 1;
+    } else if (amount < 1000) {
+      newcheeramount = 100;
+    } else if (amount < 5000) {
+      newcheeramount = 1000;
+    } else if (amount < 10000) {
+      newcheeramount = 5000;
+    } else if (amount < 100000) {
+      newcheeramount = 10000;
+    } else if (amount > 99999) {
+      newcheeramount = 100000;
+    };
+
+  var number = $("<span>")
+      .addClass("cheer" + newcheeramount)
+      .text(amount);
+
+  return number;
+}
+function buildFragmentBits( fragment ) {
+  var cheer = fragment.text.trim();
+  // console.log("cheer: "+ cheer);
+  
+  var bitsFilterMatch = "(" + bitsFilter + ")"
+  // console.log("bitsFilterMatch: "+ bitsFilterMatch);
+  
+  var pattern = new RegExp(bitsFilterMatch, "g");
+  
+  var amount = cheer.replace(pattern, "");
+  // console.log("amount: "+ amount);
+  
+  var type = cheer.match(pattern); 
+  // console.log("Type: "+ type);
+  var newcheeramount = 1;
+  
+  if ( amount > 0 && amount < 100) {
+      newcheeramount = 1;
+    } else if (amount < 1000) {
+      newcheeramount = 100;
+    } else if (amount < 5000) {
+      newcheeramount = 1000;
+    } else if (amount < 10000) {
+      newcheeramount = 5000;
+    } else if (amount < 100000) {
+      newcheeramount = 10000;
+    } else if (amount > 99999) {
+      newcheeramount = 100000;
+    };
+	
+	
+	var bitemote = bitsArray[type];
+	// console.log("bitemote: "+JSON.stringify(bitemote));
+	
+	var version = newcheeramount;
+	
+	
+	if (typeof bitemote.tierList[version] === 'undefined') {
+		var version = 10000;
+		var imgSrc = bitemote.tierList[version].data;
+		// console.log("imgSrc: "+JSON.stringify(imgSrc));
+		
+	} else{
+		var imgSrc = bitemote.tierList[version].data;
+		// console.log("imgSrc: "+JSON.stringify(imgSrc));
+	}
+	
+	
+  
+  var img = $("<img>")
+      .attr("title", cheer )
+      .addClass("cheer")
+      .attr("data-cheeramount", amount)
+      .attr("src", "data:image/png;base64," + imgSrc);
+
+  return img;
+}
+function buildFragmentBitsNumber( fragment ) {
+  var cheer = fragment.text.trim();
+  // console.log("cheer: "+ cheer);
+  
+  var bitsFilterMatch = "(" + bitsFilter + ")"
+  // console.log("bitsFilterMatch: "+ bitsFilterMatch);
+  
+  var pattern = new RegExp(bitsFilterMatch, "g");
+  
+  var amount = cheer.replace(pattern, "");
+  // console.log("amount: "+ amount);
+  
+  var type = cheer.match(pattern); 
+  // console.log("Type: "+ type);
   var newcheeramount = 1;
   
   if ( amount > 0 && amount < 100) {
@@ -2546,150 +2700,275 @@ function getExpandedMessageFragments( fragments, comment ) {
     
     // If the fragment.text contains a cheer, then we need to process it
     // and split them up.
-    if ( regExCheers.test( fragment.text ) || 
-          regExSubResub.test( fragment.text ) ||
-          regExSubGift.test( fragment.text ) ||
-          regExSubMysteryGift.test( fragment.text ) ||
-          regExSubadvance.test( fragment.text )
-          ) {
-           
-      // if ( regExSubResub.test( fragment.text ) ) {
-        
-      //   console.log( "##### getExpandedMessageFragments (1422): regExSubResub.test(): " + 
-      //                 regExSubResub.test( fragment.text ) + " userName: " + userName );
-      // }
-           
-      var splits = processFragmentsSplitText( fragment.text );
+	if (chatEmotes.twitchBits) {
+	    if (regExBits.test(fragment.text) || regExCheers.test(fragment.text) ||
+	        regExSubResub.test(fragment.text) ||
+	        regExSubGift.test(fragment.text) ||
+	        regExSubMysteryGift.test(fragment.text) ||
+	        regExSubadvance.test(fragment.text)) {
 
-      var isSubGift = false;
-      var isMysteryGift = false;
+	        // if ( regExSubResub.test( fragment.text ) ) {
 
-      jQuery.each( splits, function (idx, splitText ) {
-		
-        if ( !splitText.trim().length ) {
-          return;
-        }
-		
-        var newFragment = {
-          "text": splitText,
-          "emoticon": fragment.emoticon
-        };
-        
-        if ( regExCheers.test( splitText ) ) {
-          // We have a cheer node:  Mark it as such...
-          newFragment["isCheer"] = true;
-          results.push( newFragment );
-        }
-        else if ( regExSubResub.test( splitText ) ) {
-          var userName = comment.commenter.display_name;
+	        //   console.log( "##### getExpandedMessageFragments (1422): regExSubResub.test(): " +
+	        //                 regExSubResub.test( fragment.text ) + " userName: " + userName );
+	        // }
 
-          splitText = splitText.replace( userName, "" ).trim();
-          splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
-          // console.log("### regExSubResub.test (15105): text= " + splitText );
-          
-          newFragment["text"] = splitText;
-          newFragment["isSubResub"] = true;
+	        var splits = processFragmentsSplitText(fragment.text);
 
-          altFragmentProcessing = true;
-          results.push( newFragment );
-        }
-        else if ( regExSubadvance.test( splitText ) ) {
-          var userName = comment.commenter.display_name;
+	        var isSubGift = false;
+	        var isMysteryGift = false;
 
-          splitText = splitText.replace( userName, "" ).trim();
-          splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
-          // console.log("### regExSubResub.test (15105): text= " + splitText );
-          
-          newFragment["text"] = splitText;
-          newFragment["isSubadvance"] = true;
+	        jQuery.each(splits, function (idx, splitText) {
 
-          altFragmentProcessing = true;
-          results.push( newFragment );
-        }
-        else if ( regExSubResubTheyve.test( splitText ) ) {
-          // console.log("### regExSubResubTheyve.test (1519): text= " + splitText );
-          newFragment["isSubResubTheyve"] = true;
+	            if (!splitText.trim().length) {
+	                return;
+	            }
 
-          altFragmentProcessing = true;
-          results.push( newFragment );
-        }
-        else if ( regExSubGift.test( splitText ) ) {
-          var userName = comment.commenter.display_name;
-  
-          splitText = splitText.replace( userName, "" ).replace( "An anonymous user", "" ).trim();
-          splitText = splitText.charAt(0) + splitText.slice(1);
-          newFragment["text"] = splitText;
-  
-          newFragment["isSubGift"] = true;
-          
-          isSubGift = true;
-          results.push( newFragment );
-        }
-        else if ( isSubGift ) {
-          newFragment["isSubGiftTotalGifts"] = true;
-          
-          altFragmentProcessing = true;
-          if ( !comment.message["alt_fragments"] ) {
-            comment.message["alt_fragments"] = [];
-          }
-          comment.message["alt_fragments"].push( newFragment );
-        }
-        else if ( regExSubMysteryGift.test( splitText ) ) {
-          var userName = comment.commenter.display_name;
+	            var newFragment = {
+	                "text": splitText,
+	                "emoticon": fragment.emoticon
+	            };
 
-          splitText = splitText.replace( userName, "" ).replace( "An anonymous user", "" ).trim();
-          splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
-          newFragment["text"] = splitText;
+	            if (regExBits.test(splitText)) {
+	                // We have an Embedded Bit node:  Mark it as such...
+	                newFragment["isBits"] = true;
+	                results.push(newFragment);
+	            } else if (regExCheers.test(splitText)) {
+	                // We have a cheer node:  Mark it as such...
+	                newFragment["isCheer"] = true;
+	                results.push(newFragment);
+	            } else if (regExSubResub.test(splitText)) {
+	                var userName = comment.commenter.display_name;
 
-          newFragment["isSubMysteryGift"] = true;
-          
-          isMysteryGift = true;
-          results.push( newFragment );
-        }
-        else if ( isMysteryGift ) {
-          newFragment["isSubMysteryGiftTotalGifts"] = true;
-          
-          altFragmentProcessing = true;
-          if ( !comment.message["alt_fragments"] ) {
-            comment.message["alt_fragments"] = [];
-          }
-          comment.message["alt_fragments"].push( newFragment );
-        }
+	                splitText = splitText.replace(userName, "").trim();
+	                splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+	                // console.log("### regExSubResub.test (15105): text= " + splitText );
 
-        else if ( altFragmentProcessing && comment ) {
-          // if processing altFragments, and if comment is not null, then we need to store
-          // these alt_fragments should not be returned from this function, but added to the
-          // comment.message.alt_fragments array.  These altFragments will be used to 
-          // construct a secondary message after the system-generate message has been 
-          // processed and added.
-          if ( !comment.message["alt_fragments"] ) {
-            comment.message["alt_fragments"] = [];
-          }
-          comment.message["alt_fragments"].push( newFragment );
-        }
-        else {
+	                newFragment["text"] = splitText;
+	                newFragment["isSubResub"] = true;
 
-          results.push( newFragment );
-        }
-      });
+	                altFragmentProcessing = true;
+	                results.push(newFragment);
+	            } else if (regExSubadvance.test(splitText)) {
+	                var userName = comment.commenter.display_name;
 
-    }
-    else if ( altFragmentProcessing && comment ) {
-      // if processing altFragments, and if comment is not null, then we need to store
-      // these alt_fragments should not be returned from this function, but added to the
-      // comment.message.alt_fragments array.  These altFragments will be used to 
-      // construct a secondary message after the system-generate message has been 
-      // processed and added.
-      if ( !comment.message["alt_fragments"] ) {
-        comment.message["alt_fragments"] = [];
-      }
-      comment.message["alt_fragments"].push( fragment );
-    }
-    else {
-      // No cheer, so just add the fragment:
-      results.push( fragment );
-    }
-  });
+	                splitText = splitText.replace(userName, "").trim();
+	                splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+	                // console.log("### regExSubResub.test (15105): text= " + splitText );
+
+	                newFragment["text"] = splitText;
+	                newFragment["isSubadvance"] = true;
+
+	                altFragmentProcessing = true;
+	                results.push(newFragment);
+	            } else if (regExSubResubTheyve.test(splitText)) {
+	                // console.log("### regExSubResubTheyve.test (1519): text= " + splitText );
+	                newFragment["isSubResubTheyve"] = true;
+
+	                altFragmentProcessing = true;
+	                results.push(newFragment);
+	            } else if (regExSubGift.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                splitText = splitText.charAt(0) + splitText.slice(1);
+	                newFragment["text"] = splitText;
+
+	                newFragment["isSubGift"] = true;
+
+	                isSubGift = true;
+	                results.push(newFragment);
+	            } else if (isSubGift) {
+	                newFragment["isSubGiftTotalGifts"] = true;
+
+	                altFragmentProcessing = true;
+	                if (!comment.message["alt_fragments"]) {
+	                    comment.message["alt_fragments"] = [];
+	                }
+	                comment.message["alt_fragments"].push(newFragment);
+	            } else if (regExSubMysteryGift.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+	                newFragment["text"] = splitText;
+
+	                newFragment["isSubMysteryGift"] = true;
+
+	                isMysteryGift = true;
+	                results.push(newFragment);
+	            } else if (isMysteryGift) {
+	                newFragment["isSubMysteryGiftTotalGifts"] = true;
+
+	                altFragmentProcessing = true;
+	                if (!comment.message["alt_fragments"]) {
+	                    comment.message["alt_fragments"] = [];
+	                }
+	                comment.message["alt_fragments"].push(newFragment);
+	            } else if (altFragmentProcessing && comment) {
+	                // if processing altFragments, and if comment is not null, then we need to store
+	                // these alt_fragments should not be returned from this function, but added to the
+	                // comment.message.alt_fragments array.  These altFragments will be used to
+	                // construct a secondary message after the system-generate message has been
+	                // processed and added.
+	                if (!comment.message["alt_fragments"]) {
+	                    comment.message["alt_fragments"] = [];
+	                }
+	                comment.message["alt_fragments"].push(newFragment);
+	            } else {
+
+	                results.push(newFragment);
+	            }
+	        });
+
+	    } else if (altFragmentProcessing && comment) {
+	        // if processing altFragments, and if comment is not null, then we need to store
+	        // these alt_fragments should not be returned from this function, but added to the
+	        // comment.message.alt_fragments array.  These altFragments will be used to
+	        // construct a secondary message after the system-generate message has been
+	        // processed and added.
+	        if (!comment.message["alt_fragments"]) {
+	            comment.message["alt_fragments"] = [];
+	        }
+	        comment.message["alt_fragments"].push(fragment);
+	    } else {
+	        // No cheer, so just add the fragment:
+	        results.push(fragment);
+	    }
+	} else {
+	    if (regExCheers.test(fragment.text) ||
+	        regExSubResub.test(fragment.text) ||
+	        regExSubGift.test(fragment.text) ||
+	        regExSubMysteryGift.test(fragment.text) ||
+	        regExSubadvance.test(fragment.text)) {
+
+	        // if ( regExSubResub.test( fragment.text ) ) {
+
+	        //   console.log( "##### getExpandedMessageFragments (1422): regExSubResub.test(): " +
+	        //                 regExSubResub.test( fragment.text ) + " userName: " + userName );
+	        // }
+
+	        var splits = processFragmentsSplitText(fragment.text);
+
+	        var isSubGift = false;
+	        var isMysteryGift = false;
+
+	        jQuery.each(splits, function (idx, splitText) {
+
+	            if (!splitText.trim().length) {
+	                return;
+	            }
+
+	            var newFragment = {
+	                "text": splitText,
+	                "emoticon": fragment.emoticon
+	            };
+
+	            if (regExCheers.test(splitText)) {
+	                // We have a cheer node:  Mark it as such...
+	                newFragment["isCheer"] = true;
+	                results.push(newFragment);
+	            } else if (regExSubResub.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").trim();
+	                splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+	                // console.log("### regExSubResub.test (15105): text= " + splitText );
+
+	                newFragment["text"] = splitText;
+	                newFragment["isSubResub"] = true;
+
+	                altFragmentProcessing = true;
+	                results.push(newFragment);
+	            } else if (regExSubadvance.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").trim();
+	                splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+	                // console.log("### regExSubResub.test (15105): text= " + splitText );
+
+	                newFragment["text"] = splitText;
+	                newFragment["isSubadvance"] = true;
+
+	                altFragmentProcessing = true;
+	                results.push(newFragment);
+	            } else if (regExSubResubTheyve.test(splitText)) {
+	                // console.log("### regExSubResubTheyve.test (1519): text= " + splitText );
+	                newFragment["isSubResubTheyve"] = true;
+
+	                altFragmentProcessing = true;
+	                results.push(newFragment);
+	            } else if (regExSubGift.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                splitText = splitText.charAt(0) + splitText.slice(1);
+	                newFragment["text"] = splitText;
+
+	                newFragment["isSubGift"] = true;
+
+	                isSubGift = true;
+	                results.push(newFragment);
+	            } else if (isSubGift) {
+	                newFragment["isSubGiftTotalGifts"] = true;
+
+	                altFragmentProcessing = true;
+	                if (!comment.message["alt_fragments"]) {
+	                    comment.message["alt_fragments"] = [];
+	                }
+	                comment.message["alt_fragments"].push(newFragment);
+	            } else if (regExSubMysteryGift.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                splitText = splitText.charAt(0).toUpperCase() + splitText.slice(1);
+	                newFragment["text"] = splitText;
+
+	                newFragment["isSubMysteryGift"] = true;
+
+	                isMysteryGift = true;
+	                results.push(newFragment);
+	            } else if (isMysteryGift) {
+	                newFragment["isSubMysteryGiftTotalGifts"] = true;
+
+	                altFragmentProcessing = true;
+	                if (!comment.message["alt_fragments"]) {
+	                    comment.message["alt_fragments"] = [];
+	                }
+	                comment.message["alt_fragments"].push(newFragment);
+	            } else if (altFragmentProcessing && comment) {
+	                // if processing altFragments, and if comment is not null, then we need to store
+	                // these alt_fragments should not be returned from this function, but added to the
+	                // comment.message.alt_fragments array.  These altFragments will be used to
+	                // construct a secondary message after the system-generate message has been
+	                // processed and added.
+	                if (!comment.message["alt_fragments"]) {
+	                    comment.message["alt_fragments"] = [];
+	                }
+	                comment.message["alt_fragments"].push(newFragment);
+	            } else {
+
+	                results.push(newFragment);
+	            }
+	        });
+
+	    } else if (altFragmentProcessing && comment) {
+	        // if processing altFragments, and if comment is not null, then we need to store
+	        // these alt_fragments should not be returned from this function, but added to the
+	        // comment.message.alt_fragments array.  These altFragments will be used to
+	        // construct a secondary message after the system-generate message has been
+	        // processed and added.
+	        if (!comment.message["alt_fragments"]) {
+	            comment.message["alt_fragments"] = [];
+	        }
+	        comment.message["alt_fragments"].push(fragment);
+	    } else {
+	        // No cheer, so just add the fragment:
+	        results.push(fragment);
+	    }
+
+	}
+	});
 
   return results;
 }
@@ -2707,36 +2986,60 @@ function getExpandedMessageFragments( fragments, comment ) {
 function processFragmentsSplitText( sourceText ) {
   var splits = [];
   
-  if ( regExCheers.test( sourceText ) ) {
-    splits = sourceText.split(regExCheers).filter(Boolean);
-  }
-  else if ( regExSubResub.test( sourceText ) ) {
-    var s = sourceText.split(regExSubResub).filter(Boolean);
-    splits.push( s[0] );
-    splits = splits.concat( s[1].trim().split(regExSubResubTheyve).filter(Boolean) );
+  if (chatEmotes.twitchBits) {
+      if (regExBits.test(sourceText)) {
+          splits = sourceText.split(regExBits).filter(Boolean);
+      } else if (regExCheers.test(sourceText)) {
+          splits = sourceText.split(regExCheers).filter(Boolean);
+      } else if (regExSubResub.test(sourceText)) {
+          var s = sourceText.split(regExSubResub).filter(Boolean);
+          splits.push(s[0]);
+          splits = splits.concat(s[1].trim().split(regExSubResubTheyve).filter(Boolean));
 
-  }
-  else if ( regExSubGift.test( sourceText ) ) {
-    var s = sourceText.split(regExSubGift).filter(Boolean);
-    splits.push( s[0].trim() );
-    if ( s.length > 1 ) {
-      splits = splits.concat( s[1].trim() );
-    }
-  }
-  else if ( regExSubMysteryGift.test( sourceText ) ) {
-    var s = sourceText.split(regExSubMysteryGift).filter(Boolean);
-    splits.push( s[0].trim() );
-    if ( s.length > 1 ) {
-      splits = splits.concat( s[1].trim() );
-    }
-  }
-  else {
-    // No Cheer, no subResub, so just add to splits:
-    splits.push( sourceText );
+      } else if (regExSubGift.test(sourceText)) {
+          var s = sourceText.split(regExSubGift).filter(Boolean);
+          splits.push(s[0].trim());
+          if (s.length > 1) {
+              splits = splits.concat(s[1].trim());
+          }
+      } else if (regExSubMysteryGift.test(sourceText)) {
+          var s = sourceText.split(regExSubMysteryGift).filter(Boolean);
+          splits.push(s[0].trim());
+          if (s.length > 1) {
+              splits = splits.concat(s[1].trim());
+          }
+      } else {
+          // No Cheer, no subResub, so just add to splits:
+          splits.push(sourceText);
+      }
+  } else {
+      if (regExCheers.test(sourceText)) {
+          splits = sourceText.split(regExCheers).filter(Boolean);
+      } else if (regExSubResub.test(sourceText)) {
+          var s = sourceText.split(regExSubResub).filter(Boolean);
+          splits.push(s[0]);
+          splits = splits.concat(s[1].trim().split(regExSubResubTheyve).filter(Boolean));
+
+      } else if (regExSubGift.test(sourceText)) {
+          var s = sourceText.split(regExSubGift).filter(Boolean);
+          splits.push(s[0].trim());
+          if (s.length > 1) {
+              splits = splits.concat(s[1].trim());
+          }
+      } else if (regExSubMysteryGift.test(sourceText)) {
+          var s = sourceText.split(regExSubMysteryGift).filter(Boolean);
+          splits.push(s[0].trim());
+          if (s.length > 1) {
+              splits = splits.concat(s[1].trim());
+          }
+      } else {
+          // No Cheer, no subResub, so just add to splits:
+          splits.push(sourceText);
+      }
   }
 
   return splits;
-}
+  }
 
 
 //makes Emotes ----------------------------------------
@@ -2824,38 +3127,47 @@ function makeUserBadges(comment) {
 			imgSrc = badges.versions[badgeVersion];
 			// console.log("imgSrc: " + imgSrc);
 			
-			badgeTitle = badges.name;
-			// console.log("badgeTitle: " + badgeTitle);
+			var badgeVer = badge.version;
 			
-			
-			if (typeof imgSrc === 'undefined') {
-				// console.log("imgSrc undefined: " + imgSrc);
-				
-				if (typeof streamerBadgesJson === 'undefined' && typeof globalBadgesJson === 'undefined') {
-					return;
-				} else if (typeof streamerBadgesJson === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
-					imgSrc = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
-				} else {
-					imgSrc = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
-				}
-				
-				
-				
-				if (typeof badgeTitle === 'undefined') {
-					if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
-						badgeTitle = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
-					} else {
-						badgeTitle = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
-					}
-				}				
-				
-				var badgeImg = $("<img>")
-					.attr("src", imgSrc)
-					.addClass("badge-size")
-					.attr("title", badgeTitle);
-				userBadges.append(badgeImg);
-				
+			if (badgeVer === "1") {
+				badgeTitle = badges.name
+				// console.log("badgeTitle: " + badgeTitle);
 			} else {
+				badgeTitle = badges.name + " " + badgeVer;
+				// console.log("badgeTitle: " + badgeTitle);
+			}
+			
+			
+			
+			
+			// if (typeof imgSrc === 'undefined') {
+				// // console.log("imgSrc undefined: " + imgSrc);
+				
+				// if (typeof streamerBadgesJson === 'undefined' && typeof globalBadgesJson === 'undefined') {
+					// return;
+				// } else if (typeof streamerBadgesJson === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+					// imgSrc = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+				// } else {
+					// imgSrc = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+				// }
+				
+				
+				
+				// if (typeof badgeTitle === 'undefined') {
+					// if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+						// badgeTitle = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+					// } else {
+						// badgeTitle = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+					// }
+				// }				
+				
+				// var badgeImg = $("<img>")
+					// .attr("src", imgSrc)
+					// .addClass("badge-size")
+					// .attr("title", badgeTitle);
+				// userBadges.append(badgeImg);
+				
+			// } else {
 				
 				var badgeImg = $("<img>")
 					.attr("src", badgeImagePrefix + imgSrc)
@@ -2863,7 +3175,7 @@ function makeUserBadges(comment) {
 					.attr("title", badgeTitle);
 				userBadges.append(badgeImg);
 				
-			}
+			// }
 			
 		});
 		
