@@ -127,6 +127,7 @@ var chatEmotes;
 var emotesBadges = {};
 var bitsArray = {};
 var bitsFilter;
+var bitsFilterplain;
 
 
 
@@ -547,26 +548,32 @@ function localFileVideoPlayer() {
   function cheerfilter(bitsArray) {
 	bitsFilter;
 	var bitsFilterpart;
+	var bitsFilterplainpart;
 	bitsFilterpart;
+	bitsFilterplain;
 	// $("#chat").append(JSON.stringify(bitsArray));
 	jQuery.each(bitsArray, function (index, prefix) {
 		var prefix = this["prefix"];
 		// var prefix = bitsArray[prefix];
 		// console.log("Prefix: "+JSON.stringify(prefix));
-		bitsFilterpart = bitsFilterpart + "|" + prefix;
+		bitsFilterpart = bitsFilterpart + "[0-9]{1,6}" + "|" + prefix;
+		
+		bitsFilterplainpart = bitsFilterplainpart + "|" + prefix;
 	});
-	bitsFilter = bitsFilterpart.replace("undefined|", "").replace("Cheer|", "").replace(/(\r\n|\n|\r)/gm, "").trim();
-	// $("#chat").append(bitsFilter);
-	// console.log("Prefixes: "+bitsFilterpart);
+	bitsFilter = bitsFilterpart.replace("undefined[0-9]{1,6}|", "").replace("Cheer[0-9]{1,6}|", "").replace(/(\r\n|\n|\r)/gm, "").trim();
+	bitsFilterplain = bitsFilterplainpart.replace("undefined|", "").replace("Cheer|", "").replace(/(\r\n|\n|\r)/gm, "").trim();
+	// console.log("bitsFilterpart: "+bitsFilterpart);
+	// console.log("bitsFilterplain: "+bitsFilterplain);
+	// console.log("bitsFilter: "+bitsFilter);
 	
 	// console.log("regExBits :"+regExBits);
 	// console.log(regExBits);
 	
-	regExBitsFragments = "(" + bitsFilter + ")" + "[0-9]{1,6}\\b";
-	regExBits =  new RegExp(
-                        "((?=" + regExBitsFragments + ")|" + 
-                        "(?<=" + regExBitsFragments + "))", "i");
-						console.log(regExBitsFragments);
+	regExBitsFragments = "(" + bitsFilter + "[0-9]{1,6}" + ")\\b";
+	regExBits =  new RegExp(regExBitsFragments, "i");
+	
+	// console.log("regExBitsFragments: "+regExBitsFragments);
+	// console.log("regExBits: "+regExBits);
 	
 	
   }
@@ -2338,6 +2345,7 @@ function rendersubgiftContinue(comment) {
 
 
 function extractMessageFragments(comment) {
+
   let message = $("<span>").addClass("chatmessage");
   //.text( comment.message.body );
 
@@ -2346,6 +2354,8 @@ function extractMessageFragments(comment) {
   var fragments = getExpandedMessageFragments( comment.message.fragments, comment );
 
   jQuery.each(fragments, function (index, fragment) {
+	  
+	// console.log("fragment: "+JSON.stringify(fragment));
     var altName = " " + fragment.text.trim();
 	//if the message has "bits_spent", it gets sent for processing
     // if (comment.message["bits_spent"]) {
@@ -2360,6 +2370,7 @@ function extractMessageFragments(comment) {
     }
     else if ( fragment.isBits ) {
       // Process fragment as a Cheer:
+	  // console.log("fragment: "+JSON.stringify(fragment));
       message.append( buildFragmentBits( fragment ) );
       message.append( buildFragmentBitsNumber( fragment ) );
     }
@@ -2488,10 +2499,10 @@ function buildFragmentBits( fragment ) {
   var cheer = fragment.text.trim();
   // console.log("cheer: "+ cheer);
   
-  var bitsFilterMatch = "(" + bitsFilter + ")"
+  var bitsFilterMatch = "(" + bitsFilterplain + ")"
   // console.log("bitsFilterMatch: "+ bitsFilterMatch);
   
-  var pattern = new RegExp(bitsFilterMatch, "g");
+  var pattern = new RegExp(bitsFilterMatch, "ig");
   
   var amount = cheer.replace(pattern, "");
   // console.log("amount: "+ amount);
@@ -2545,10 +2556,10 @@ function buildFragmentBitsNumber( fragment ) {
   var cheer = fragment.text.trim();
   // console.log("cheer: "+ cheer);
   
-  var bitsFilterMatch = "(" + bitsFilter + ")"
+  var bitsFilterMatch = "(" + bitsFilterplain + ")"
   // console.log("bitsFilterMatch: "+ bitsFilterMatch);
   
-  var pattern = new RegExp(bitsFilterMatch, "g");
+  var pattern = new RegExp(bitsFilterMatch, "ig");
   
   var amount = cheer.replace(pattern, "");
   // console.log("amount: "+ amount);
@@ -2712,12 +2723,12 @@ function getExpandedMessageFragments( fragments, comment ) {
 	        //   console.log( "##### getExpandedMessageFragments (1422): regExSubResub.test(): " +
 	        //                 regExSubResub.test( fragment.text ) + " userName: " + userName );
 	        // }
-
+	// console.log("fragment2: "+JSON.stringify(fragment));
 	        var splits = processFragmentsSplitText(fragment.text);
 
 	        var isSubGift = false;
 	        var isMysteryGift = false;
-
+	
 	        jQuery.each(splits, function (idx, splitText) {
 
 	            if (!splitText.trim().length) {
@@ -2847,7 +2858,7 @@ function getExpandedMessageFragments( fragments, comment ) {
 	        //   console.log( "##### getExpandedMessageFragments (1422): regExSubResub.test(): " +
 	        //                 regExSubResub.test( fragment.text ) + " userName: " + userName );
 	        // }
-
+	
 	        var splits = processFragmentsSplitText(fragment.text);
 
 	        var isSubGift = false;
@@ -2988,9 +2999,15 @@ function processFragmentsSplitText( sourceText ) {
   
   if (chatEmotes.twitchBits) {
       if (regExBits.test(sourceText)) {
+		  // console.log("fragment: "+JSON.stringify(sourceText));
           splits = sourceText.split(regExBits).filter(Boolean);
+		  // console.log("regExCheers: "+regExCheers);
+		  // console.log("regExBits: "+regExBits);
+		  // console.log("splits: "+JSON.stringify(sourceText.split(regExBits)));
       } else if (regExCheers.test(sourceText)) {
+		  // console.log("fragment2: "+JSON.stringify(sourceText));
           splits = sourceText.split(regExCheers).filter(Boolean);
+		  // console.log("splits2: "+JSON.stringify(splits));
       } else if (regExSubResub.test(sourceText)) {
           var s = sourceText.split(regExSubResub).filter(Boolean);
           splits.push(s[0]);
