@@ -183,7 +183,12 @@ function getVideoMetadata() {
 	}
 	
 
-	MediaInfo({ format: 'JSON' }, (mediainfo) => {
+	MediaInfo({
+		format: 'JSON',
+		// locateFile: (path, prefix) => prefix + path, // Make sure WASM file is loaded from CDN location
+		locateFile: (path, prefix) => prefix + path, // Make sure WASM file is loaded from CDN location
+	},
+		(mediainfo) => {
 	fileinput.addEventListener('change', () => onChangeFile(mediainfo))
 	})
 
