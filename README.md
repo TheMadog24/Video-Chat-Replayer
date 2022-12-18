@@ -2,7 +2,7 @@
 
 # What is Video Chat Replayer?
 
-Video Chat Replayer is a realtime chat replayer for downloaded vods and chat. It was designed specifically with Twitch in mind, so may features will look and behave similarly.
+Video Chat Replayer is a realtime chat replayer for downloaded vods and chat. Created specifically for Twitch VODs and Chat files.
 
 ## What does it do?
 
