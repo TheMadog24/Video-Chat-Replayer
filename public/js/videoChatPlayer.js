@@ -128,6 +128,7 @@ var emotesBadges = {};
 var bitsArray = {};
 var bitsFilter;
 var bitsFilterplain;
+var iscontinuetimeOption = false;
 
 
 
@@ -633,15 +634,17 @@ function localFileVideoPlayer() {
   }
   
 var saveVideo = setInterval(saveLocalVideoTime, 5000);
-  function saveLocalVideoTime() {
-	  // console.log("Saving Video Time");
-	  var currentTime = videoNode.currentTime;
-	  if ($("#videoPlayer")[0].readyState === 4) {
-		// console.log("saving");
-		var videoUniqueID = currentFile.name + currentFile.size;
-		localStorage.setItem(videoUniqueID, currentTime);
-	}
-  }
+function saveLocalVideoTime() {
+    // console.log("Saving Video Time");
+    var currentTime = videoNode.currentTime;
+    if ($("#videoPlayer")[0].readyState === 4) {
+        if (!iscontinuetimeOption) {
+            // console.log("saving");
+            var videoUniqueID = currentFile.name + currentFile.size;
+            localStorage.setItem(videoUniqueID, currentTime);
+        }
+    }
+}
 
   /**
    * This function will take the current chatPosition within the
@@ -1491,6 +1494,7 @@ $(document).click(function(e) {
 		  
 		  lastStoredTime = localstoragevidID;
 		  $("#continuetimeOption").show();
+		  iscontinuetimeOption = true;
 		  
 	  }
 	  	  
@@ -1502,9 +1506,11 @@ $(document).click(function(e) {
 	  videoNode.currentTime = lastStoredTime
 	  saveLocalVideoTime();
 	  $("#continuetimeOption").hide();
+	  iscontinuetimeOption = false;
   });
   $("#continueClose").click(function (e) {
 	  $("#continuetimeOption").hide();
+	  iscontinuetimeOption = false;
   });
   
   
