@@ -143,6 +143,7 @@ function getVideoMetadata() {
 	var videoDatajson;
 	
 	const onChangeFile = (mediainfo) => {
+		// console.log("Chapters");
 		const file = fileinput.files[0]
 		if (file) {
 			removeCurrentChapter();
@@ -168,7 +169,7 @@ function getVideoMetadata() {
 			mediainfo
 				.analyzeData(getSize, readChunk)
 				.then((result) => {
-					console.log("Chapters Loaded!");
+					console.log("Chapters Loaded");
 					
 					var videoMetadata = result;
 					saveResults(videoMetadata);
@@ -185,7 +186,6 @@ function getVideoMetadata() {
 
 	MediaInfo({
 		format: 'JSON',
-		// locateFile: (path, prefix) => prefix + path, // Make sure WASM file is loaded from CDN location
 		locateFile: (path, prefix) => prefix + path, // Make sure WASM file is loaded from CDN location
 	},
 		(mediainfo) => {
@@ -293,7 +293,7 @@ function getVideoMetadata() {
 	}
 	//removes existing Chapters on Load
 	function removeCurrentChapter() {
-		console.log("Removing!");
+		// console.log("Removing!");
 		const chapterMenu = document.getElementById("chapterSelector");
 		chapterMenu.replaceChildren();
 		
@@ -724,7 +724,7 @@ var saveVideo = setInterval(saveLocalVideoTime, 5000);
         // chatBodies is an array, and it's already processed all of the specials.
         // Normally it would be just one HTML formatted message, but with 
         // message splitting, it can be more than one HTML message.
-        let chatBodies = renderChatBody(msg);
+        let chatBodies = renderChatBody(msg, curPos);
         
         // if ( chatBodies.length >= 2 ) {
         //   console.log( "### chatBodies length: " + chatBodies.length + "  [" + curPos + "]" );
@@ -1465,6 +1465,7 @@ $(document).click(function(e) {
 	  $("#chapters").hide();
 	  $("#message").hide();
 	  $('#autoscroller').hide();
+	  $('#userBox').hide();
   });
 
   //Video player not loaded until video is loaded
@@ -1641,7 +1642,216 @@ $(document).click(function(e) {
   //	Custom Control Bar End
 
   //Reading video Metadata
+  
+	//Get Size of Window
+	var sizeOfCurrentWindow = getWindowsSize();
+	function getWindowsSize() {
+		var x1 = -5;
+		var y1 = -5;
+		var x2 = $(window).width() - 350;
+		var y2 = $(window).height() - 218;
+		return [x1, y1, x2, y2];
+	}
+	
+  
+	//Dragable User Info Box
+	$('#userBox').draggable({
+		cursor: 'move',
+		containment: sizeOfCurrentWindow,
+		scroll: false,
+		handle: '#userBoxDragBox'
+		// [5, 10, $(window).width() - 370, $(window).height() - 215]
+	});
+	
+	$(window).on("resize", function () {
+		var sizeOfCurrentWindow = getWindowsSize();
+		$('#userBox').draggable("option", "containment", sizeOfCurrentWindow);
+	});
+	
 
+	//retirves data on click
+	$(document).on("click", ".commenter, .commenter2", function () {
+		// console.log("Clicked!");
+		
+		var userBox = $('#userBox');
+		const userBadgeBox = document.getElementById("userBadgeBox");
+		userBadgeBox.replaceChildren();
+		
+		userBox.hide();
+		var commentIndexNumber = $(this).attr("data-commentIndex");
+		var prefix = chatJson.comments;
+		
+		// console.log(commentIndex);
+		// console.log("chatJson.comments[0].message.user_color: " + chatJson.comments[0].message.user_color);
+		// console.log("User's Name: " + chatJson.comments[commentIndexNumber].commenter.name);
+		
+		//show UserInfoBox
+		userBox.fadeIn(100);
+		
+		var leftPos = $('#chat').offset().left - 360 + "px";
+		var topPos = $(this).offset().top - 20 + "px";
+		var topPos2 = $(this).offset().top - 15;
+		var bottomLimit = $(window).height() - 229;
+		// console.log("bottomLimit: "+bottomLimit);
+		// console.log("topPos: "+topPos);
+		
+		if (topPos2 > bottomLimit) {
+			topPos = bottomLimit;
+			// console.log("Below!");
+		}
+		
+		userBox.css({
+			left: leftPos,
+			top: topPos
+		});
+		
+		
+		// $.ajax({
+			// url: "https://www.twitch.tv/" + prefix[commentIndexNumber].commenter.name,
+			// type: 'Get',
+			// success: function (data) {
+				// $('#userBoxInfoContainer').css( "background-image", $(data).find('.tw-image-avatar').attr('src'));
+			// }
+		// });
+		
+		
+		// console.log("Color: " + prefix[commentIndexNumber].message.user_color);
+		$('.userNameinBox')
+			.text(prefix[commentIndexNumber].commenter.display_name);
+			
+		
+		$('.userLinkinBox')
+			.text("twitch.tv/" + prefix[commentIndexNumber].commenter.name)
+			.attr("href", "https://www.twitch.tv/" + prefix[commentIndexNumber].commenter.name)
+			.attr("target", '="_blank"');
+			
+			
+		if (prefix[commentIndexNumber].message.user_color !== null) {
+			// console.log("Not null!");
+			$('#userBoxInfoContainer').css('background-color', prefix[commentIndexNumber].message.user_color);
+		} else {
+			$('#userBoxInfoContainer').css('background-color', "#ffffff");	
+		}
+		
+		$('#userBadgeBox').append(buildInfoBoxBadges(prefix, commentIndexNumber));
+	});
+	
+	
+	
+	
+	
+	function buildInfoBoxBadges(prefix, commentIndexNumber) {
+
+	    if (typeof prefix[commentIndexNumber].message.user_badges === 'null' || prefix[commentIndexNumber].message.user_badges === 'null' || !prefix[commentIndexNumber].message.user_badges) {
+	        // console.log("user_badges for user " + prefix[commentIndexNumber].commenter.display_name + " :" + prefix[commentIndexNumber].message.user_badges);
+	        return;
+	    } else if (!prefix[commentIndexNumber].message.user_badges.length) {
+	        return;
+	    } else {
+	        var userBadges = $("<span>").addClass("user-info-badges");
+	        // console.log("Making Badges!");
+	        var url = twitchGlobalBadgeUrl
+	            // .replace("{{id}}", id)
+	            // var url = twitchEmoticonsUrl
+	            // .replace("{{format}}", "static")
+	            // .replace("{{theme_mode}}", chatThemeMode);
+	            // .replace("{{id}}", id)
+	            // var emotesBadges = chatJson.embeddedData.twitchBadges;
+	            // console.log("emotesBadges: " + JSON.stringify(emotesBadges));
+
+
+	            if (chatEmotes.twitchBadges) {
+
+	                jQuery.each(prefix[commentIndexNumber].message.user_badges, function (index, badge) {
+
+	                    var badgeID = badge["_id"];
+	                    var badgeVersion = badge.version;
+	                    var badgeImagePrefix = "data:image/png;base64,";
+
+	                    // console.log("Badge ID: " + badgeID);
+	                    // console.log("Badge Version: " + badgeVersion);
+
+	                    var imgSrc;
+	                    var badgeTitle;
+
+	                    var badges = emotesBadges[badgeID];
+	                    // console.log("badges: " + JSON.stringify(badges));
+
+
+	                    imgSrc = badges.versions[badgeVersion];
+	                    // console.log("imgSrc: " + imgSrc);
+
+	                    var badgeVer = badge.version;
+
+	                    if (badgeVer === "1") {
+	                        badgeTitle = badges.name
+	                            // console.log("badgeTitle: " + badgeTitle);
+	                    } else {
+	                        badgeTitle = badges.name + " " + badgeVer;
+	                        // console.log("badgeTitle: " + badgeTitle);
+	                    }
+						
+						
+						var badgebox = $("<div>").addClass("badgebox");
+
+	                    var badgeImg = $("<img>")
+	                        .attr("src", badgeImagePrefix + imgSrc)
+	                        .addClass("infobadge")
+	                        .attr("title", badgeTitle);
+							
+						
+	                    userBadges.append(badgebox);
+	                    badgebox.append(badgeImg);
+
+	                });
+
+	            } else {
+
+	                jQuery.each(prefix[commentIndexNumber].message.user_badges, function (index, badge) {
+
+	                    var badgeID = badge["_id"];
+	                    var badgeVersion = badge.version;
+
+	                    // console.log("Badge ID: " + badgeID);
+	                    // console.log("Badge Version: " + badgeVersion);
+	                    var imgSrc;
+
+	                    if (typeof streamerBadgesJson === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+	                        imgSrc = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+	                    } else {
+	                        imgSrc = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
+	                    }
+	                    // console.log("imgSrc: " + imgSrc);
+
+	                    var badgeTitle;
+
+	                    if (typeof streamerBadgesJson === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
+	                        badgeTitle = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+	                    } else {
+	                        badgeTitle = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
+	                    }
+
+	                    // console.log("badgeTitle: " + badgeTitle);
+						var badgebox = $("<div>").addClass("badgebox");
+
+	                    var badgeImg = $("<img>").attr("src", imgSrc).addClass("infobadge").attr("title", badgeTitle);
+	                    userBadges.append(badgebox);
+	                    badgebox.append(badgeImg);
+	                });
+	            }
+	    }
+	    return userBadges;
+	}
+	
+	
+	
+	//Closes UserInfoBox
+	$('.userBoxClose').on("click", function () {
+		$('#userBox').hide();
+	});
+	
+  
+  // jumpt so video time when clicked
   $("#chat").on("click", ".chattime", function () {
     var timeSecond = $(this).attr("data-time");
     if (timeSecond) {
@@ -1760,7 +1970,7 @@ function pad(num, size) {
 
 
 
-function renderChatBody(comment) {
+function renderChatBody(comment, index) {
 
   var chatBodies = [];
 
@@ -1770,23 +1980,23 @@ function renderChatBody(comment) {
   // different messages:
   if ( regExSubResub.test( comment.message.body )  ) {
     
-    return renderChatSub( comment );
+    return renderChatSub(comment, index);
   }
   else if ( regExSubadvance.test( comment.message.body )  ) {
     
-    return renderChatAdvanceSub( comment );
+    return renderChatAdvanceSub(comment, index);
   }
   else if ( regExSubGift.test( comment.message.body )  ) {
 
-    return rendersubgift( comment );
+    return rendersubgift(comment, index);
   }
   else if ( regExContinueSub.test( comment.message.body )  ) {
 
-    return rendersubgiftContinue( comment );
+    return rendersubgiftContinue(comment, index);
   }
   else if ( regExSubMysteryGift.test( comment.message.body )  ) {
 
-    return renderChatSubMysteryGift( comment );
+    return renderChatSubMysteryGift(comment, index);
   }
 
   // comment.message.body;
@@ -1798,7 +2008,8 @@ function renderChatBody(comment) {
   let player = $("<span>")
     .addClass("commenter")
     .css(styles)
-    .text(comment.commenter.display_name);
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
 
   let chatBody = $("<div>").addClass("chatbody");
@@ -1823,7 +2034,7 @@ function renderChatBody(comment) {
 }
 
 
-function renderChatSub(comment) {
+function renderChatSub(comment, index) {
   var chatBodies = [];
   comment.message["alt_fragments"] = [];
 
@@ -1837,7 +2048,9 @@ function renderChatSub(comment) {
   let player = $("<span>")
     .addClass("commenter")
     .css(styles)
-    .text(comment.commenter.display_name);
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
+	
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
 
@@ -1881,7 +2094,8 @@ function renderChatSub(comment) {
     let player2 = $("<span>")
       .addClass("commenter2")
       .css(styles)
-      .text(clonedComment.commenter.display_name);
+      .text(clonedComment.commenter.display_name)
+	.attr("data-commentindex", index);
     // let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
 
     // let chatBody2 = $("<div>").addClass("chatbody issubmessage")
@@ -1900,7 +2114,7 @@ function renderChatSub(comment) {
 return chatBodies;
 }
 
-function renderChatAdvanceSub(comment) {
+function renderChatAdvanceSub(comment, index) {
   var chatBodies = [];
   comment.message["alt_fragments"] = [];
 
@@ -1914,7 +2128,8 @@ function renderChatAdvanceSub(comment) {
   let player = $("<span>")
     .addClass("commenter")
     .css(styles)
-    .text(comment.commenter.display_name);
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
 
@@ -1958,7 +2173,8 @@ function renderChatAdvanceSub(comment) {
     let player2 = $("<span>")
       .addClass("commenter2")
       .css(styles)
-      .text(clonedComment.commenter.display_name);
+      .text(clonedComment.commenter.display_name)
+	.attr("data-commentindex", index);
     // let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
 
     // let chatBody2 = $("<div>").addClass("chatbody issubmessage")
@@ -1977,7 +2193,7 @@ function renderChatAdvanceSub(comment) {
 return chatBodies;
 }
 
-function renderChatSubMysteryGift(comment) {
+function renderChatSubMysteryGift(comment, index) {
   var chatBodies = [];
 
   let message = extractMessageFragments(comment);
@@ -1988,7 +2204,8 @@ function renderChatSubMysteryGift(comment) {
   let player = $("<span>")
     .addClass("commenter")
     .css(styles)
-    .text(comment.commenter.display_name);
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
   //let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
   let chatBody = $("<div>").addClass("chatbody no-time submysterygift isbiggiftsubmessage")
@@ -2070,7 +2287,7 @@ function renderChatSubMysteryGift(comment) {
 
   return chatBodies;
 }
-function rendersubgift(comment) {
+function rendersubgift(comment, index) {
   var chatBodies = [];
 
   // comment.message.body;
@@ -2083,7 +2300,8 @@ function rendersubgift(comment) {
 
   let player = $("<span>")
     .addClass("commenter2")
-    .text(comment.commenter.display_name);
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
   
@@ -2208,7 +2426,7 @@ function rendersubgift(comment) {
 
 }
 
-function rendersubgiftContinue(comment) {
+function rendersubgiftContinue(comment, index) {
   var chatBodies = [];
 
   // comment.message.body;
@@ -2221,7 +2439,8 @@ function rendersubgiftContinue(comment) {
 
   let player = $("<span>")
     .addClass("commenter2")
-    .text(comment.commenter.display_name);
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
   let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
   
   

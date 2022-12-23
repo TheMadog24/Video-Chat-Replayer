@@ -45,6 +45,160 @@ video {
      }
 }
 
+#userBoxDragBox {
+	position: absolute;
+	width: 100%;
+	height: 40px;
+	cursor: all-scroll;
+	z-index: 991;
+}
+
+#userBox {
+	width: 340px;
+	height: 210px;
+	border: 1px solid #303032;
+	overflow-y: scroll;
+	background-color:#18181b;
+	border-radius: 5px 5px 0 0;
+	overflow: hidden;
+	/* padding: 5px; */
+	z-index: 990;
+	margin: 5px;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+#userBoxInfoContainer {
+	position: relative;
+	width: 100%;
+	height: 110px;
+	bottom: 0;
+	left: 0;
+	/* background-color: green; */
+}
+#userBoxInfoContainerCover {
+	position: relative;
+	width: 100%;
+	height: 110px;
+	bottom: 0;
+	left: 0;
+	background-color: rgb(0,0,0,0.6);
+	/* cursor: all-scroll; */
+}
+#userBoxCloseContainer {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	height: 20px;
+	width: 20px;	
+	padding: 2px;
+	/* background-color: red; */
+	border-radius: 4px;
+	cursor: pointer;
+	z-index: 992;
+}
+#userBoxCloseContainer:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+.userBoxClose {
+	fill: #dedede;
+}.userBoxClose:hover {
+	fill: #ffffff;
+}
+
+#userNameBox {
+	width: 250px;
+	height: 45px;
+	font-size: 18px;
+	font-weight: 600;
+	padding: 1px 2px;
+	/* background-color: blue; */
+	word-break: break-word;
+	position: absolute;
+	top: 5px;
+	left: 20px;
+}
+.userNameinBox{
+	text-shadow: 1px 1px 2px #000000;
+	cursor: auto;	
+	/* text-decoration:none; */
+	/* color: inherit; */
+	position: relative;
+	z-index: 992;
+}
+#userLinkBox {
+	width: 250px;
+	height: 35px;
+	font-size: 13px;
+	font-weight: 400;
+	padding: 1px 2px;
+	/* background-color: blue; */
+	word-break: break-word;
+	position: absolute;
+	top: 50px;
+	left: 20px;
+}
+.userLinkinBox{
+	text-shadow: 1px 1px 2px #000000;	
+	text-decoration:none;
+	color: inherit;
+	cursor: pointer;
+}
+#userBoxInfo {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 320px;
+	height: 80px;
+	/* background-color: purple; */
+}
+
+#userBadgeText {
+	position: relative;
+	top: 10px;
+	left: 20px;
+	font-size: 14px;
+	font-weight: 400;
+	text-shadow: 1px 1px 2px #000000;
+	
+}
+#userBoxBadgeContainer {
+	position: absolute;
+	width: 100%;
+	height: 100px;
+	bottom: 0;
+	left: 0;
+	/* background-color: blue; */
+}
+
+#userBadgeBox {
+	position: absolute;
+	top: 40px;
+	left: 20px;
+	width: 280px;
+	height: 50px;
+	/* background-color: green; */
+}
+
+.infobadge {
+	padding: 4px;
+	height: 24px;
+	width: 24px;
+}
+.badgebox {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 4px;
+	margin-right: 5px;
+}
+
 #continuetimeOption {
 	display: none;
 	z-index: 999;
@@ -786,7 +940,7 @@ video {
 	width: 100%;
 	right: 0;
 	top: 0;
-	z-index: 9999;
+	z-index: 998;
 	-webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -806,7 +960,7 @@ video {
 	top: 50%;
 	-webkit-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
-	z-index: 9998;
+	z-index: 999;
 	
 	text-align:center;
 	display: flex;
@@ -1251,7 +1405,7 @@ input[type=number] {
 	position: absolute;
 	bottom: 0;
 	right: 0;
-    width: 340px;
+    width: 332px;
     border-left: 1px solid #303032;
 	border-top: 1px solid #303032;
     height: calc(100% - 96px);
@@ -1266,6 +1420,7 @@ input[type=number] {
 	scrollbar-width: thin;
 	/* scrollbar-width: none; */
 	padding-bottom: 5px;
+	padding-right: 8px;
 }
 
 #autoscroller {
@@ -1350,6 +1505,11 @@ input[type=number] {
 	font-weight: 700;
 	display: inline-block;
 	vertical-align: top;
+}
+.commenter2:hover{
+	border-radius: 2px;
+	background-color: rgba(255, 255, 255, 0.2);
+	cursor: pointer;
 }
 .smallgifticon {
 	margin-left: 15px;
@@ -1874,6 +2034,11 @@ input {
 .commenter {
     vertical-align: top;
     font-weight: bolder;
+}
+.commenter:hover{
+	border-radius: 2px;
+	background-color: rgba(255, 255, 255, 0.2);
+	cursor: pointer;
 }
 
 .messagePrefix {
