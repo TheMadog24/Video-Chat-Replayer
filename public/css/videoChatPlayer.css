@@ -1422,7 +1422,9 @@ input[type=number] {
 	padding-bottom: 5px;
 	padding-right: 8px;
 }
-
+.chatline:first-of-type {
+	margin-top: 5px;
+}
 #autoscroller {
 	position: absolute;
 	bottom: 0;
@@ -1555,7 +1557,7 @@ input[type=number] {
 	fill: #efeff1;
 }
 .issubgift {
-	margin-top: -4px;
+	/* margin-top: -4px; */
 }
 
 .subgiftcontainer {
@@ -2006,7 +2008,7 @@ input {
     display: flex;
     white-space: nowrap;
 	margin-bottom: 5px;
-	padding-top: 5px;
+	/* padding-top: 5px; */
 }
 
 .chattime {
