@@ -11,7 +11,17 @@ Video Chat Replayer is a realtime chat replayer for downloaded videos. Created s
 Video Chat Replayer uses your browser to playback your chat files alongside your video file, in sync, no rendering required.
 
 <br/><br/>
-# ![Features](https://user-images.githubusercontent.com/12008758/210620554-73443ee2-45c4-414a-bf15-c843b4ab6a96.png)
+
+![Important](https://user-images.githubusercontent.com/12008758/210639704-226badd3-8001-45e0-ad0a-80fbda9cd8db.png)
+
+# How Do I Get get these video and chat files?
+
+Currently, any donwloaded Mp4 videos will work.
+However, for chat files, I <strong>STRONGLY</strong> reccomend using [TwitchDownloader](https://github.com/lay295/TwitchDownloader) to get your chat files.
+You should also select the options to embed images and all emotes. The Required Format for chat files is Json.
+
+<br/><br/>
+# ![Features](https://user-images.githubusercontent.com/12008758/210639812-5d207aa4-5dce-4780-80fa-2a76197df33e.png)
 ## Synced Video Playback. 
 
 
