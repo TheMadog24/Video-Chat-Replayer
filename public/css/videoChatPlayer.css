@@ -547,7 +547,9 @@ video {
 	padding: 5px 10px;
 	margin: 5px auto 5px auto;
 	height:auto;
-	min-height:30px;
+	min-height: 63px;
+	display: block;
+	position: relative;
 	/* height: 80px; */
 	/* border-radius: 9px; */
 	cursor: pointer;
@@ -588,7 +590,7 @@ video {
 .chapterName {
 	position: relative;
 	display: block;
-	width: auto;
+	width: 190px;
 	margin: 5px;
 	display: flex;
 	font-size: 15px;
@@ -604,7 +606,7 @@ video {
 .chapterTime {
 	position: relative;
 	display: block;
-	width: auto;
+	width: 190px;
 	margin: 5px;
 	display: flex;
 	color: #adadad;
@@ -617,6 +619,20 @@ video {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+}
+
+.chapterimage {
+	width: 40px;
+	height: 53px;
+	margin: 5px;
+	position: absolute;
+}
+
+.chapTextContainer {
+	position: absolute;
+	left: 65px;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .custom-controls .button {
