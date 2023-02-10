@@ -601,19 +601,19 @@ video {
 	position: relative;
 	display: none;
 	z-index:99;
-	opacity: 75%
+	/* opacity: 75% */
 }
 .volume-speaker-muted-large{
 	position: relative;
 	display: none;
 	z-index:99;
-	opacity: 75%
+	/* opacity: 75% */
 }
 .volume-animated-speaker-half-large{
 	position: relative;
 	display: none;
 	z-index:99;
-	opacity: 75%
+	/* opacity: 75% */
 }
 
 
