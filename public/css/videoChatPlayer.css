@@ -1563,6 +1563,19 @@ input[type=number] {
 	border-left-width: 6px;
 	background-color: #1f1f23;
 }
+.isPayingForward {
+	border-left-color: #26262c;
+	border-left-style: solid;
+	border-left-width: 4px;
+	color: #adadb8;
+}
+.isPayingForwardContainer {
+	padding: 5px 0;
+	margin-left: 16px;
+}
+.isPayingForward .chatmessage{
+}
+
 .issubmessage .commenter{
 	position: relative;
 	top: 8px;

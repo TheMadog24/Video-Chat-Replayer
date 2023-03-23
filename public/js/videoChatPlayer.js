@@ -87,6 +87,14 @@ var regExSubadvance = new RegExp(
                         "(?<=" + regExSubadvanceFragments + "))", "i");
 // console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
 //             "(?<=" + regExSubResubFragments + "))");
+
+//Regex for "Paying Forward Gift" messages
+var regExPayingForwardGiftFragments = "\\b\\w+ is paying forward the Gift they got from \\b\\w+ to ";
+var regExPayingForwardGift = new RegExp(
+                        "((?=" + regExPayingForwardGiftFragments + ")|" + 
+                        "(?<=" + regExPayingForwardGiftFragments + "))", "i");
+// console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
+//             "(?<=" + regExSubResubFragments + "))");
             
 var regExSubResubTheyveFragments = "\\bThey've subscribed for \\d+ months(?:!|, currently on a \\d+ month streak!)";
 var regExSubResubTheyve = new RegExp(
@@ -2304,6 +2312,10 @@ function renderChatBody(comment, index) {
     
     return renderChatSub(comment, index);
   }
+  else if ( regExPayingForwardGift.test( comment.message.body )  ) {
+    
+    return renderPayingForwardGift(comment, index);
+  }
   else if ( regExSubadvance.test( comment.message.body )  ) {
     
     return renderChatAdvanceSub(comment, index);
@@ -2432,6 +2444,28 @@ function renderChatSub(comment, index) {
 
     // chatBodies.push( chatBody2 );
   }
+
+return chatBodies;
+}
+
+function renderPayingForwardGift(comment, index) {
+  var chatBodies = [];
+  comment.message["alt_fragments"] = [];
+
+  // comment.message.body;
+  let message = extractMessageFragments(comment);
+  
+  let isPayingForwardContainer = $("<div>").addClass("isPayingForwardContainer");
+    
+
+  let chatBody = $("<div>").addClass("chatbody no-time isPayingForward");
+  
+  // chatBody.append( makeUserBadges( comment ) );
+  
+	chatBody.append(isPayingForwardContainer);
+	isPayingForwardContainer.append(message);
+	chatBodies.push( chatBody );
+
 
 return chatBodies;
 }
