@@ -1962,6 +1962,9 @@ $(document).click(function(e) {
 	                jQuery.each(prefix[commentIndexNumber].message.user_badges, function (index, badge) {
 
 	                    var badgeID = badge["_id"];
+						if (!badgeID) {
+	                        return;
+	                    }
 	                    var badgeVersion = badge.version;
 	                    var badgeImagePrefix = "data:image/png;base64,";
 
@@ -1975,28 +1978,42 @@ $(document).click(function(e) {
 	                    // console.log("badges: " + JSON.stringify(badges));
 
 
-	                    imgSrc = badges.versions[badgeVersion];
-	                    // console.log("imgSrc: " + imgSrc);
+	                    if (badges.versions[badgeVersion].bytes) {
+	                        // console.log("It Has Extra Data");
 
-	                    var badgeVer = badge.version;
 
-	                    if (badgeVer === "1") {
-	                        badgeTitle = badges.name
-	                            // console.log("badgeTitle: " + badgeTitle);
+	                        imgSrc = badges.versions[badgeVersion].bytes;
+	                        // console.log("imgSrc: " + imgSrc);
+
+	                        var badgeVer = badge.version;
+
+	                        badgeTitle = badges.versions[badgeVersion].title;
+
 	                    } else {
-	                        badgeTitle = badges.name + " " + badgeVer;
-	                        // console.log("badgeTitle: " + badgeTitle);
+	                        // console.log("It Is Alone");
+
+	                        imgSrc = badges.versions[badgeVersion];
+	                        // console.log("imgSrc: " + imgSrc);
+
+	                        var badgeVer = badge.version;
+
+	                        if (badgeVer === "1") {
+	                            badgeTitle = badges.name
+	                                // console.log("badgeTitle: " + badgeTitle);
+	                        } else {
+	                            badgeTitle = badges.name + " " + badgeVer;
+	                            // console.log("badgeTitle: " + badgeTitle);
+	                        }
+
 	                    }
-						
-						
-						var badgebox = $("<div>").addClass("badgebox");
+
+	                    var badgebox = $("<div>").addClass("badgebox");
 
 	                    var badgeImg = $("<img>")
 	                        .attr("src", badgeImagePrefix + imgSrc)
 	                        .addClass("infobadge")
 	                        .attr("title", badgeTitle);
-							
-						
+
 	                    userBadges.append(badgebox);
 	                    badgebox.append(badgeImg);
 
@@ -2007,6 +2024,9 @@ $(document).click(function(e) {
 	                jQuery.each(prefix[commentIndexNumber].message.user_badges, function (index, badge) {
 
 	                    var badgeID = badge["_id"];
+	                    if (!badgeID) {
+	                        return;
+	                    }
 	                    var badgeVersion = badge.version;
 
 	                    // console.log("Badge ID: " + badgeID);
@@ -2928,6 +2948,7 @@ function extractMessageFragments(comment) {
 
   let message = $("<span>").addClass("chatmessage");
   //.text( comment.message.body );
+  // console.log(comment);
 
   // Expands message fragments to isolate and mark Cheers:
   //   Cheer is identified by: ( fragment.isCheer === true )
@@ -3707,73 +3728,64 @@ function makeUserBadges(comment) {
 		
 		jQuery.each(comment.message.user_badges, function (index, badge) {
 			
-			var badgeID = badge["_id"];
-			var badgeVersion = badge.version;
-			var badgeImagePrefix = "data:image/png;base64,";
 			
-			// console.log("Badge ID: " + badgeID);
-			// console.log("Badge Version: " + badgeVersion);
-			
-			var imgSrc;
-			var badgeTitle;
-			
-			var badges = emotesBadges[badgeID];
-			// console.log("badges: " + JSON.stringify(badges));
-			
-			
-			imgSrc = badges.versions[badgeVersion];
-			// console.log("imgSrc: " + imgSrc);
-			
-			var badgeVer = badge.version;
-			
-			if (badgeVer === "1") {
-				badgeTitle = badges.name
-				// console.log("badgeTitle: " + badgeTitle);
-			} else {
-				badgeTitle = badges.name + " " + badgeVer;
-				// console.log("badgeTitle: " + badgeTitle);
+
+		    var badgeID = badge["_id"];
+			// console.log(badge);
+			if (!badgeID){
+				return;
 			}
-			
-			
-			
-			
-			// if (typeof imgSrc === 'undefined') {
-				// // console.log("imgSrc undefined: " + imgSrc);
+		    var badgeVersion = badge.version;
+		    var badgeImagePrefix = "data:image/png;base64,";
+
+		    // console.log("Badge ID: " + badgeID);
+		    // console.log("Badge Version: " + badgeVersion);
+
+		    var imgSrc;
+		    var badgeTitle;
+
+		    var badges = emotesBadges[badgeID];
+		    // console.log("badges: " + JSON.stringify(badges));
+
+
+		    if (badges.versions[badgeVersion].bytes) {
+		        // console.log("It Has Extra Data");
 				
-				// if (typeof streamerBadgesJson === 'undefined' && typeof globalBadgesJson === 'undefined') {
-					// return;
-				// } else if (typeof streamerBadgesJson === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
-					// imgSrc = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
-				// } else {
-					// imgSrc = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].image_url_1x;
-				// }
+				
+
+		        imgSrc = badges.versions[badgeVersion].bytes;
+		        // console.log("imgSrc: " + imgSrc);
+
+		        var badgeVer = badge.version;
+
+		        badgeTitle = badges.versions[badgeVersion].title;
 				
 				
-				
-				// if (typeof badgeTitle === 'undefined') {
-					// if (typeof streamerBadgesJson === 'undefined' ||typeof streamerBadgesJson.badge_sets[badge["_id"]] === 'undefined' || typeof streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion] === 'undefined') {
-						// badgeTitle = globalBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
-					// } else {
-						// badgeTitle = streamerBadgesJson.badge_sets[badge["_id"]].versions[badgeVersion].title;
-					// }
-				// }				
-				
-				// var badgeImg = $("<img>")
-					// .attr("src", imgSrc)
-					// .addClass("badge-size")
-					// .attr("title", badgeTitle);
-				// userBadges.append(badgeImg);
-				
-			// } else {
-				
-				var badgeImg = $("<img>")
-					.attr("src", badgeImagePrefix + imgSrc)
-					.addClass("badge-size")
-					.attr("title", badgeTitle);
-				userBadges.append(badgeImg);
-				
-			// }
-			
+
+		    } else {
+		        // console.log("It Is Alone");
+
+		        imgSrc = badges.versions[badgeVersion];
+		        // console.log("imgSrc: " + imgSrc);
+
+		        var badgeVer = badge.version;
+
+		        if (badgeVer === "1") {
+		            badgeTitle = badges.name
+		                // console.log("badgeTitle: " + badgeTitle);
+		        } else {
+		            badgeTitle = badges.name + " " + badgeVer;
+		            // console.log("badgeTitle: " + badgeTitle);
+		        }
+
+		    }
+
+		    var badgeImg = $("<img>")
+		        .attr("src", badgeImagePrefix + imgSrc)
+		        .addClass("badge-size")
+		        .attr("title", badgeTitle);
+		    userBadges.append(badgeImg);
+
 		});
 		
 		
