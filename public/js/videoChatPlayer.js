@@ -109,6 +109,12 @@ var regExSubGift = new RegExp(
                         "((?=" + regExSubGiftFragments + ")|" + 
                         "(?<=" + regExSubGiftFragments + "))", "i");
 						
+//Regex for subgift in advance
+var regExSubGiftAdvanceFragments = "^.+ gifted \\d+ months of Tier \\d+ to \\w+[.]";
+var regExSubGiftAdvance = new RegExp(
+                        "((?=" + regExSubGiftAdvanceFragments + ")|" + 
+                        "(?<=" + regExSubGiftAdvanceFragments + "))", "i");
+						
 //Regex for submysterygift
 var regExSubMysteryGiftFragments = "^.+ is gifting [0-9]+\\b Tier [0-9]+\\b Subs to .+'s community!";
 var regExSubMysteryGift = new RegExp(
@@ -2344,6 +2350,10 @@ function renderChatBody(comment, index) {
 
     return rendersubgift(comment, index);
   }
+  else if ( regExSubGiftAdvance.test( comment.message.body )  ) {
+
+    return renderChatSubGiftAdvance(comment, index);
+  }
   else if ( regExContinueSub.test( comment.message.body )  ) {
 
     return rendersubgiftContinue(comment, index);
@@ -2486,85 +2496,6 @@ function renderPayingForwardGift(comment, index) {
 	isPayingForwardContainer.append(message);
 	chatBodies.push( chatBody );
 
-
-return chatBodies;
-}
-
-function renderChatAdvanceSub(comment, index) {
-  var chatBodies = [];
-  comment.message["alt_fragments"] = [];
-
-  // comment.message.body;
-  let message = extractMessageFragments(comment);
-  let messageSubBold = message[0].outerHTML.replace("Subscribed", "<strong>Subscribed</strong>");
-
-  let colorHex = comment.message.user_color;
-  let styles = { color: colorHex };
-
-  let player = $("<span>")
-    .addClass("commenter")
-    .css(styles)
-    .text(comment.commenter.display_name)
-	.attr("data-commentindex", index);
-  let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
-  
-
-  let chatBody = $("<div>").addClass("chatbody no-time issub issubmessage")
-        .css('border-left-color', accentColor);
-  
-  // chatBody.append( makeUserBadges( comment ) );
-  
-	if ( message.find(".prime").length ) {
-		let primeSub = $('<svg class="primeicon"><path class="primeSub" d="M18 5v8a2 2 0 0 1-2 2H4a2.002 2.002 0 0 1-2-2V5l4 3 4-4 4 4 4-3z"/></svg>');
-		chatBody.append(primeSub);
-	}
-	if ( message.find(".tier").length ) {
-		if (message.find(".tier").is(':contains("Tier 1")')){
-			let tier1Sub = $('<svg class="staricon"><path class="tierOneSub" d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77zz"/></svg>');
-			chatBody.append(tier1Sub);
-		}
-		if (message.find(".tier").is(':contains("Tier 2")')){
-			let tier2Sub = $('<svg class="staricon animated-tier-star animated-tier-star--tier-2 " viewBox="0 0 20 20" width="20" height="20" overflow="visible"><defs><linearGradient x1="0%" x2="100%" y1="0%" y2="100%" id="swipe-gradient"><stop offset="0%" stop-color="#9147ff"></stop><stop offset="100%" stop-color="#d1b3ff"></stop></linearGradient><clipPath id="star-mask" class="animated-tier-star__star-mask"><path d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77z"></path></clipPath></defs><g class="animated-tier-star__star"><path d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77z"></path></g><g width="20" height="20" class="animated-tier-star__swipe-mask" clip-path="url(#star-mask)"><g class="animated-tier-star__swipe-group"><rect class="animated-tier-star__swipe animated-tier-star__swipe--1" fill="url(#swipe-gradient)"></rect><rect class="animated-tier-star__swipe animated-tier-star__swipe--2" fill="url(#swipe-gradient)"></rect><rect class="animated-tier-star__swipe animated-tier-star__swipe--3" fill="url(#swipe-gradient)"></rect></g></g></svg>');
-			chatBody.append(tier2Sub);
-		}	
-		if (message.find(".tier").is(':contains("Tier 3")')) {
-			let tier3Sub = $('<svg class="staricon animated-tier-star animated-tier-star--tier-3 " viewBox="0 0 20 20" width="20" height="20" overflow="visible"><defs><linearGradient x1="0%" x2="100%" y1="0%" y2="100%" id="swipe-gradient"><stop offset="0%" stop-color="#9147ff"></stop><stop offset="100%" stop-color="#d1b3ff"></stop></linearGradient><clipPath id="star-mask" class="animated-tier-star__star-mask"><path d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77z"></path></clipPath></defs><g class="animated-tier-star__star"><path d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77z"></path></g><g width="20" height="20" class="animated-tier-star__swipe-mask" clip-path="url(#star-mask)"><g class="animated-tier-star__swipe-group"><rect class="animated-tier-star__swipe animated-tier-star__swipe--1" fill="url(#swipe-gradient)"></rect><rect class="animated-tier-star__swipe animated-tier-star__swipe--2" fill="url(#swipe-gradient)"></rect><rect class="animated-tier-star__swipe animated-tier-star__swipe--3" fill="url(#swipe-gradient)"></rect></g></g></svg>');
-			chatBody.append(tier3Sub);
-		}
-	}
-	chatBody.append(player);
-	chatBody.append(messageSubBold);
-	chatBodies.push( chatBody );
-
-  if ( comment.message.alt_fragments.length ) {
-    // Clone the existing comment, then replace the fragments with the alt_fragments:
-    var clonedComment = JSON.parse(JSON.stringify(comment));
-    clonedComment.message.fragments = comment.message.alt_fragments;
-	  // console.log(clonedComment);
-	
-	  let userComment = $("<span>").addClass("userComment");
-    
-    let msg2 = extractMessageFragments(clonedComment);
-
-    let player2 = $("<span>")
-      .addClass("commenter2")
-      .css(styles)
-      .text(clonedComment.commenter.display_name)
-	.attr("data-commentindex", index);
-    // let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
-
-    // let chatBody2 = $("<div>").addClass("chatbody issubmessage")
-            // .css('border-left-color', accentColor);
-			
-	  chatBody.append(userComment);
-
-    userComment.append( makeUserBadges( clonedComment ) );
-    userComment.append(player2);
-    userComment.append(messagePrefix);
-    userComment.append(msg2);
-
-    // chatBodies.push( chatBody2 );
-  }
 
 return chatBodies;
 }
@@ -2743,6 +2674,289 @@ function rendersubgift(comment, index) {
 		let channelText = msg.match(" Gift Subs in the channel!");
 	
 		let msgGiftTotal = msg.match("They have given ");
+	
+		let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+		let giftedTotal = $("<span>")
+      .addClass("giftmessagetotal")
+      .text(msgGiftTotal);
+	  
+		let giftednumber = $("<span>")
+      .addClass("giftednumber")
+      .text(giftedtotalnumber);
+	  
+		let toChannel = $("<span>")
+      .addClass("tochannel")
+      .text(channelText);
+
+		subgiftcontainer.append( giftedTotal );
+		subgiftcontainer.append( giftednumber );
+		subgiftcontainer.append( toChannel );
+		
+  }
+
+  return chatBodies;
+
+	// if (theyvemessage) {
+		
+	// 	let theyvecontainer = $("<span>").addClass("theyvecontainer");
+	// 	subgiftcontainer.append(theyvecontainer);
+		
+	// 	var msg = theyvemessage[0];
+	// 	console.log(msg);
+		
+	// 	let channelText = msg.match(" Gift Subs in the channel!");
+	
+	// 	let msgGiftTotal = msg.match("They have given ");
+	
+	// 	let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+	// 	let giftedTotal = $("<span>")
+	// 	.addClass("giftmessagetotal")
+	// 	.text(msgGiftTotal);
+	  
+	// 	let giftednumber = $("<span>")
+	// 	.addClass("giftednumber")
+	// 	.text(giftedtotalnumber);
+	  
+	// 	let toChannel = $("<span>")
+	// 	.addClass("tochannel")
+	// 	.text(channelText);
+
+	// 	theyvecontainer.append( giftedTotal );
+	// 	theyvecontainer.append( giftednumber );
+	// 	theyvecontainer.append( toChannel );
+		
+	// 	// theyvecontainer.append(restofmessage);		
+	// }
+	// return chatBody;
+
+}
+function renderChatAdvanceSub(comment, index) {
+  var chatBodies = [];
+
+  // comment.message.body;
+  let message = extractMessageFragments(comment);
+  
+  // let messageNameRemoved = message[0].outerHTML.replace(comment.commenter.display_name, "");
+  // let messageBold = message[0].outerHTML.replace("!", "</b>!").replace("sub to ", "sub to <b>");
+  let colorHex = comment.message.user_color;
+  let styles = { color: colorHex };
+
+  let player = $("<span>")
+    .addClass("commenter2")
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
+  let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+  
+  
+  // let workingmessage = comment.message.body;
+  let workingmessage = message[0].textContent;
+  workingmessage = workingmessage.replace("gifted ", " gifted ");
+  // console.log(workingmessage);
+  
+  // let theyvemessage = workingmessage.match("\They have given [0-9]{1,10} Gift Subs in the channel!");
+  // let theyveremoved = workingmessage.replace(theyvemessage, "").trim();
+  
+  
+  let middlemessageTEXT = workingmessage.match("\\ gifted \\d+ months of Tier \\d+ to \\w+", "");
+  let recievertext = workingmessage.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace("!", "").trim();
+  
+  let reciever = $("<span>")
+    .addClass("reciever")
+    .text(recievertext);
+  
+  let exclamation  = $("<span>")
+    .addClass("exclamation ")
+    .text("! ");
+	
+	
+  let middlemessage = $("<span>")
+    .addClass("middlemessage")
+    .text(middlemessageTEXT);
+	
+	// let restofmessage = $("<span>")
+    // .addClass("restofmessage")
+    // .text(theyvemessage);
+	
+	
+  
+  let subgiftcontainer = $("<div>").addClass("subgiftcontainer")
+
+  let chatBody = $("<div>").addClass("chatbody no-time issubgift issubmessage")
+        .css('border-left-color', accentColor);
+  // chatBody.append( makeUserBadges( comment ) );
+  // if (message.is(':contains("gifted a Tier")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
+	let subgift = $('<svg class="smallgifticon"><path class="subgift" fill-rule="evenodd" d="M16 6h2v6h-1v6H3v-6H2V6h2V4.793c0-2.507 3.03-3.762 4.803-1.99.131.131.249.275.352.429L10 4.5l.845-1.268a2.81 2.81 0 01.352-.429C12.969 1.031 16 2.286 16 4.793V6zM6 4.793V6h2.596L7.49 4.341A.814.814 0 006 4.793zm8 0V6h-2.596l1.106-1.659a.814.814 0 011.49.451zM16 8v2h-5V8h5zm-1 8v-4h-4v4h4zM9 8v2H4V8h5zm0 4H5v4h4v-4z" fill-rule="evenodd"/></svg>');
+	chatBody.append(subgift);
+	// }
+	// chatBody.append(player);
+	
+	chatBody.append(subgiftcontainer);
+	subgiftcontainer.append(player);
+	// subgiftcontainer.append(message);
+	subgiftcontainer.append(middlemessage);
+	subgiftcontainer.append(reciever);
+	subgiftcontainer.append(exclamation);
+
+	chatBodies.push( chatBody );
+
+  // If a mysteryGift has a Total Gifts component, then process that:
+  if ( comment.message.alt_fragments && comment.message.alt_fragments.length ) {
+    let fragment = comment.message.alt_fragments[0];
+
+    var msg = fragment.text;
+
+    // console.log(msg);
+		
+		let channelText = msg.match(" months in the channel!");
+	
+		let msgGiftTotal = msg.match("They've gifted ");
+	
+		let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+		let giftedTotal = $("<span>")
+      .addClass("giftmessagetotal")
+      .text(msgGiftTotal);
+	  
+		let giftednumber = $("<span>")
+      .addClass("giftednumber")
+      .text(giftedtotalnumber);
+	  
+		let toChannel = $("<span>")
+      .addClass("tochannel")
+      .text(channelText);
+
+		subgiftcontainer.append( giftedTotal );
+		subgiftcontainer.append( giftednumber );
+		subgiftcontainer.append( toChannel );
+		
+  }
+
+  return chatBodies;
+
+	// if (theyvemessage) {
+		
+	// 	let theyvecontainer = $("<span>").addClass("theyvecontainer");
+	// 	subgiftcontainer.append(theyvecontainer);
+		
+	// 	var msg = theyvemessage[0];
+	// 	console.log(msg);
+		
+	// 	let channelText = msg.match(" Gift Subs in the channel!");
+	
+	// 	let msgGiftTotal = msg.match("They have given ");
+	
+	// 	let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+	// 	let giftedTotal = $("<span>")
+	// 	.addClass("giftmessagetotal")
+	// 	.text(msgGiftTotal);
+	  
+	// 	let giftednumber = $("<span>")
+	// 	.addClass("giftednumber")
+	// 	.text(giftedtotalnumber);
+	  
+	// 	let toChannel = $("<span>")
+	// 	.addClass("tochannel")
+	// 	.text(channelText);
+
+	// 	theyvecontainer.append( giftedTotal );
+	// 	theyvecontainer.append( giftednumber );
+	// 	theyvecontainer.append( toChannel );
+		
+	// 	// theyvecontainer.append(restofmessage);		
+	// }
+	// return chatBody;
+
+}
+
+function renderChatSubGiftAdvance(comment, index) {
+  var chatBodies = [];
+  
+  // console.log(comment);
+
+  // comment.message.body;
+  let message = extractMessageFragments(comment);
+  // console.log(message);
+  
+  // let messageNameRemoved = message[0].outerHTML.replace(comment.commenter.display_name, "");
+  // let messageBold = message[0].outerHTML.replace("!", "</b>!").replace("sub to ", "sub to <b>");
+  let colorHex = comment.message.user_color;
+  let styles = { color: colorHex };
+
+  let player = $("<span>")
+    .addClass("commenter2")
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
+  let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+  
+  
+  // let workingmessage = comment.message.body;
+  let workingmessage = message[0].textContent;
+  console.log(workingmessage)
+  workingmessage = workingmessage.replace("gifted ", " gifted ");
+  console.log(workingmessage);
+  
+  // let theyvemessage = workingmessage.match("\They have given [0-9]{1,10} Gift Subs in the channel!");
+  // let theyveremoved = workingmessage.replace(theyvemessage, "").trim();
+  
+  
+  let middlemessageTEXT = workingmessage.match("\\ gifted \\d+ months of Tier \\d+ to ", "");
+  let recievertext = workingmessage.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace(".", "").trim();
+  console.log(middlemessageTEXT);
+  console.log("reciever: "+recievertext);
+  
+  let reciever = $("<span>")
+    .addClass("reciever")
+    .text(recievertext);
+  
+  let exclamation  = $("<span>")
+    .addClass("exclamation ")
+    .text(". ");
+	
+	
+  let middlemessage = $("<span>")
+    .addClass("middlemessage")
+    .text(middlemessageTEXT);
+	
+	// let restofmessage = $("<span>")
+    // .addClass("restofmessage")
+    // .text(theyvemessage);
+	
+	
+  
+  let subgiftcontainer = $("<div>").addClass("subgiftcontainer")
+
+  let chatBody = $("<div>").addClass("chatbody no-time issubgift issubmessage")
+        .css('border-left-color', accentColor);
+  // chatBody.append( makeUserBadges( comment ) );
+  // if (message.is(':contains("gifted a Tier")') && !message.is(':contains("subscribed with Prime")') && !message.is(':contains("subscribed at Tier")')){
+	let subgift = $('<svg class="smallgifticon"><path class="subgift" fill-rule="evenodd" d="M16 6h2v6h-1v6H3v-6H2V6h2V4.793c0-2.507 3.03-3.762 4.803-1.99.131.131.249.275.352.429L10 4.5l.845-1.268a2.81 2.81 0 01.352-.429C12.969 1.031 16 2.286 16 4.793V6zM6 4.793V6h2.596L7.49 4.341A.814.814 0 006 4.793zm8 0V6h-2.596l1.106-1.659a.814.814 0 011.49.451zM16 8v2h-5V8h5zm-1 8v-4h-4v4h4zM9 8v2H4V8h5zm0 4H5v4h4v-4z" fill-rule="evenodd"/></svg>');
+	chatBody.append(subgift);
+	// }
+	// chatBody.append(player);
+	
+	chatBody.append(subgiftcontainer);
+	subgiftcontainer.append(player);
+	// subgiftcontainer.append(message);
+	subgiftcontainer.append(middlemessage);
+	subgiftcontainer.append(reciever);
+	subgiftcontainer.append(exclamation);
+
+	chatBodies.push( chatBody );
+
+  // If a mysteryGift has a Total Gifts component, then process that:
+  if ( comment.message.alt_fragments && comment.message.alt_fragments.length ) {
+    let fragment = comment.message.alt_fragments[0];
+
+    var msg = fragment.text;
+
+    // console.log(msg);
+		
+		let channelText = msg.match(" in the channel!");
+	
+		let msgGiftTotal = msg.match("They've gifted ");
 	
 		let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
   
@@ -2980,6 +3194,9 @@ function extractMessageFragments(comment) {
     }
     else if ( fragment.isSubadvance ) {
       message.append( buildFragmentSubAdvance( fragment ) );
+    }
+    else if ( fragment.isSubGiftAdvance ) {
+      message.append( buildFragmentSubGiftAdvance( fragment ) );
     }
     else if ( fragment.isSubResubTheyve ) {
       message.append( buildFragmentSubResubTheyve( fragment ) );
@@ -3222,6 +3439,22 @@ function buildFragmentSubAdvance( fragment ) {
   return result;
 }
 
+function buildFragmentSubGiftAdvance( fragment ) {
+  var msg = fragment.text.trim();
+  
+  if ( msg.indexOf("Tier") > -1 ) {
+    msg = msg.replace("Tier 1", '<b class="tier tier1">Tier 1').replace(" for", "</b> for");
+    msg = msg.replace("Tier 2", '<b class="tier tier2">Tier 2').replace(" for", "</b> for");
+    msg = msg.replace("Tier 3", '<b class="tier tier3">Tier 3').replace(" for", "</b> for");
+  }
+  var result = $("<span>")
+      .addClass("subResub")
+      .html( msg );
+
+  //console.log("### buildFragmentSubResub (1444): msg=" + msg );
+  return result;
+}
+
 function buildFragmentSubResubTheyve( fragment ) {
   var msg = fragment.text.trim();
   msg = msg.replace( "for ", "for <b>")
@@ -3316,6 +3549,7 @@ function getExpandedMessageFragments( fragments, comment ) {
 	    if (regExBits.test(fragment.text) || regExCheers.test(fragment.text) ||
 	        regExSubResub.test(fragment.text) ||
 	        regExSubGift.test(fragment.text) ||
+	        regExSubGiftAdvance.test(fragment.text) ||
 	        regExSubMysteryGift.test(fragment.text) ||
 	        regExSubadvance.test(fragment.text)) {
 
@@ -3390,6 +3624,20 @@ function getExpandedMessageFragments( fragments, comment ) {
 
 	                isSubGift = true;
 	                results.push(newFragment);
+	            } else if (regExSubGiftAdvance.test(splitText)) {
+					// console.log(splitText);
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                // console.log(splitText);
+					splitText = splitText.charAt(0) + splitText.slice(1);
+	                newFragment["text"] = splitText;
+
+	                newFragment["isSubGiftAdvance"] = true;
+
+	                isSubGift = true;
+					// console.log(newFragment);
+	                results.push(newFragment);
 	            } else if (isSubGift) {
 	                newFragment["isSubGiftTotalGifts"] = true;
 
@@ -3451,6 +3699,7 @@ function getExpandedMessageFragments( fragments, comment ) {
 	    if (regExCheers.test(fragment.text) ||
 	        regExSubResub.test(fragment.text) ||
 	        regExSubGift.test(fragment.text) ||
+	        regExSubGiftAdvance.test(fragment.text) ||
 	        regExSubMysteryGift.test(fragment.text) ||
 	        regExSubadvance.test(fragment.text)) {
 
@@ -3518,6 +3767,17 @@ function getExpandedMessageFragments( fragments, comment ) {
 	                newFragment["text"] = splitText;
 
 	                newFragment["isSubGift"] = true;
+
+	                isSubGift = true;
+	                results.push(newFragment);
+	            } else if (regExSubGiftAdvance.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                splitText = splitText.charAt(0) + splitText.slice(1);
+	                newFragment["text"] = splitText;
+
+	                newFragment["isSubGiftAdvance"] = true;
 
 	                isSubGift = true;
 	                results.push(newFragment);
@@ -3616,6 +3876,14 @@ function processFragmentsSplitText( sourceText ) {
 
       } else if (regExSubGift.test(sourceText)) {
           var s = sourceText.split(regExSubGift).filter(Boolean);
+          splits.push(s[0].trim());
+          if (s.length > 1) {
+              splits = splits.concat(s[1].trim());
+          }
+      } else if (regExSubGiftAdvance.test(sourceText)) {
+		  // console.log(sourceText);
+          var s = sourceText.split(regExSubGiftAdvance).filter(Boolean);
+		  // console.log(s);
           splits.push(s[0].trim());
           if (s.length > 1) {
               splits = splits.concat(s[1].trim());
