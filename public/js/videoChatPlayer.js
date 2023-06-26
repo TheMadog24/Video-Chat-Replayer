@@ -660,15 +660,31 @@ function localFileVideoPlayer() {
 	})
   }
   
+
 var saveVideo = setInterval(saveLocalVideoTime, 5000);
 function saveLocalVideoTime() {
-    // console.log("Saving Video Time");
+
+    var videoUniqueID = currentFile.name + currentFile.size;
+    localstoragevidID = localStorage.getItem(videoUniqueID);
+
+    var savedtime = localstoragevidID;
+
     var currentTime = videoNode.currentTime;
+    // console.log("savedtime: " + savedtime);
+    // console.log("currentTime: " + currentTime);
+
+    // console.log("Saving Video Time");
+
     if ($("#videoPlayer")[0].readyState === 4) {
         if (!iscontinuetimeOption) {
-            // console.log("saving");
-            var videoUniqueID = currentFile.name + currentFile.size;
-            localStorage.setItem(videoUniqueID, currentTime);
+            if (currentTime == savedtime) {
+                // console.log("Not Saving, Same Time already Exists");
+                return;
+            } else {
+                // console.log("saving");
+                var videoUniqueID = currentFile.name + currentFile.size;
+                localStorage.setItem(videoUniqueID, currentTime);
+            }
         }
     }
 }
