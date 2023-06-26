@@ -40,11 +40,11 @@ var twitchEmoticonsUrl =
   
   //Chat Badges Links
   //Global
-var twitchGlobalBadgeUrl =
-  "https://badges.twitch.tv/v1/badges/global/display";
-  //Channel
-var twitchChannelBadgeUrl =
-  "https://badges.twitch.tv/v1/badges/channels/{{streamerId}}/display";
+// var twitchGlobalBadgeUrl =
+  // "https://badges.twitch.tv/v1/badges/global/display";
+  // // Channel
+// var twitchChannelBadgeUrl =
+  // "https://badges.twitch.tv/v1/badges/channels/{{streamerId}}/display";
   
 var maxChatMessages = 150;
 
@@ -661,7 +661,7 @@ function localFileVideoPlayer() {
   }
   
 
-var saveVideo = setInterval(saveLocalVideoTime, 5000);
+
 function saveLocalVideoTime() {
 
     var videoUniqueID = currentFile.name + currentFile.size;
@@ -1696,7 +1696,9 @@ $(document).click(function(e) {
 	  barSelectorparams();
 	  $("#selectVideo").hide();
 	  
-	  saveVideo;
+	  console.log("Video Ready");
+	  
+	  var saveVideo = setInterval(saveLocalVideoTime, 5000);
 	  
 	  var videoUniqueID = currentFile.name + currentFile.size;
 	  localstoragevidID = localStorage.getItem(videoUniqueID);
@@ -2126,16 +2128,16 @@ $(document).click(function(e) {
 
  function loadBadgesJson(chatJson) {
 	var streamerID = chatJson.streamer.id;
-  $.getJSON(twitchGlobalBadgeUrl, function ( data) {
-     globalBadgesJson = data;
-	 console.log("Global Badges URL: " + twitchGlobalBadgeUrl);
-   });
+  // $.getJSON(twitchGlobalBadgeUrl, function ( data) {
+     // globalBadgesJson = data;
+	 // console.log("Global Badges URL: " + twitchGlobalBadgeUrl);
+   // });
    
-   var streamerBadgesURL = twitchChannelBadgeUrl.replace("{{streamerId}}", streamerID);
-   $.getJSON(streamerBadgesURL, function (data) {
-     streamerBadgesJson = data;
-	 console.log("Channel Badges URL: " + streamerBadgesURL);
-   });
+   // var streamerBadgesURL = twitchChannelBadgeUrl.replace("{{streamerId}}", streamerID);
+   // $.getJSON(streamerBadgesURL, function (data) {
+     // streamerBadgesJson = data;
+	 // console.log("Channel Badges URL: " + streamerBadgesURL);
+   // });
 }
 
 	//Video Chapters
