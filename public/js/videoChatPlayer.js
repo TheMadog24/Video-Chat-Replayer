@@ -1971,7 +1971,7 @@ $(document).click(function(e) {
 	    } else {
 	        var userBadges = $("<span>").addClass("user-info-badges");
 	        // console.log("Making Badges!");
-	        var url = twitchGlobalBadgeUrl
+	        // var url = twitchGlobalBadgeUrl
 	            // .replace("{{id}}", id)
 	            // var url = twitchEmoticonsUrl
 	            // .replace("{{format}}", "static")
@@ -3998,7 +3998,7 @@ function makeUserBadges(comment) {
 		// console.log("user_badges for user " + comment.commenter.display_name + " :" + comment.message.user_badges);
 		var userBadges = $("<span>").addClass("user-badges");
 		// console.log("Making Badges!");
-		var url = twitchGlobalBadgeUrl
+		// var url = twitchGlobalBadgeUrl
 		// .replace("{{id}}", id)
 		// var url = twitchEmoticonsUrl
 		// .replace("{{format}}", "static")

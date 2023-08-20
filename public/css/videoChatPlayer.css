@@ -761,6 +761,7 @@ video {
 	clip-path: polygon(0px 0px, 100% 50%, 0% 100%);
     background: #e5e5e5;
 	z-index: 97;
+	opacity: 50%;
 }
 
 
@@ -781,7 +782,7 @@ video {
     transition: clip-path .3s ease;
 }
 .play-button-before {
-    clip-path: polygon(0 0, 50% 25%, 50% 75%, 0% 100%);
+    clip-path: polygon(0% 0%, calc(50% + 0.375px) 25%, calc(50% + 0.375px) 75%, 0% 100%);
     background: #ffffff;
 }
 .play-button-after {
