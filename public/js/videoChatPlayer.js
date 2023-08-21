@@ -162,9 +162,10 @@ function getVideoMetadata() {
 	var videoDatajson;
 	
 	const onChangeFile = (mediainfo) => {
-		// console.log("Chapters");
+		// console.log("Starting");
 		const file = fileinput.files[0]
 		if (file) {
+			// console.log("Looking For Chapters");
 			removeCurrentChapter();
 			window.setTimeout(function () {
 				$("#message").text("Looking for Chapters...").css({"background-color": "yellow", "color": "black"});
@@ -204,19 +205,24 @@ function getVideoMetadata() {
 	
 
 	MediaInfo({
-		format: 'JSON',
-		locateFile: (path, prefix) => prefix + path, // Make sure WASM file is loaded from CDN location
-	},
-		(mediainfo) => {
-	fileinput.addEventListener('change', () => onChangeFile(mediainfo))
+		format: 'JSON'
+	}, (mediainfo) => {
+		fileinput.removeAttribute('disabled')
+		fileinput.addEventListener('change', () => onChangeFile(mediainfo))
 	})
-
+	
+	
 	function saveResults(videoMetadata) {
+		// console.log("Saving Chapters");
+		// console.log(videoMetadata);
 		videoDatajson = JSON.parse( videoMetadata );
+		// console.log(videoDatajson);
 	}
 	
 	
 	function extractChapters() { 
+	// console.log("Extracting Chapters");
+	// console.log(videoDatajson.media.track[4]);
 		if (typeof videoDatajson.media.track[4] === `undefined`) {
 			$("#chapters").hide();
 			$("#message").text("No Chapters Found").css({"background-color": "red", "color": "white"}).delay(2000).fadeOut(5000);
