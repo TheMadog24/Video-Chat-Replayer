@@ -77,6 +77,7 @@ var regExSubResubFragments = "\\b\\w+ subscribed (?:with Prime|at Tier \\d+)\\."
 var regExSubResub = new RegExp(
                         "((?=" + regExSubResubFragments + ")|" + 
                         "(?<=" + regExSubResubFragments + "))", "i");
+						// console.log(regExSubResub);
 // console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
 //             "(?<=" + regExSubResubFragments + "))");
 
@@ -3345,6 +3346,7 @@ function buildFragmentBits( fragment ) {
   // console.log("bitsFilterMatch: "+ bitsFilterMatch);
   
   var pattern = new RegExp(bitsFilterMatch, "ig");
+  // console.log(pattern);
   
   var amount = cheer.replace(pattern, "");
   // console.log("amount: "+ amount);
@@ -3367,8 +3369,16 @@ function buildFragmentBits( fragment ) {
       newcheeramount = 100000;
     };
 	
+	var bitemote = null;
+	$.each(bitsArray, function (key, value) {
+	    if ( type && type.length > 0 && key.toLowerCase() === type[0].toLowerCase() ) {
+	        bitemote = value;
+	        return true;
+	    }
+	})
 	
-	var bitemote = bitsArray[type];
+	// console.log("bitsArray: "+ JSON.stringify(bitsArray, null, 4));
+	// var bitemote = bitsArray[type];
 	// console.log("bitemote: "+JSON.stringify(bitemote));
 	
 	var version = newcheeramount;
