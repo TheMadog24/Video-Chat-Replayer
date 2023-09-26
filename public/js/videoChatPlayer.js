@@ -411,6 +411,7 @@ function localFileVideoPlayer() {
 
   var playSelectedFile = function (event) {
     var file = this.files[0];
+	document.title = file.name.replace(/\.[^/.]+$/, "");
 	currentFile = file;
     var type = file.type;
 
