@@ -715,7 +715,7 @@ function saveLocalVideoTime() {
         chatPos < len &&
         chatPos > 0 &&
         currentTime <
-          (chatJson.comments.at(chatPos).content_offset_seconds + +chatOffsetAdjustment)
+          (chatJson.comments.at(chatPos).content_offset_seconds - +chatJson.video.start + +chatOffsetAdjustment)
       ) {
         chatPos--;
       }
@@ -725,7 +725,7 @@ function saveLocalVideoTime() {
         chatPos + 1 < len &&
         chatPos + 1 >= 0 &&
         currentTime >
-          (chatJson.comments.at(chatPos + 1).content_offset_seconds + +chatOffsetAdjustment)
+          (chatJson.comments.at(chatPos + 1).content_offset_seconds - +chatJson.video.start + +chatOffsetAdjustment)
       ) {
         chatPos++;
       }
@@ -2151,7 +2151,11 @@ $(document).click(function(e) {
 	function loadVideoChapters(chatJson) {
 
 	    var chapters = chatJson.video.chapters;
-		// console.log(chapters);
+	    var timeOffsetStart = +chatJson.video.start * 1000;
+	    var timeOffsetEnd = +chatJson.video.end * 1000;
+	    // console.log("timeOffset: "+timeOffset);
+	    // console.log(chapters);
+		
 
 	        if (chapters.length === 0) {
 	            $("#message").text("No Chapters Found").css({"background-color": "red", "color": "white"}).delay(2000).fadeOut(5000);
@@ -2165,14 +2169,20 @@ $(document).click(function(e) {
 					// console.log(chapter.gameDisplayName);
 					
 					var chapName = chapter.gameDisplayName;
-					var ms = chapter.startMilliseconds;
-					var chapTimeSeconds = convertToSeconds(ms);
-					var chapImg = chapter.gameBoxArtUrl;
+					var ms = chapter.startMilliseconds - timeOffsetStart;
+					// console.log("ms: "+ms);
+					if (ms<0 || ms>+timeOffsetEnd){
+						return;
+					} else {
+					    var chapTimeSeconds = convertToSeconds(ms);
+					    var chapImg = chapter.gameBoxArtUrl;
+
+					    var ChaptTime = convertChapterTime(ms);
+					    // console.log(chapName + " - " + ChaptTime + " - " + chapTimeSeconds);
+
+					    setChapterMenu(chapName, ChaptTime, chapTimeSeconds, chapImg);
+					}
 					
-					var ChaptTime = convertChapterTime(ms);
-					// console.log(chapName+" - "+ChaptTime+" - "+chapTimeSeconds);
-					
-					setChapterMenu(chapName, ChaptTime, chapTimeSeconds, chapImg);
 					
 	            });
 				
@@ -2184,6 +2194,9 @@ $(document).click(function(e) {
 
 		//adds entries to the chapter menu.
 	    function setChapterMenu(chapName, ChaptTime, chapTimeSeconds, chapImg) {
+			if (ChaptTime<0){
+				return;
+			} else {
 	        // let chatTime = $("<div>")
 	        // .addClass("chattime")
 	        // .attr("data-time", timeSeconds.toString())
@@ -2218,6 +2231,8 @@ $(document).click(function(e) {
 	        chapTextContainer.append(chapterName);
 	        chapTextContainer.append(chapterTime);
 	    }
+		}
+		
 		
 		
 
@@ -2285,7 +2300,7 @@ let TIME_MINUTE = 60;
 let TIME_HOUR = TIME_MINUTE * 60;
 
 function renderChatTime(comment) {
-  let timeSeconds = comment.content_offset_seconds + +chatOffsetAdjustment;
+  let timeSeconds = comment.content_offset_seconds - +chatJson.video.start + +chatOffsetAdjustment;
 
   let timeHtml = formatElapsedTime(timeSeconds);
 
@@ -2919,9 +2934,9 @@ function renderChatSubGiftAdvance(comment, index) {
   
   // let workingmessage = comment.message.body;
   let workingmessage = message[0].textContent;
-  console.log(workingmessage)
+  // console.log(workingmessage)
   workingmessage = workingmessage.replace("gifted ", " gifted ");
-  console.log(workingmessage);
+  // console.log(workingmessage);
   
   // let theyvemessage = workingmessage.match("\They have given [0-9]{1,10} Gift Subs in the channel!");
   // let theyveremoved = workingmessage.replace(theyvemessage, "").trim();
@@ -2929,8 +2944,8 @@ function renderChatSubGiftAdvance(comment, index) {
   
   let middlemessageTEXT = workingmessage.match("\\ gifted \\d+ months of Tier \\d+ to ", "");
   let recievertext = workingmessage.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace(".", "").trim();
-  console.log(middlemessageTEXT);
-  console.log("reciever: "+recievertext);
+  // console.log(middlemessageTEXT);
+  // console.log("reciever: "+recievertext);
   
   let reciever = $("<span>")
     .addClass("reciever")
