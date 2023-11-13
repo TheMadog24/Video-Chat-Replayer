@@ -126,6 +126,11 @@ var regExContinueSubFragment = "^.+ is continuing the Gift Sub they got from ";
 var regExContinueSub = new RegExp(
                         "((?=" + regExContinueSubFragment + ")|" + 
                         "(?<=" + regExContinueSubFragment + "))", "i");
+//Regex for converted Sub
+var regExConvertedSubFragment = "^.+ converted from a (Prime|Tier \\d) sub to a (Prime|Tier \\d) sub!";
+var regExConvertedSub = new RegExp(
+                        "((?=" + regExConvertedSubFragment + ")|" + 
+                        "(?<=" + regExConvertedSubFragment + "))", "i");
 
 
 var globalBadgesJson;
@@ -445,10 +450,18 @@ function localFileVideoPlayer() {
     var timingLoadStart = window.performance.now();
     reader.onload = function () {
       chatJson = JSON.parse(reader.result);
+	  if (chatJson.video.title) {
+		  // console.log("Set Video Title");
+		  document.title = chatJson.video.title;
+	  } else {
+		  // console.log("Reset Video Title");
+		  document.title = "Video Chat Replayer";
+		}
       initChat(timingLoadStart);
 	  loadBadgesJson(chatJson);
 	  loadVideoChapters(chatJson);
-    };
+	  
+	  };
 
     reader.readAsText(input.files[0]);
   };
@@ -2391,6 +2404,10 @@ function renderChatBody(comment, index) {
 
     return rendersubgift(comment, index);
   }
+  else if ( regExConvertedSub.test( comment.message.body )  ) {
+
+    return renderConvertedSub(comment, index);
+  }
   else if ( regExSubGiftAdvance.test( comment.message.body )  ) {
 
     return renderChatSubGiftAdvance(comment, index);
@@ -2773,6 +2790,127 @@ function rendersubgift(comment, index) {
 	// return chatBody;
 
 }
+function renderConvertedSub(comment, index) {
+	// console.log("ConvertedSub");
+  var chatBodies = [];
+  comment.message["alt_fragments"] = [];
+
+  // comment.message.body;
+  // console.log("Message: "+JSON.stringify(comment));
+  let message = extractMessageFragments(comment);
+  let messageSubBold = message[0].outerHTML.replace("converted", "<strong>Converted</strong>");
+
+  let colorHex = comment.message.user_color;
+  let styles = { color: colorHex };
+
+  let player = $("<span>")
+    .addClass("commenter")
+    .css(styles)
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
+	
+  let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+  
+  
+  // let workingmessage = comment.message.body;
+  let workingmessage = message[0].textContent;
+  // workingmessage - "Keeks7 converted from a Prime sub to a Tier 1 sub!"
+  workingmessage = workingmessage.replace("converted from a ", " converted from a ");
+  
+  
+  // workingmessage - "Keeks7  converted from a Prime sub to a Tier 1 sub!"
+  let convertedFrom = workingmessage.match(" converted from a ", "");
+  // convertedFrom - " converted from a "
+  let toAMessage = workingmessage.match(" to a ", "");
+  // convertedFrom - " to a "
+  let subType1Message = workingmessage.replace(comment.commenter.display_name, "").replace(convertedFrom, "").replace("!", "").replace( new RegExp("\\ sub to a (Prime|Tier \\d) sub","gm"), "").trim();
+  // subType1 - "Prime"
+  let subType2Message = workingmessage.replace(comment.commenter.display_name, "").replace(convertedFrom, "").replace("!", "").replace( new RegExp("\\ (Prime|Tier \d) sub to a ","gm"), "").replace(" sub","").trim();
+  // subType1 - "Tier 1"
+  
+  let subType1 = $("<span>")
+    .addClass("reciever")
+    .text(subType1Message);
+  
+  let subType2 = $("<span>")
+    .addClass("reciever")
+    .text(subType2Message);
+  
+  let endingSub = $("<span>")
+    .addClass("middlemessage")
+    .text(" sub");
+  
+  let exclamation  = $("<span>")
+    .addClass("exclamation ")
+    .text("! ");
+	
+	
+  let middlemessage1 = $("<span>")
+    .addClass("middlemessage")
+    .text(convertedFrom);
+	
+  let middlemessage2 = $("<span>")
+    .addClass("middlemessage")
+    .text(toAMessage);
+	
+	// let restofmessage = $("<span>")
+    // .addClass("restofmessage")
+    // .text(theyvemessage);
+  
+
+  let chatBody = $("<div>").addClass("chatbody no-time issub issubmessage")
+      .css('border-left-color', accentColor);
+
+  if (subType2Message.includes("Tier 1")) {
+      let tier1Sub = $('<svg class="staricon"><path class="tierOneSub" d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77zz"/></svg>');
+      chatBody.append(tier1Sub);
+  }
+  if (subType2Message.includes("Tier 2")) {
+      let tier2Sub = $('<svg class="staricon animated-tier-star animated-tier-star--tier-2 " viewBox="0 0 20 20" width="20" height="20" overflow="visible"><defs><linearGradient x1="0%" x2="100%" y1="0%" y2="100%" id="swipe-gradient"><stop offset="0%" stop-color="#9147ff"></stop><stop offset="100%" stop-color="#d1b3ff"></stop></linearGradient><clipPath id="star-mask" class="animated-tier-star__star-mask"><path d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77z"></path></clipPath></defs><g class="animated-tier-star__star"><path d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77z"></path></g><g width="20" height="20" class="animated-tier-star__swipe-mask" clip-path="url(#star-mask)"><g class="animated-tier-star__swipe-group"><rect class="animated-tier-star__swipe animated-tier-star__swipe--1" fill="url(#swipe-gradient)"></rect><rect class="animated-tier-star__swipe animated-tier-star__swipe--2" fill="url(#swipe-gradient)"></rect><rect class="animated-tier-star__swipe animated-tier-star__swipe--3" fill="url(#swipe-gradient)"></rect></g></g></svg>');
+      chatBody.append(tier2Sub);
+  }
+  if (subType2Message.includes("Tier 3")) {
+      let tier3Sub = $('<svg class="staricon animated-tier-star animated-tier-star--tier-3 " viewBox="0 0 20 20" width="20" height="20" overflow="visible"><defs><linearGradient x1="0%" x2="100%" y1="0%" y2="100%" id="swipe-gradient"><stop offset="0%" stop-color="#9147ff"></stop><stop offset="100%" stop-color="#d1b3ff"></stop></linearGradient><clipPath id="star-mask" class="animated-tier-star__star-mask"><path d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77z"></path></clipPath></defs><g class="animated-tier-star__star"><path d="M8.944 2.654c.406-.872 1.706-.872 2.112 0l1.754 3.77 4.2.583c.932.13 1.318 1.209.664 1.853l-3.128 3.083.755 4.272c.163.92-.876 1.603-1.722 1.132L10 15.354l-3.579 1.993c-.846.47-1.885-.212-1.722-1.132l.755-4.272L2.326 8.86c-.654-.644-.268-1.723.664-1.853l4.2-.583 1.754-3.77z"></path></g><g width="20" height="20" class="animated-tier-star__swipe-mask" clip-path="url(#star-mask)"><g class="animated-tier-star__swipe-group"><rect class="animated-tier-star__swipe animated-tier-star__swipe--1" fill="url(#swipe-gradient)"></rect><rect class="animated-tier-star__swipe animated-tier-star__swipe--2" fill="url(#swipe-gradient)"></rect><rect class="animated-tier-star__swipe animated-tier-star__swipe--3" fill="url(#swipe-gradient)"></rect></g></g></svg>');
+      chatBody.append(tier3Sub);
+  }
+	chatBody.append(player);
+	chatBody.append(messageSubBold);
+	chatBodies.push( chatBody );
+
+  if ( comment.message.alt_fragments.length ) {
+    // Clone the existing comment, then replace the fragments with the alt_fragments:
+    var clonedComment = JSON.parse(JSON.stringify(comment));
+    clonedComment.message.fragments = comment.message.alt_fragments;
+	  // console.log(clonedComment);
+	
+	  let userComment = $("<span>").addClass("userComment");
+    
+    let msg2 = extractMessageFragments(clonedComment);
+
+    let player2 = $("<span>")
+      .addClass("commenter2")
+      .css(styles)
+      .text(clonedComment.commenter.display_name)
+	.attr("data-commentindex", index);
+    // let messagePrefix = $("<span>").addClass("messagePrefix").text(":");
+
+    // let chatBody2 = $("<div>").addClass("chatbody issubmessage")
+            // .css('border-left-color', accentColor);
+			
+	  chatBody.append(userComment);
+
+    userComment.append( makeUserBadges( clonedComment ) );
+    userComment.append(player2);
+    userComment.append(messagePrefix);
+    userComment.append(msg2);
+
+    // chatBodies.push( chatBody2 );
+  }
+
+return chatBodies;
+
+}
+
 function renderChatAdvanceSub(comment, index) {
   var chatBodies = [];
 
@@ -3233,6 +3371,9 @@ function extractMessageFragments(comment) {
     else if ( fragment.isSubResub ) {
       message.append( buildFragmentSubResub( fragment ) );
     }
+    else if ( fragment.isConvertedSub ) {
+      message.append( buildFragmentConvertedSub( fragment ) );
+    }
     else if ( fragment.isSubadvance ) {
       message.append( buildFragmentSubAdvance( fragment ) );
     }
@@ -3473,6 +3614,22 @@ function buildFragmentSubResub( fragment ) {
   return result;
 }
 
+function buildFragmentConvertedSub( fragment ) {
+  var msg = fragment.text.trim();
+  msg = msg.replace( "Prime", '<b class="prime">Prime</b>');
+  if ( msg.indexOf("Tier") > -1 ) {
+    msg = msg.replace("Tier 1", '<b class="tier tier1">Tier 1</b>');
+    msg = msg.replace("Tier 2", '<b class="tier tier2">Tier 2</b>');
+    msg = msg.replace("Tier 3", '<b class="tier tier3">Tier 3</b>');
+  }
+  var result = $("<span>")
+      .addClass("subResub")
+      .html( msg );
+
+  // console.log("### buildFragmentSubResub (1444): msg=" + msg );
+  return result;
+}
+
 function buildFragmentSubAdvance( fragment ) {
   var msg = fragment.text.trim();
   
@@ -3599,6 +3756,7 @@ function getExpandedMessageFragments( fragments, comment ) {
 	    if (regExBits.test(fragment.text) || regExCheers.test(fragment.text) ||
 	        regExSubResub.test(fragment.text) ||
 	        regExSubGift.test(fragment.text) ||
+	        regExConvertedSub.test(fragment.text) ||
 	        regExSubGiftAdvance.test(fragment.text) ||
 	        regExSubMysteryGift.test(fragment.text) ||
 	        regExSubadvance.test(fragment.text)) {
@@ -3673,6 +3831,18 @@ function getExpandedMessageFragments( fragments, comment ) {
 	                newFragment["isSubGift"] = true;
 
 	                isSubGift = true;
+	                results.push(newFragment);
+	            } else if (regExConvertedSub.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                splitText = splitText.charAt(0) + splitText.slice(1);
+					
+					// console.log("SplitText: "+splitText);
+	                newFragment["text"] = splitText;
+
+	                newFragment["isConvertedSub"] = true;
+
 	                results.push(newFragment);
 	            } else if (regExSubGiftAdvance.test(splitText)) {
 					// console.log(splitText);
@@ -3749,6 +3919,7 @@ function getExpandedMessageFragments( fragments, comment ) {
 	    if (regExCheers.test(fragment.text) ||
 	        regExSubResub.test(fragment.text) ||
 	        regExSubGift.test(fragment.text) ||
+	        regExConvertedSub.test(fragment.text) ||
 	        regExSubGiftAdvance.test(fragment.text) ||
 	        regExSubMysteryGift.test(fragment.text) ||
 	        regExSubadvance.test(fragment.text)) {
@@ -3817,6 +3988,18 @@ function getExpandedMessageFragments( fragments, comment ) {
 	                newFragment["text"] = splitText;
 
 	                newFragment["isSubGift"] = true;
+
+	                isSubGift = true;
+	                results.push(newFragment);
+	            } else if (regExConvertedSub.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                splitText = splitText.charAt(0) + splitText.slice(1);
+	                newFragment["text"] = splitText;
+					// console.log("splitText: "+splitText);
+
+	                newFragment["isConvertedSub"] = true;
 
 	                isSubGift = true;
 	                results.push(newFragment);
@@ -3958,6 +4141,12 @@ function processFragmentsSplitText( sourceText ) {
 
       } else if (regExSubGift.test(sourceText)) {
           var s = sourceText.split(regExSubGift).filter(Boolean);
+          splits.push(s[0].trim());
+          if (s.length > 1) {
+              splits = splits.concat(s[1].trim());
+          }
+      } else if (regExConvertedSub.test(sourceText)) {
+          var s = sourceText.split(regExConvertedSub).filter(Boolean);
           splits.push(s[0].trim());
           if (s.length > 1) {
               splits = splits.concat(s[1].trim());
