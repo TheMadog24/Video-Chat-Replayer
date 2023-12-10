@@ -131,6 +131,11 @@ var regExConvertedSubFragment = "^.+ converted from a (Prime|Tier \\d) sub to a 
 var regExConvertedSub = new RegExp(
                         "((?=" + regExConvertedSubFragment + ")|" + 
                         "(?<=" + regExConvertedSubFragment + "))", "i");
+//Regex for Raid
+var regExRaidFragment = "^.+ raiders from .+ have joined! ";
+var regExRaid = new RegExp(
+                        "((?=" + regExRaidFragment + ")|" + 
+                        "(?<=" + regExRaidFragment + "))", "i");
 
 
 var globalBadgesJson;
@@ -2404,6 +2409,10 @@ function renderChatBody(comment, index) {
 
     return rendersubgift(comment, index);
   }
+  else if ( regExRaid.test( comment.message.body )  ) {
+
+    return renderRaid(comment, index);
+  }
   else if ( regExConvertedSub.test( comment.message.body )  ) {
 
     return renderConvertedSub(comment, index);
@@ -2455,6 +2464,79 @@ function renderChatBody(comment, index) {
   return chatBodies;
 }
 
+
+function renderRaid(comment, index) {
+  var chatBodies = [];
+
+  // comment.message.body;
+  let message = extractMessageFragments(comment);
+  console.log(message);
+  let messageNumber = message[0].textContent.replace(" raiders from  have joined!", "");
+  
+  let colorHex = comment.message.user_color;
+  let styles = { color: colorHex };
+
+  let player = $("<span>")
+    .addClass("commenter2")
+    .text(comment.commenter.display_name)
+	.attr("data-commentindex", index);
+	
+  let raidMessage = $("<span>")
+    .addClass("middlemessage")
+    .text(" is raiding with a party of ");
+	
+  let raidEndNumber = $("<span>")
+    .addClass("messageNumber")
+    .text(messageNumber)
+  
+
+  let isPayingForwardContainer = $("<div>").addClass("isPayingForwardContainer")
+
+  let chatBody = $("<div>").addClass("chatbody no-time issubgift issubmessage")
+        .css('border-left-color', accentColor);
+  
+	chatBody.append(isPayingForwardContainer);
+	isPayingForwardContainer.append(player);
+	isPayingForwardContainer.append(raidMessage);
+	isPayingForwardContainer.append(raidEndNumber);
+
+	chatBodies.push( chatBody );
+
+  // If a mysteryGift has a Total Gifts component, then process that:
+  if ( comment.message.alt_fragments && comment.message.alt_fragments.length ) {
+    let fragment = comment.message.alt_fragments[0];
+
+    var msg = fragment.text;
+
+    // console.log(msg);
+		
+		let channelText = msg.match(" Gift Subs in the channel!");
+	
+		let msgGiftTotal = msg.match("They have given ");
+	
+		let giftedtotalnumber = msg.replace(msgGiftTotal , "").replace(channelText , "");
+  
+		let giftedTotal = $("<span>")
+      .addClass("giftmessagetotal")
+      .text(msgGiftTotal);
+	  
+		let giftednumber = $("<span>")
+      .addClass("giftednumber")
+      .text(giftedtotalnumber);
+	  
+		let toChannel = $("<span>")
+      .addClass("tochannel")
+      .text(channelText);
+
+		subgiftcontainer.append( giftedTotal );
+		subgiftcontainer.append( giftednumber );
+		subgiftcontainer.append( toChannel );
+		
+  }
+
+
+return chatBodies;
+}
 
 function renderChatSub(comment, index) {
   var chatBodies = [];
@@ -3757,6 +3839,7 @@ function getExpandedMessageFragments( fragments, comment ) {
 	        regExSubResub.test(fragment.text) ||
 	        regExSubGift.test(fragment.text) ||
 	        regExConvertedSub.test(fragment.text) ||
+	        regExRaid.test(fragment.text) ||
 	        regExSubGiftAdvance.test(fragment.text) ||
 	        regExSubMysteryGift.test(fragment.text) ||
 	        regExSubadvance.test(fragment.text)) {
@@ -3831,6 +3914,18 @@ function getExpandedMessageFragments( fragments, comment ) {
 	                newFragment["isSubGift"] = true;
 
 	                isSubGift = true;
+	                results.push(newFragment);
+	            } else if (regExRaid.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                splitText = splitText.charAt(0) + splitText.slice(1);
+					
+					// console.log("SplitText: "+splitText);
+	                newFragment["text"] = splitText;
+
+	                newFragment["isRaid"] = true;
+
 	                results.push(newFragment);
 	            } else if (regExConvertedSub.test(splitText)) {
 	                var userName = comment.commenter.display_name;
@@ -3919,6 +4014,7 @@ function getExpandedMessageFragments( fragments, comment ) {
 	    if (regExCheers.test(fragment.text) ||
 	        regExSubResub.test(fragment.text) ||
 	        regExSubGift.test(fragment.text) ||
+	        regExRaid.test(fragment.text) ||
 	        regExConvertedSub.test(fragment.text) ||
 	        regExSubGiftAdvance.test(fragment.text) ||
 	        regExSubMysteryGift.test(fragment.text) ||
@@ -3988,6 +4084,18 @@ function getExpandedMessageFragments( fragments, comment ) {
 	                newFragment["text"] = splitText;
 
 	                newFragment["isSubGift"] = true;
+
+	                isSubGift = true;
+	                results.push(newFragment);
+	            } else if (regExRaid.test(splitText)) {
+	                var userName = comment.commenter.display_name;
+
+	                splitText = splitText.replace(userName, "").replace("An anonymous user", "").trim();
+	                splitText = splitText.charAt(0) + splitText.slice(1);
+	                newFragment["text"] = splitText;
+					// console.log("splitText: "+splitText);
+
+	                newFragment["isRaid"] = true;
 
 	                isSubGift = true;
 	                results.push(newFragment);
@@ -4141,6 +4249,12 @@ function processFragmentsSplitText( sourceText ) {
 
       } else if (regExSubGift.test(sourceText)) {
           var s = sourceText.split(regExSubGift).filter(Boolean);
+          splits.push(s[0].trim());
+          if (s.length > 1) {
+              splits = splits.concat(s[1].trim());
+          }
+      } else if (regExRaid.test(sourceText)) {
+          var s = sourceText.split(regExRaid).filter(Boolean);
           splits.push(s[0].trim());
           if (s.length > 1) {
               splits = splits.concat(s[1].trim());

@@ -1683,7 +1683,9 @@ input[type=number] {
 .subgiftcontainer .theyvecontainer  {
 	color: #adadb8;
 }
-
+.messageNumber {
+	font-weight: 900;
+}
 .giftednumber {
 	color: white;
 	font-weight: 700;
