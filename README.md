@@ -1,4 +1,4 @@
-# ![Video Chat Replayer](https://user-images.githubusercontent.com/12008758/205196726-bad0103c-b65e-4904-b801-0250920d6e8b.png)
+# [![Video Chat Replayer](https://user-images.githubusercontent.com/12008758/205196726-bad0103c-b65e-4904-b801-0250920d6e8b.png)](https://themadog24.github.io/Video-Chat-Replayer/public/index.html)
 
 # What is Video Chat Replayer?
 
@@ -9,6 +9,10 @@ Video Chat Replayer is a realtime chat replayer for downloaded videos. Created s
 ## What does it do?
 
 Video Chat Replayer uses your browser to playback your chat files alongside your video file, in sync, no rendering required.
+
+<br/><br/>
+
+# [Click Here To Use it Now](https://themadog24.github.io/Video-Chat-Replayer/public/index.html)
 
 <br/><br/>
 
