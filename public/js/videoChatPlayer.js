@@ -105,7 +105,7 @@ var regExSubResubTheyve = new RegExp(
 //             "(?<=" + regExSubResubTheyveFragments + "))");
 						
 //Regex for subgift
-var regExSubGiftFragments = "^.+ gifted a Tier \\d+\\b sub to \\w+!";
+var regExSubGiftFragments = "^.+ gifted a Tier \\d+\\b sub to \\w+.!";
 var regExSubGift = new RegExp(
                         "((?=" + regExSubGiftFragments + ")|" + 
                         "(?<=" + regExSubGiftFragments + "))", "i");
