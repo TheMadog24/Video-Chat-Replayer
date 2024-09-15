@@ -2259,7 +2259,7 @@ $(document).click(function(e) {
 			var duration = ms;
 	        var seconds = Math.floor((duration / 1000) % 60),
 	        minutes = Math.floor((duration / (1000 * 60)) % 60),
-	        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+	        hours = Math.floor((duration / (1000 * 60 * 60)));
 
 	        hours = (hours < 10) ? "0" + hours : hours;
 	        minutes = (minutes < 10) ? "0" + minutes : minutes;
@@ -2470,7 +2470,7 @@ function renderRaid(comment, index) {
 
   // comment.message.body;
   let message = extractMessageFragments(comment);
-  console.log(message);
+  // console.log(message);
   let messageNumber = message[0].textContent.replace(" raiders from  have joined!", "");
   
   let colorHex = comment.message.user_color;
