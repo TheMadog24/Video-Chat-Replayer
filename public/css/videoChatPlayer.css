@@ -1718,9 +1718,26 @@ input[type=number] {
 	background-color: #1f1f23;
 	margin: 0;
 }
+.isbonusgiftsubmessage {
+	border-left-color: #a970ff;
+	border-left-style: solid;
+	border-left-width: 6px;
+	background: linear-gradient(81deg,#69edc2 7.28%,#69edc2 28.62%,#00c8af 92.65%);
+	margin: 0;
+}
 .isbiggiftsubmessage .commenter{
 	position: relative;
 	top: 12px;
+	left: 9px;
+	margin: 0;
+	display: block;
+	font-size: 16px;
+	font-weight: 900;
+	display: inline-block;
+}
+.isbonusgiftsubmessage .Bonuscommenter{
+	position: relative;
+	top: 9px;
 	left: 9px;
 	margin: 0;
 	display: block;
@@ -1734,9 +1751,28 @@ input[type=number] {
 	display: block;
 	color: #adadb8;
 }
+.isbonusgiftsubmessage .bonussubgiftcontainer{
+	position: relative;
+	margin: -16px auto 14px 65px;
+	display: block;
+	color: #adadb8;
+}
 .isbiggiftsubmessageimg {
 	position: relative;
 	margin: 9px auto auto 15px;
+	width: 40px;
+	height: 40px;
+}
+.isbonusgiftsubmessageimg {
+	position: relative;
+	width: 55.333px;
+	height: 42px;
+	top: 25%;
+}
+.isbonusgiftsubmessagetxt {
+	color: #0e0e10;
+	position: relative;
+	margin: auto;
 	width: 40px;
 	height: 40px;
 }
@@ -2146,6 +2182,15 @@ input {
     font-weight: bolder;
 }
 .commenter:hover{
+	border-radius: 2px;
+	background-color: rgba(255, 255, 255, 0.2);
+	cursor: pointer;
+}
+.Bonuscommenter {
+    vertical-align: top;
+    font-weight: bolder;
+}
+.Bonuscommenter:hover{
 	border-radius: 2px;
 	background-color: rgba(255, 255, 255, 0.2);
 	cursor: pointer;
