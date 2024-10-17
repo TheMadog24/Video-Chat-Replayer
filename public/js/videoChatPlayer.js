@@ -194,27 +194,19 @@ function getVideoMetadata() {
 				$("#message").text("Looking for Chapters...").css({"background-color": "yellow", "color": "black"});
 			}, 500);
 			
+			
+			const readChunk = async (chunkSize, offset) =>
+			new Uint8Array(await file.slice(offset, offset + chunkSize).arrayBuffer())
 
-		const getSize = () => file.size
-
-		const readChunk = (chunkSize, offset) =>
-			new Promise((resolve, reject) => {
-				const reader = new FileReader()
-				reader.onload = (event) => {
-					if (event.target.error) {
-						reject(event.target.error)
-					}
-					resolve(new Uint8Array(event.target.result))
-				}
-				reader.readAsArrayBuffer(file.slice(offset, offset + chunkSize))
-			})
 
 			mediainfo
-				.analyzeData(getSize, readChunk)
+				.analyzeData(file.size, readChunk)
 				.then((result) => {
 					console.log("Chapters Loaded");
 					
+					
 					var videoMetadata = result;
+					// console.log(JSON.stringify(videoMetadata));
 					saveResults(videoMetadata);
 					extractChapters();
         
@@ -226,8 +218,7 @@ function getVideoMetadata() {
 		}
 	}
 	
-
-	MediaInfo({
+	MediaInfo.mediaInfoFactory({
 		format: 'JSON'
 	}, (mediainfo) => {
 		fileinput.removeAttribute('disabled')
@@ -339,7 +330,8 @@ function getVideoMetadata() {
 		.addClass("chapTextContainer");
 		
 		let chapterImg = $("<img>")
-		.addClass("chapterimage");
+		.addClass("chapterimage")
+		.attr("src", "img/no_img.png");
 		
 		chapterEntry.append(chapterImg);
 		chapterEntry.append(chapTextContainer);
