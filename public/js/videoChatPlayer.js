@@ -464,7 +464,7 @@ function localFileVideoPlayer() {
 		  document.title = chatJson.video.title;
 	  } else {
 		  // console.log("Reset Video Title");
-		  document.title = "Video Chat Replayer";
+		  // document.title = "Video Chat Replayer";
 		}
       initChat(timingLoadStart);
 	  loadBadgesJson(chatJson);
@@ -1665,9 +1665,35 @@ $(document).click(function(e) {
 
   // Preview Start
 
-  function showPreview(TimeInSeconds) {
-    $("#previewVid")[0].currentTime = TimeInSeconds;
-  }
+	let previewTimeout;
+	let lastPreviewTime = -1; // Stores the last preview seek time
+
+	function showPreview(TimeInSeconds) {
+		// Only update if the hovered time changed by at least 0.5 seconds
+		if (Math.abs(TimeInSeconds - lastPreviewTime) < 0.5) {
+			return; // Skip unnecessary seeks
+		}
+
+		lastPreviewTime = TimeInSeconds; // Update the last preview time
+
+		clearTimeout(previewTimeout); // Cancel previous seek
+
+		previewTimeout = setTimeout(() => {
+			$("#previewVid")[0].currentTime = TimeInSeconds;
+		}, 100); // Short debounce (adjust if needed)
+	}
+
+
+  // function showPreview(TimeInSeconds) {
+    // $("#previewVid")[0].currentTime = TimeInSeconds;
+  // }
+
+
+
+
+
+
+
 
   // function showPreview(TimeInSeconds) {
   // const canvas = document.createElement('canvas');
@@ -1689,7 +1715,9 @@ $(document).click(function(e) {
   //PreviewBox Appears on Hover Only
 
   $(".progress-bar-container").on("mouseover", function (e) {
+	$("#previewBox").clearQueue();
     $("#previewBox").fadeIn(100);
+	
   });
   $(".progress-bar-container").on("mouseleave", function (e) {
     var PBox = $("#previewBox");
