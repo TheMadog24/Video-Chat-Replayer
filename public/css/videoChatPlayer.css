@@ -1309,6 +1309,17 @@ input[type=number] {
 	background-color: green;
 }
 
+#timeBox {
+	width: 340px;
+	height:41px;
+	border-left: 1px solid #303032;
+	position:absolute;
+	top: 90px;
+	right: 0;
+    bottom: 0;
+	background-color: #1f1f23;
+	border-top: 2px solid #303032;
+}
 #topBox {
 	width: 340px;
 	height:90px;
@@ -1343,6 +1354,40 @@ input[type=number] {
 	font-size: 14px;
 	cursor: pointer;
 	padding: 2px;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */	
+}
+
+#localTime {
+	margin: -3px auto auto 0;
+	font-size: 14px;
+	padding: 2px;
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+	color: #e64545;
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */	
+}
+#localTimeText {
+	margin: 2px auto auto 0;
+	font-size: 14px;
+	padding: 2px;
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 	-webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
@@ -1500,8 +1545,8 @@ input[type=number] {
 	right: 0;
     width: 332px;
     border-left: 1px solid #303032;
-	border-top: 1px solid #303032;
-    height: calc(100% - 96px);
+	border-top: 2px solid #303032;
+    height: calc(100% - 140px);
 	overflow-y: scroll;
 	background-color:#18181b;
  	font-family: "Inter";
@@ -2086,7 +2131,7 @@ input[type=number] {
 	bottom: 0;
 	right: 0;
     width: 8px;
-	height: calc(100% - 91px);
+	height: calc(100% - 140px);
 	background-color:#18181b;
 	z-index: 98;
 	opacity: 100%;

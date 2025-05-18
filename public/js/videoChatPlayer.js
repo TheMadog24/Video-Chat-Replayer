@@ -469,6 +469,7 @@ function localFileVideoPlayer() {
       initChat(timingLoadStart);
 	  loadBadgesJson(chatJson);
 	  loadVideoChapters(chatJson);
+	  setLocalTime(chatJson);
 	  
 	  };
 
@@ -2181,6 +2182,66 @@ $(document).click(function(e) {
       videoNode.currentTime = 0;
     }
   });
+  
+  	//Getting and Displaying Local video time
+
+  	// Ensure chatJson is loaded beforehand
+  	function setLocalTime(chatJson) {
+  	    if (chatJson.video.created_at) {
+  	        console.log("Video time loaded");
+  	        console.log(chatJson.video.created_at);
+
+  	        const createdAt = new Date(chatJson.video.created_at);
+  	        var localTimeDiv = $("#localTime")[0];
+  	        var Vid = $("#videoPlayer")[0];
+
+  	        function updateLocalTimeDisplay() {
+  	            const currentVideoTime = Vid.currentTime;
+  	            const currentDateTime = new Date(createdAt.getTime() + currentVideoTime * 1000);
+
+  	            const weekday = currentDateTime.toLocaleDateString('en-US', {
+  	                weekday: 'long'
+  	            });
+  	            const month = currentDateTime.toLocaleDateString('en-US', {
+  	                month: 'short'
+  	            });
+  	            const day = currentDateTime.getDate();
+  	            const year = currentDateTime.getFullYear();
+
+  	            const hourOptions = {
+  	                hour: 'numeric',
+  	                minute: '2-digit',
+  	                second: '2-digit',
+  	                hour12: true,
+  	            };
+  	            const time = currentDateTime.toLocaleTimeString('en-US', hourOptions);
+
+  	            // Helper to get ordinal suffix
+  	            function getOrdinalSuffix(n) {
+  	                if (n >= 11 && n <= 13)
+  	                    return 'th';
+  	                switch (n % 10) {
+  	                case 1:
+  	                    return 'st';
+  	                case 2:
+  	                    return 'nd';
+  	                case 3:
+  	                    return 'rd';
+  	                default:
+  	                    return 'th';
+  	                }
+  	            }
+
+  	            const formattedDate = `${weekday}, ${month} ${day}${getOrdinalSuffix(day)}, ${year} at ${time}`;
+  	            localTimeDiv.textContent = `${formattedDate}`;
+  	        }
+
+  	        Vid.addEventListener('timeupdate', updateLocalTimeDisplay);
+			updateLocalTimeDisplay(); // Show immediately when video and chatJson are ready
+
+  	    }
+  	}
+
 }
 
 
@@ -2414,6 +2475,9 @@ function pad(num, size) {
   var str = "00000" + num.toString();
   return str.substring(str.length - size);
 }
+
+
+
 
 
 
