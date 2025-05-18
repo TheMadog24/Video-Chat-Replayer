@@ -2188,8 +2188,8 @@ $(document).click(function(e) {
   	// Ensure chatJson is loaded beforehand
   	function setLocalTime(chatJson) {
   	    if (chatJson.video.created_at) {
-  	        console.log("Video time loaded");
-  	        console.log(chatJson.video.created_at);
+  	        // console.log("Video time loaded");
+  	        // console.log(chatJson.video.created_at);
 
   	        const createdAt = new Date(chatJson.video.created_at);
   	        var localTimeDiv = $("#localTime")[0];
