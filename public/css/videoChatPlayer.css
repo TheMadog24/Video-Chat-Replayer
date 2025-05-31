@@ -1615,7 +1615,17 @@ input[type=number] {
 	border-left-width: 4px;
 	color: #adadb8;
 }
+.communitySent {
+	border-left-color: #adadb8;
+	border-left-style: solid;
+	border-left-width: 4px;
+	color: #adadb8;
+}
 .isPayingForwardContainer {
+	padding: 5px 0;
+	margin-left: 16px;
+}
+.communitySentContainer {
 	padding: 5px 0;
 	margin-left: 16px;
 }
@@ -1813,6 +1823,13 @@ input[type=number] {
 	width: 55.333px;
 	height: 42px;
 	top: 25%;
+}
+.communitySentimg {
+	position: relative;
+	width: 24px;
+	height: 24px;
+	top: 25%;
+	padding: 0 7px 0 7px;
 }
 .isbonusgiftsubmessagetxt {
 	color: #0e0e10;

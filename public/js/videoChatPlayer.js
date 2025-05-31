@@ -149,6 +149,22 @@ var regExBonusSub = new RegExp(
                         "((?=" + regExBonusSubFragment + ")|" + 
                         "(?<=" + regExBonusSubFragment + "))", "i");
 
+//Regex for "community sent " messages
+var regExCommunitySentFragments = "\\b\\w+ community sent \\d+! ";
+var regExCommunitySent = new RegExp(
+                        "((?=" + regExCommunitySentFragments + ")|" + 
+                        "(?<=" + regExCommunitySentFragments + "))", "i");
+// console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
+//             "(?<=" + regExSubResubFragments + "))");
+ 
+//Regex for "Milestone Achieved" messages
+var regExMilestoneFragments = "Milestone \\d+ achieved! ";
+var regExMilestone = new RegExp(
+                        "((?=" + regExMilestoneFragments + ")|" + 
+                        "(?<=" + regExMilestoneFragments + "))", "i");
+// console.log("### regExSubResub (70): " + "((?=" + regExSubResubFragments + ")|" + 
+//             "(?<=" + regExSubResubFragments + "))");
+    
 
 var globalBadgesJson;
 var streamerBadgesJson;
@@ -2497,6 +2513,14 @@ function renderChatBody(comment, index) {
     
     return renderPayingForwardGift(comment, index);
   }
+  else if ( regExCommunitySent.test( comment.message.body )  ) {
+    
+    return renderCommunitySent(comment, index);
+  }
+  else if ( regExMilestone.test( comment.message.body )  ) {
+    
+    return renderMilestone(comment, index);
+  }
   else if ( regExSubadvance.test( comment.message.body )  ) {
     
     return renderChatAdvanceSub(comment, index);
@@ -2738,6 +2762,56 @@ function renderPayingForwardGift(comment, index) {
   
 	chatBody.append(isPayingForwardContainer);
 	isPayingForwardContainer.append(message);
+	chatBodies.push( chatBody );
+
+
+return chatBodies;
+}
+
+function renderCommunitySent(comment, index) {
+  var chatBodies = [];
+  comment.message["alt_fragments"] = [];
+
+  // comment.message.body;
+  let message = extractMessageFragments(comment);
+  
+  let communitySentContainer = $("<div>").addClass("communitySentContainer");
+    
+
+  let chatBody = $("<div>").addClass("chatbody no-time communitySent");
+  
+  let communitySentimg = $('<img class="communitySentimg" src="img/gift_heart.png"/>');
+  
+  // chatBody.append( makeUserBadges( comment ) );
+  
+	chatBody.append(communitySentContainer);
+	communitySentContainer.append(message);
+	communitySentContainer.append(communitySentimg);
+	chatBodies.push( chatBody );
+
+
+return chatBodies;
+}
+
+function renderMilestone(comment, index) {
+  var chatBodies = [];
+  comment.message["alt_fragments"] = [];
+
+  // comment.message.body;
+  let message = extractMessageFragments(comment);
+  
+  let communitySentContainer = $("<div>").addClass("communitySentContainer");
+    
+
+  let chatBody = $("<div>").addClass("chatbody no-time communitySent");
+  
+  let communitySentimg = $('<img class="communitySentimg" src="img/gift_heart.png"/>');
+  
+  // chatBody.append( makeUserBadges( comment ) );
+  
+	chatBody.append(communitySentContainer);
+	communitySentContainer.append(message);
+	// communitySentContainer.append(communitySentimg);
 	chatBodies.push( chatBody );
 
 
