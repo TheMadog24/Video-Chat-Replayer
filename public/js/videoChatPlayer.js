@@ -105,13 +105,13 @@ var regExSubResubTheyve = new RegExp(
 //             "(?<=" + regExSubResubTheyveFragments + "))");
 						
 //Regex for subgift
-var regExSubGiftFragments = "^.+ gifted a Tier \\d+\\b sub to \\w+.!";
+var regExSubGiftFragments = "^.+ gifted a Tier \\d+\\b sub to .+!";
 var regExSubGift = new RegExp(
                         "((?=" + regExSubGiftFragments + ")|" + 
                         "(?<=" + regExSubGiftFragments + "))", "i");
 						
 //Regex for subgift in advance
-var regExSubGiftAdvanceFragments = "^.+ gifted \\d+ months of Tier \\d+ to \\w+[.]";
+var regExSubGiftAdvanceFragments = "^.+ gifted \\d+ months of Tier \\d+ to .+";
 var regExSubGiftAdvance = new RegExp(
                         "((?=" + regExSubGiftAdvanceFragments + ")|" + 
                         "(?<=" + regExSubGiftAdvanceFragments + "))", "i");
@@ -3110,7 +3110,7 @@ function rendersubgift(comment, index) {
   // let theyveremoved = workingmessage.replace(theyvemessage, "").trim();
   
   
-  let middlemessageTEXT = workingmessage.match("\\ gifted a Tier [0-9] sub to \\b", "");
+  let middlemessageTEXT = workingmessage.match("\\ gifted a Tier [0-9] sub to ", "");
   let recievertext = workingmessage.replace(comment.commenter.display_name, "").replace(middlemessageTEXT, "").replace("!", "").trim();
   
   let reciever = $("<span>")
