@@ -1733,13 +1733,14 @@ $(document).click(function(e) {
 
   $(".progress-bar-container").on("mouseover", function (e) {
 	$("#previewBox").clearQueue();
-    $("#previewBox").fadeIn(100);
+    //$("#previewBox").fadeIn(100);
+    $("#previewBox").show();
 	
   });
   $(".progress-bar-container").on("mouseleave", function (e) {
     var PBox = $("#previewBox");
     PBox.clearQueue();
-    PBox.fadeOut(10);
+    PBox.hide();
   });
 
   //Disable on Page load
