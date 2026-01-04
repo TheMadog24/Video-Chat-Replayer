@@ -528,7 +528,7 @@ function localFileVideoPlayer() {
     var timingReadChatMs = window.performance.now() - timingReadChatStart;
 	
 	//loading array of twitchBits emotes
-	//Checks if twitchBits exists and is not empty
+	//Checks twitchBits exists and is not empty
 	if (Array.isArray(chatEmotes.twitchBits) && chatEmotes.twitchBits.length > 0) {
 		jQuery.each(chatEmotes.twitchBits, function (index, bits) {
 			bitsArray[bits.prefix] = bits;
@@ -4186,7 +4186,7 @@ function getExpandedMessageFragments( fragments, comment ) {
     
     // If the fragment.text contains a cheer, then we need to process it
     // and split them up.
-	if (chatEmotes.twitchBits) {
+	if (Array.isArray(chatEmotes.twitchBits) && chatEmotes.twitchBits.length > 0) {
 	    if (regExBits.test(fragment.text) || regExCheers.test(fragment.text) ||
 	        regExSubResub.test(fragment.text) ||
 	        regExSubGift.test(fragment.text) ||
@@ -4551,7 +4551,7 @@ function getExpandedMessageFragments( fragments, comment ) {
 function processFragmentsSplitText( sourceText ) {
   var splits = [];
   
-  if (chatEmotes.twitchBits) {
+  if (Array.isArray(chatEmotes.twitchBits) && chatEmotes.twitchBits.length > 0) {
       if (regExBits.test(sourceText)) {
 		  // console.log("fragment: "+JSON.stringify(sourceText));
           splits = sourceText.split(regExBits).filter(Boolean);
