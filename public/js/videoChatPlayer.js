@@ -528,7 +528,8 @@ function localFileVideoPlayer() {
     var timingReadChatMs = window.performance.now() - timingReadChatStart;
 	
 	//loading array of twitchBits emotes
-	if (chatEmotes.twitchBits) {
+	//Checks if twitchBits exists and is not empty
+	if (Array.isArray(chatEmotes.twitchBits) && chatEmotes.twitchBits.length > 0) {
 		jQuery.each(chatEmotes.twitchBits, function (index, bits) {
 			bitsArray[bits.prefix] = bits;
 		});
